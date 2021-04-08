@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.3k 字
+      1.8k 字
     </span>
   
 
@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      17
+      22
        分钟
     </span>
   
@@ -299,6 +299,13 @@
 
 
 
+<h2 id="Hexo-域名管理"><a href="#Hexo-域名管理" class="headerlink" title="Hexo 域名管理"></a>Hexo 域名管理</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://dc.console.aliyun.com/next/index?spm=5176.12818093.favorite.ddomain.5adc16d0KPMqNR#/domain/list/all-domain">阿里域名控制台</a></p>
+</blockquote>
+<h3 id="配置域名"><a href="#配置域名" class="headerlink" title="配置域名"></a>配置域名</h3><h4 id="阿里云解析"><a href="#阿里云解析" class="headerlink" title="阿里云解析"></a>阿里云解析</h4><p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210408115433.png" srcset="/img/loading.gif" lazyload alt="image-20210408115433164"></p>
+<p>添加两条解析</p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210408115709.png" srcset="/img/loading.gif" lazyload alt="image-20210408115708992"></p>
+<h4 id="Github-配置"><a href="#Github-配置" class="headerlink" title="Github 配置"></a>Github 配置</h4><p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210408115630.png" srcset="/img/loading.gif" lazyload alt="image-20210408115630741"></p>
 <h2 id="Hexo-主题配置"><a href="#Hexo-主题配置" class="headerlink" title="Hexo 主题配置"></a>Hexo 主题配置</h2><blockquote>
 <p>主题：<a target="_blank" rel="noopener" href="https://github.com/fluid-dev/hexo-theme-fluid">hexo-theme-fluid</a><br>配置指南：<a target="_blank" rel="noopener" href="https://hexo.fluid-dev.com/docs/">Hexo Fluid</a></p>
 </blockquote>
@@ -318,6 +325,36 @@
 <h2 id="百度和谷歌收录博客"><a href="#百度和谷歌收录博客" class="headerlink" title="百度和谷歌收录博客"></a>百度和谷歌收录博客</h2><blockquote>
 <p><a target="_blank" rel="noopener" href="http://duansm.top/2018/08/08/hexo-sitemap/">百度和谷歌收录博客</a></p>
 <p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000037550362">怎么样让自己的博客被谷歌和百度收录</a></p>
+</blockquote>
+<h3 id="百度收录"><a href="#百度收录" class="headerlink" title="百度收录"></a>百度收录</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://ziyuan.baidu.com/site/index#/">百度站点管理</a></p>
+</blockquote>
+<p>需要登录<a target="_blank" rel="noopener" href="https://ziyuan.baidu.com/">百度搜索资源平台</a>， 只要是百度旗下的账号就可以， 登录成功之后在站点管理中点击<a target="_blank" rel="noopener" href="https://ziyuan.baidu.com/site/siteadd#/">添加网站</a>，输入域名，按照步骤走。</p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210408120056.png" srcset="/img/loading.gif" lazyload alt="image-20210408120055995"></p>
+<p>需要验证网站的所有权，验证网站所有权的方式有三种</p>
+<h4 id="CNAME解析验证"><a href="#CNAME解析验证" class="headerlink" title="CNAME解析验证"></a>CNAME解析验证</h4><p>需要到域名供应商后台管理新增一条域名解析，以阿里云的域名解析为例：</p>
+<ul>
+<li>请将code-k8gqscg2Wk.reanon.top使用CNAME解析到ziyuan.baidu.com</li>
+</ul>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210408120419.png" srcset="/img/loading.gif" lazyload alt="image-20210408120419056"></p>
+<h4 id="推送网站的资源"><a href="#推送网站的资源" class="headerlink" title="推送网站的资源"></a>推送网站的资源</h4><p>百度已经知道有我们网站的存在了，但是百度还不知道我们的网站上有什么内容，所以要向百度推送我们的内容。</p>
+<p>需要使用npm自动生成网站的sitemap，然后将生成的sitemap提交到百度和其他搜索引擎。</p>
+<ul>
+<li>sitemap是一种文件，您可以通过该文件列出您网站上的网页，从而将您网站内容的组织架构告知Google和其他搜索引擎。</li>
+<li>Googlebot等搜索引擎网页抓取工具会读取此文件，以便更加智能地抓取您的网站。</li>
+</ul>
+<p>使用sitemap方式推送：需要先安装sitemap插件</p>
+<p>安装插件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ npm install hexo-generator-sitemap --save<br>$ npm install hexo-generator-baidu-sitemap –-save<br></code></pre></td></tr></table></figure>
+
+<p>编辑博客配置文件:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ vim _config.yml<br></code></pre></td></tr></table></figure>
+
+<p>在文件最后添加以下内容：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># 自动生成sitemap</span><br><span class="hljs-attr">sitemap:</span><br>  <span class="hljs-attr">path:</span> <span class="hljs-string">sitemap.xml</span><br><span class="hljs-attr">baidusitemap:</span><br>  <span class="hljs-attr">path:</span> <span class="hljs-string">baidusitemap.xml</span><br></code></pre></td></tr></table></figure>
+
+<p>保存文件，重新部署博客，查看：reanon.top/sitemap.xml。显示如下信息表示sitemap生成成功</p>
+<h3 id="谷歌收录"><a href="#谷歌收录" class="headerlink" title="谷歌收录"></a>谷歌收录</h3><blockquote>
 </blockquote>
 <h2 id="Hexo-配置文件"><a href="#Hexo-配置文件" class="headerlink" title="Hexo 配置文件"></a>Hexo 配置文件</h2><h3 id="config-yml"><a href="#config-yml" class="headerlink" title="_config.yml"></a>_config.yml</h3><p>网站的 <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/configuration">配置</a> 信息，您可以在此配置大部分的参数。</p>
 <h3 id="package-json"><a href="#package-json" class="headerlink" title="package.json"></a>package.json</h3><p>应用程序的信息。<a target="_blank" rel="noopener" href="https://ejs.co/">EJS</a>, <a target="_blank" rel="noopener" href="http://learnboost.github.io/stylus/">Stylus</a> 和 <a target="_blank" rel="noopener" href="http://daringfireball.net/projects/markdown/">Markdown</a> renderer 已默认安装，您可以自由移除。</p>
