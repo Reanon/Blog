@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.8k 字
+      1.9k 字
     </span>
   
 
@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      22
+      23
        分钟
     </span>
   
@@ -344,7 +344,7 @@
 <li>Googlebot等搜索引擎网页抓取工具会读取此文件，以便更加智能地抓取您的网站。</li>
 </ul>
 <p>使用sitemap方式推送：需要先安装sitemap插件</p>
-<p>安装插件：</p>
+<h5 id="sitemap插件"><a href="#sitemap插件" class="headerlink" title="sitemap插件"></a>sitemap插件</h5><p>安装插件：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ npm install hexo-generator-sitemap --save<br>$ npm install hexo-generator-baidu-sitemap –-save<br></code></pre></td></tr></table></figure>
 
 <p>编辑博客配置文件:</p>
@@ -353,6 +353,14 @@
 <p>在文件最后添加以下内容：</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># 自动生成sitemap</span><br><span class="hljs-attr">sitemap:</span><br>  <span class="hljs-attr">path:</span> <span class="hljs-string">sitemap.xml</span><br><span class="hljs-attr">baidusitemap:</span><br>  <span class="hljs-attr">path:</span> <span class="hljs-string">baidusitemap.xml</span><br></code></pre></td></tr></table></figure>
 
+<h5 id="hexo-abbrlink"><a href="#hexo-abbrlink" class="headerlink" title="hexo-abbrlink"></a>hexo-abbrlink</h5><p>hexo-abbrlink是一个hexo博客链接永久化的解决方案。它可以支持使用不同的算法和进制对文章链接进行转换。</p>
+<p>安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm install hexo-abbrlink --save<br></code></pre></td></tr></table></figure>
+
+<p>使用<br>打开config.yml，修改permalink中类似这样</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">permalink:</span> <span class="hljs-string">:year/:month:abbrlink.html</span><br><span class="hljs-attr">abbrlink:</span> <br>  <span class="hljs-attr">alg:</span> <span class="hljs-string">crc32</span> <span class="hljs-comment">#算法选项：crc16丨crc32</span><br>  <span class="hljs-attr">rep:</span> <span class="hljs-string">hex</span> <span class="hljs-comment">#输出进制：dec为十进制，hex为十六进制</span><br></code></pre></td></tr></table></figure>
+
+<p>然后执行hexo clean &amp;&amp; hexo g 命令 我们可以发现永久链接生成如下：</p>
 <p>保存文件，重新部署博客，查看：reanon.top/sitemap.xml。显示如下信息表示sitemap生成成功</p>
 <h3 id="谷歌收录"><a href="#谷歌收录" class="headerlink" title="谷歌收录"></a>谷歌收录</h3><blockquote>
 </blockquote>
