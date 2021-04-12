@@ -236,37 +236,46 @@
             <h1 style="display: none">ContractFuzzer:Fuzzing Smart Contracts for Vulnerability Detection</h1>
             
             <div class="markdown-body">
-              <h1 id="ContractFuzzer-Fuzzing-Smart-Contracts-for-Vulnerability-Detection"><a href="#ContractFuzzer-Fuzzing-Smart-Contracts-for-Vulnerability-Detection" class="headerlink" title="ContractFuzzer: Fuzzing Smart Contracts for Vulnerability Detection"></a>ContractFuzzer: Fuzzing Smart Contracts for Vulnerability Detection</h1><p>论文标题：(2018-ASE) <a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/abstract/document/9000089">ContractFuzzer: Fuzzing Smart Contracts for Vulnerability Detection</a></p>
+              <h1 id="contractfuzzer-fuzzing-smart-contracts-for-vulnerability-detection"><a class="markdownIt-Anchor" href="#contractfuzzer-fuzzing-smart-contracts-for-vulnerability-detection"></a> ContractFuzzer: Fuzzing Smart Contracts for Vulnerability Detection</h1>
+<p>论文标题：(2018-ASE) <a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/abstract/document/9000089">ContractFuzzer: Fuzzing Smart Contracts for Vulnerability Detection</a></p>
 <p>论文引用：Jiang B, Liu Y, Chan W K. Contractfuzzer: Fuzzing smart contracts for vulnerability detection[C]//2018 33rd IEEE/ACM International Conference on Automated Software Engineering (ASE). IEEE, 2018: 259-269.</p>
 <p>代码开源：<a target="_blank" rel="noopener" href="https://github.com/gongbell/ContractFuzzer">gongbell/ContractFuzzer</a></p>
-<h2 id="一、主要内容"><a href="#一、主要内容" class="headerlink" title="一、主要内容"></a>一、主要内容</h2><p>智能合约是运行在区块链共识协议上的程序，它使得人们能够在最小化信任的基础上达成共识。而今数以百万计的智能合约部署在各个分散的应用程序中，而智能合约的安全漏洞造成了巨大的经济损失。</p>
+<h2 id="一-主要内容"><a class="markdownIt-Anchor" href="#一-主要内容"></a> 一、主要内容</h2>
+<p>智能合约是运行在区块链共识协议上的程序，它使得人们能够在最小化信任的基础上达成共识。而今数以百万计的智能合约部署在各个分散的应用程序中，而智能合约的安全漏洞造成了巨大的经济损失。</p>
 <p>本文提出了一种新的模糊测试工具：ContractFuzzer，它能够根据智能合约的<strong>ABI规范生成模糊测试输入</strong>，定义检测<strong>安全漏洞的测试预言（test oracle）</strong>，通过对<strong>以太坊虚拟机（EVM）插桩</strong>记录智能合约的运行时状态，分析日志并报告安全漏洞。通过实验，作者对6991份智能合约的检测已经发现了459个高精确度的漏洞。</p>
-<h2 id="二、设计实现"><a href="#二、设计实现" class="headerlink" title="二、设计实现"></a>二、设计实现</h2><p>文章分析了七种不同类型的智能合约安全漏洞：gas耗尽终止（<strong>Gasless Send</strong>）、异常处理混乱（<strong>Exception Disorder</strong>）、重入（<strong>Reentrancy</strong>）、时间戳依赖（<strong>Timestamp Dependency</strong>）、区块号依赖(<strong>Block Number Dependency</strong>)、危险的delegatecall 调用（<strong>Dangerous DelegateCall</strong>）和以太币冻结（<strong>Freezing Ether</strong>）。并对以上七种安全漏洞定义了测试预言（test orcle)。</p>
-<h3 id="2-1-gas耗尽终止"><a href="#2-1-gas耗尽终止" class="headerlink" title="2.1 gas耗尽终止"></a>2.1 gas耗尽终止</h3><p>测试预言GaslessSend检查：</p>
+<h2 id="二-设计实现"><a class="markdownIt-Anchor" href="#二-设计实现"></a> 二、设计实现</h2>
+<p>文章分析了七种不同类型的智能合约安全漏洞：gas耗尽终止（<strong>Gasless Send</strong>）、异常处理混乱（<strong>Exception Disorder</strong>）、重入（<strong>Reentrancy</strong>）、时间戳依赖（<strong>Timestamp Dependency</strong>）、区块号依赖(<strong>Block Number Dependency</strong>)、危险的delegatecall 调用（<strong>Dangerous DelegateCall</strong>）和以太币冻结（<strong>Freezing Ether</strong>）。并对以上七种安全漏洞定义了测试预言（test orcle)。</p>
+<h3 id="21-gas耗尽终止"><a class="markdownIt-Anchor" href="#21-gas耗尽终止"></a> 2.1 gas耗尽终止</h3>
+<p>测试预言GaslessSend检查：</p>
 <ul>
 <li>函数调用是通过Send函数进行的，即该函数调用的输入为0，Gas限制为2300；</li>
 <li>函数调用在执行时返回错误ErrOutOfGas。</li>
 </ul>
-<h3 id="2-2-异常处理混乱"><a href="#2-2-异常处理混乱" class="headerlink" title="2.2 异常处理混乱"></a>2.2 异常处理混乱</h3><p>对于一个嵌套调用链，测试预言ExceptionDisorder检查：</p>
+<h3 id="22-异常处理混乱"><a class="markdownIt-Anchor" href="#22-异常处理混乱"></a> 2.2 异常处理混乱</h3>
+<p>对于一个嵌套调用链，测试预言ExceptionDisorder检查：</p>
 <ul>
 <li>由原始调用开始的嵌套调用链中的调用抛出异常，但是原始调用没有抛出异常。</li>
 </ul>
-<h3 id="2-3-重入"><a href="#2-3-重入" class="headerlink" title="2.3 重入"></a>2.3 重入</h3><p>测试预言Reentrancy包括两个子预言ReentrancyCall与CallAgentWithValue：</p>
+<h3 id="23-重入"><a class="markdownIt-Anchor" href="#23-重入"></a> 2.3 重入</h3>
+<p>测试预言Reentrancy包括两个子预言ReentrancyCall与CallAgentWithValue：</p>
 <p>Reentrancy = ReentrancyCall &amp; CallAgentWithValue</p>
 <ul>
-<li><p>子预言ReentrancyCall检查： </p>
+<li>
+<p>子预言ReentrancyCall检查：</p>
 <ul>
 <li>原始函数调用在由其开始的嵌套调用链中出现了不止一次。</li>
 </ul>
 </li>
-<li><p>子预言CallAgentWithValue检查： + 函数调用所发送的以太币大于0； </p>
+<li>
+<p>子预言CallAgentWithValue检查： + 函数调用所发送的以太币大于0；</p>
 <ul>
-<li>被调用函数拥有充足的Gas执行复杂的代码，即函数调用不是通过Send函数或Transfer函数进行的； </li>
+<li>被调用函数拥有充足的Gas执行复杂的代码，即函数调用不是通过Send函数或Transfer函数进行的；</li>
 <li>被调用合约由原始合约调用者指定，而不是硬编码在原始合约中的</li>
 </ul>
 </li>
 </ul>
-<h3 id="2-4-时间戳依赖-amp-区块号依赖"><a href="#2-4-时间戳依赖-amp-区块号依赖" class="headerlink" title="2.4 时间戳依赖 &amp; 区块号依赖"></a>2.4 时间戳依赖 &amp; 区块号依赖</h3><p>这两者可以放在一起进行检查，其中测试预言Timestamp Dependency/BlockNum Dependency包括三个子预言TimestampOp / BlockNumOp、SendCall与EtherTransfer：</p>
+<h3 id="24-时间戳依赖-区块号依赖"><a class="markdownIt-Anchor" href="#24-时间戳依赖-区块号依赖"></a> 2.4 时间戳依赖 &amp; 区块号依赖</h3>
+<p>这两者可以放在一起进行检查，其中测试预言Timestamp Dependency/BlockNum Dependency包括三个子预言TimestampOp / BlockNumOp、SendCall与EtherTransfer：</p>
 <p>2.4.1 子预言TimestampOp/BlockNumOp检查：</p>
 <ul>
 <li>当前合约的执行过程中执行了TIMESTAMP/NUMBER操作符。</li>
@@ -276,19 +285,21 @@
 <ul>
 <li>函数调用所发送的以太币大于0。</li>
 </ul>
-<h3 id="2-5-危险的delegatecall-调用"><a href="#2-5-危险的delegatecall-调用" class="headerlink" title="2.5 危险的delegatecall 调用"></a>2.5 危险的delegatecall 调用</h3><p>测试预言DangerDelegateCall检查：</p>
+<h3 id="25-危险的delegatecall-调用"><a class="markdownIt-Anchor" href="#25-危险的delegatecall-调用"></a> 2.5 危险的delegatecall 调用</h3>
+<p>测试预言DangerDelegateCall检查：</p>
 <ul>
 <li>当前合约执行过程中通过DelegateCall函数进行了函数调用；</li>
 <li>DelegateCall函数的参数是由当前合约调用者指定的。</li>
 </ul>
-<h3 id="2-6-以太币冻结"><a href="#2-6-以太币冻结" class="headerlink" title="2.6 以太币冻结"></a>2.6 以太币冻结</h3><p>测试预言FreezingEther检查：</p>
+<h3 id="26-以太币冻结"><a class="markdownIt-Anchor" href="#26-以太币冻结"></a> 2.6 以太币冻结</h3>
+<p>测试预言FreezingEther检查：</p>
 <ul>
 <li>当前合约能够接收以太币；</li>
 <li>当前合约执行过程中通过DelegateCall函数进行了函数调用；</li>
 <li>当前合约自己的代码中没有transfer/send/call/suicide函数。</li>
 </ul>
 <p>ContractFuzzer工具包括一个线下的EVM插桩工具以及一个线上的模糊测试工具。<strong>线下的EVM插桩工具通过对EVM进行插桩</strong>，使得模糊测试工具能够监视智能合约的执行并提取执行日志用于漏洞分析。</p>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210412105155.png" srcset="/img/loading.gif" lazyload alt="image-20200901201058793"></p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210412105155.png" srcset="/img/loading.gif" lazyload alt="image-20200901201058793" /></p>
 <p>文章实现了一个网络爬虫从Etherscan网站上爬取以太坊平台上已经部署的智能合约，爬取内容包括合约创建代码、ABI接口与构造函数参数。文章将爬取的智能合约重新部署在自己搭建的以太坊测试网络中，一方面作为之后模糊测试的对象，另一方面作为使用合约地址作为参数的合约调用的输入。线上的模糊测试过程如下：</p>
 <ul>
 <li>分析测试智能合约的ABI接口以及字节码，提取ABI函数的每一个参数的数据类型以及ABI函数中所使用到的函数签名；</li>
@@ -297,7 +308,8 @@
 <li>启动模糊测试，通过随机的函数调用，使用生成的输入调用相应的ABI接口；</li>
 <li>分析模糊测试过程中生成的执行日志，检测安全漏洞。</li>
 </ul>
-<h2 id="三、实验评估"><a href="#三、实验评估" class="headerlink" title="三、实验评估"></a>三、实验评估</h2><p>实验机器配置：Ubuntu 14.04 LTS and is equipped with Intel i5 8-core CPU and 16GB of memory.</p>
+<h2 id="三-实验评估"><a class="markdownIt-Anchor" href="#三-实验评估"></a> 三、实验评估</h2>
+<p>实验机器配置：Ubuntu 14.04 LTS and is equipped with Intel i5 8-core CPU and 16GB of memory.</p>
 <p>文章从Etherscan网站上爬取了共<strong>6991</strong>个互不相同且包含经过验证的源代码的智能合约作为实验对象。对于测试智能合约的每个ABI函数，ContractFuzzer工具使用三种类型的账户对其进行调用，包括：</p>
 <ol>
 <li>创建合约的外部账户</li>
@@ -306,8 +318,9 @@
 </ol>
 <p>此外，通过每种类型的账户，工具分别使用发送以太币和不发送以太币两种模式对ABI函数进行调用。对于每个包含参数的ABI函数，工具生成k个输入作为函数的输入集。</p>
 <p>ContractFuzzer工具把对于某个合约生成的所有调用合并成一个调用池，并随机从调用池中选择调用进行对该合约进行模糊测试，以模拟合约中ABI函数的不同调用序列。文章使ContractFuzzer工具对所有测试智能合约共进行了80个小时的模糊测试，直至实验结果逐渐趋同。下表是最后的实验结果:</p>
-<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20200901201113.png" srcset="/img/loading.gif" lazyload alt="image-20200901201112926"></p>
-<h2 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h2><p>文章是第一个基于Ethereum 平台的智能合约安全漏洞模糊测试框架，支持gas耗尽终止、异常处理混乱、重入、时间戳依赖、区块号依赖、危险的delegatecall 调用和以太币冻结七种漏洞的检测。ContractFuzzer 包含离线EVM 测试工具和在线模糊测试工具，并且将这些工具开源。</p>
+<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20200901201113.png" srcset="/img/loading.gif" lazyload alt="image-20200901201112926" /></p>
+<h2 id="四-总结"><a class="markdownIt-Anchor" href="#四-总结"></a> 四、总结</h2>
+<p>文章是第一个基于Ethereum 平台的智能合约安全漏洞模糊测试框架，支持gas耗尽终止、异常处理混乱、重入、时间戳依赖、区块号依赖、危险的delegatecall 调用和以太币冻结七种漏洞的检测。ContractFuzzer 包含离线EVM 测试工具和在线模糊测试工具，并且将这些工具开源。</p>
 <p>构建了一个Web 爬虫，从Etherscan 网站上获得部署在以太坊上的智能合约，爬虫可以提取合约创建代码( 智能合约的二进制文件) 、应用程序二进制接口( Application BinaryInterface，ABI) 以及这些合约的构造函数参数。和其他智能合约漏洞检测工具相比，ContractFuzzer 支持更多的漏洞类型，有效降低了误报率; 但由于测试用例生成的随机性，所能涵盖的系统行为有限，无法达到理想的路径覆盖率，很难找出所有的潜在错误</p>
 
             </div>
@@ -345,9 +358,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2020/07e753fece.html">
+                      <a href="/2020/062138ce9d.html">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">ETHBMC: A Bounded Model Checker for Smart Contracts</span>
+                        <span class="hidden-mobile">Order Matters: Semantic-Aware Neural Networks for Binary Code Similarity Detection</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     

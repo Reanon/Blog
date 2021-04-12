@@ -236,11 +236,14 @@
             <h1 style="display: none">A Survey of Smart Contract Formal Specification and Verification</h1>
             
             <div class="markdown-body">
-              <h1 id="A-Survey-of-Smart-Contract-Formal-Specification-and-Verification"><a href="#A-Survey-of-Smart-Contract-Formal-Specification-and-Verification" class="headerlink" title="A Survey of Smart Contract Formal Specification and Verification"></a>A Survey of Smart Contract Formal Specification and Verification</h1><p>论文标题：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2008.02712">A Survey of Smart Contract Formal Specification and Verification</a> —— 智能合约正式规范和验证调查</p>
+              <h1 id="a-survey-of-smart-contract-formal-specification-and-verification"><a class="markdownIt-Anchor" href="#a-survey-of-smart-contract-formal-specification-and-verification"></a> A Survey of Smart Contract Formal Specification and Verification</h1>
+<p>论文标题：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2008.02712">A Survey of Smart Contract Formal Specification and Verification</a> —— 智能合约正式规范和验证调查</p>
 <p>论文引用：Tolmach P, Li Y, Lin S W, et al. A Survey of Smart Contract Formal Specification and Verification[J]. arXiv preprint arXiv:2008.02712, 2020.</p>
-<h2 id="一、主要内容"><a href="#一、主要内容" class="headerlink" title="一、主要内容"></a>一、主要内容</h2><p>智能合约是一种计算机程序，可让用户在区块链平台之上自动定义和执行交易。鉴于智能合约对于支持整个行业部门（包括供应链，金融，法律和医疗服务）的重要活动的重要性，因此对验证和确认技术有强烈的需求。但是，绝大多数智能合约都缺乏任何形式的规范，这对于确定其正确性至关重要。</p>
+<h2 id="一-主要内容"><a class="markdownIt-Anchor" href="#一-主要内容"></a> 一、主要内容</h2>
+<p>智能合约是一种计算机程序，可让用户在区块链平台之上自动定义和执行交易。鉴于智能合约对于支持整个行业部门（包括供应链，金融，法律和医疗服务）的重要活动的重要性，因此对验证和确认技术有强烈的需求。但是，绝大多数智能合约都缺乏任何形式的规范，这对于确定其正确性至关重要。</p>
 <p>在这项调查中，本文调查了文献中介绍的智能合约的正式模型和规格，并提供了系统概述以了解常见趋势，还讨论用于验证此类属性规范的当前方法并找出差距，以期识别出未来工作的有希望的方向。</p>
-<h3 id="三个问题"><a href="#三个问题" class="headerlink" title="三个问题"></a>三个问题</h3><p>RQ1: 什么是用于智能合约的建模、规范和验证的“形式化技术”？这些技术指定并验证了哪些“常见的形式化的要求”？</p>
+<h3 id="三个问题"><a class="markdownIt-Anchor" href="#三个问题"></a> 三个问题</h3>
+<p>RQ1: 什么是用于智能合约的建模、规范和验证的“形式化技术”？这些技术指定并验证了哪些“常见的形式化的要求”？</p>
 <p>1、在合约级别的表示中，最主要的组合是时态逻辑中的状态转换模型（state-transition models）和规范，然后由模型检验器（model checker）进行验证。如表所示，这种组合主要用于描述功能正确性属性，一些涉及进度概念（the concept of progress）的安全属性，如流动性（liquidity ），被建模为活跃性。</p>
 <p>2、Hoare-style规范进行自动化程序级验证(automated program-level),字节码级定义的程序逻辑允许使用定理证明器来推理智能合约行为，而源代码级注释通常由程序验证技术来执行。安全属性的验证主要由现有的已建立的符号执行和程序验证工具链(如Boogie)主导。</p>
 <p>3、Runtime verification check，运行时验证检查类似问题，但在运行时执行跟踪。这些技术通常需要使用适当的监视器(例如断言)来检测智能契约代码。运行时监视（Runtime monitoring）也可以通过跟踪事件来实现，以便对托管和供应链应用程序进行合规性检查。</p>
@@ -250,30 +253,40 @@
 <p>执行环境建模中的复杂性</p>
 <p>RQ3: What are <strong>the current limitations</strong> in smart contract formal specification and verification and what research directions may be taken to overcome them?</p>
 <p>智能合约正式规范和验证中的“当前限制”是什么？可以采取哪些研究方向来克服这些限制？</p>
-<h2 id="二、MODELING-FORMALISM-建模方法"><a href="#二、MODELING-FORMALISM-建模方法" class="headerlink" title="二、MODELING FORMALISM 建模方法"></a>二、MODELING FORMALISM 建模方法</h2><p>在不同的抽象级别定义模型。<strong>合同级方法</strong>与所分析的智能合同的高级行为有关，通常不考虑其实施和执行的技术细节。<strong>程序级方法</strong>主要对合同实现（即源代码）本身进行分析，因此依赖于平台。</p>
-<h3 id="Contract-level-models-合同级模型"><a href="#Contract-level-models-合同级模型" class="headerlink" title="Contract-level models(合同级模型)"></a>Contract-level models(合同级模型)</h3><p>在合同级别的分析中，智能合同被视为黑匣子（black boxes），它们接受来自外部的交易消息，并可能基于这些消息执行一些计算。合同级模型涉及以下概念：</p>
+<h2 id="二-modeling-formalism-建模方法"><a class="markdownIt-Anchor" href="#二-modeling-formalism-建模方法"></a> 二、MODELING FORMALISM 建模方法</h2>
+<p>在不同的抽象级别定义模型。<strong>合同级方法</strong>与所分析的智能合同的高级行为有关，通常不考虑其实施和执行的技术细节。<strong>程序级方法</strong>主要对合同实现（即源代码）本身进行分析，因此依赖于平台。</p>
+<h3 id="contract-level-models合同级模型"><a class="markdownIt-Anchor" href="#contract-level-models合同级模型"></a> Contract-level models(合同级模型)</h3>
+<p>在合同级别的分析中，智能合同被视为黑匣子（black boxes），它们接受来自外部的交易消息，并可能基于这些消息执行一些计算。合同级模型涉及以下概念：</p>
 <ol>
 <li>Users：可以是与智能合约互动的任何类型的账户（包括余额、交易信息以及如账户地址和附加值的相关参数等。）</li>
 <li>Contracts：一组可公开访问的函数以及函数能执行的外部可见效果（比如合同所有者/余额的变化、发出的事件/操作）</li>
 <li>Blockchain State：合同所指的全局变量和环境变量，例如时间戳和块编号。区块链状态可能还包括矿池和合同执行环境的内存状态。</li>
 </ol>
 <p>合同级模型可以有效地表达有关智能合同与外部环境之间的交互的属性，并且通常根据进程代数（Process Algebras），状态转换系统（State-Transition Systems）和基于集合的方法（Set-Based Methods）来定义它们。</p>
-<h4 id="进程代数（Process-Algebras）"><a href="#进程代数（Process-Algebras）" class="headerlink" title="进程代数（Process Algebras）"></a>进程代数（Process Algebras）</h4><p>进程代数是一类数学方法，用于以交互并发流程（interacting concurrent processes）的形式描述分布式或并行系统（distributed or parallel systems）的行为。</p>
+<h4 id="进程代数process-algebras"><a class="markdownIt-Anchor" href="#进程代数process-algebras"></a> 进程代数（Process Algebras）</h4>
+<p>进程代数是一类数学方法，用于以交互并发流程（interacting concurrent processes）的形式描述分布式或并行系统（distributed or parallel systems）的行为。</p>
 <p>智能合约的可观察到的行为类似于共享内存并发程序（shared-memory concurrent program）或具有交错模式（interleaving mode）的系统的行为，这使进程代数成为高级行为建模成为可能。因此，进程代数捕获并发用户与智能合约之间的交互。对于这些交互，可以通过将智能合约转换为进程代数形式主义之一来确保正确性。一种替代方法涉及以进程代数领域专用语言（process-algebraic domainspecific language，DSL）实现智能合约。</p>
-<p>假定用户通过调用以太坊合约的public 函数与以太坊合约互动，Qu等人和Li等将Solidity 函数 转化为分别在通信顺序过程（Communicating Sequential Processes，CSP）和所应用的π演算SAPIC（π-calculus SAPIC）的变体中定义的过程符号。<br>如果交易不是原子的，则不同用户调用的函数之间的相互作用可能会导致风险状况，这些风险状况通过执行轨迹中出现的易受攻击的序列来体现。</p>
+<p>假定用户通过调用以太坊合约的public 函数与以太坊合约互动，Qu等人和Li等将Solidity 函数 转化为分别在通信顺序过程（Communicating Sequential Processes，CSP）和所应用的π演算SAPIC（π-calculus SAPIC）的变体中定义的过程符号。<br />
+如果交易不是原子的，则不同用户调用的函数之间的相互作用可能会导致风险状况，这些风险状况通过执行轨迹中出现的易受攻击的序列来体现。</p>
 <p>在合同中，每个用户都可以提出自己的出价，直到达到截止日期为止。拍卖结束后，最高出价将转给受益人，而失败的投标者可以撤回其投标。或者，可以在投标阶段取消拍卖。由于用户通过调用智能合约的功能来参与拍卖，因此图3显示了Solidity实现的两个功能，即bid（）和finish（）。</p>
-<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20200908192601.png" srcset="/img/loading.gif" lazyload alt="image-20200908192601798">`</p>
+<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20200908192601.png" srcset="/img/loading.gif" lazyload alt="image-20200908192601798" />`</p>
 <p>Fig. 3. Solidity source code of Simple Auction smart contract adapted from</p>
 <p>图4将这些功能分别表示为一个过程：Bid（msg，blk）和Finish（blk）。这些过程在CSP#中指定（一种基于CSP的形式语言，它支持过程和编程结构）。每个过程都根据CSP事件以及通过共享变量实现的智能合约状态更改来描述智能合约及其用户的相应操作。作为高级表示，该模型将低级执行细节（包括transfer（）函数的细节）与相应的事件进行抽象。块和事务属性使用msg和blk过程参数表示，类似于Solidity中的全局可用变量。为简便起见，省略了用户行为模型。</p>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210412112721.png" srcset="/img/loading.gif" lazyload alt="image-20200908192611190"></p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210412112721.png" srcset="/img/loading.gif" lazyload alt="image-20200908192611190" /></p>
 <p>Fig. 4. A CSP# model of Simple Auction smart contract.</p>
-<h4 id="状态转换系统（State-Transition-Systems）"><a href="#状态转换系统（State-Transition-Systems）" class="headerlink" title="状态转换系统（State-Transition Systems）"></a>状态转换系统（State-Transition Systems）</h4><p>智能合约的行为自然可以解释为状态转换系统，实际上，Solidity鼓励将合约建模为状态机。状态转换模型通常由模型检查器针对特定于合同的属性进行验证，此外还具有诸如死锁/活锁-自由之类的通用时间逻辑属性.</p>
-<p>行为交互优先级（Behavior-Interaction-Priority,BIP）是用于建模智能合约和用户之间交互的分层框架。智能合约的BIP模型通常由两层组成：行为层(Behavior layer)的组件将每个智能合约的逻辑描述为FSM，而交互层(Interaction layer)则定义了其通信原理。图5展示了简单拍卖智能合约的FSM模型（图3），图5中的模型描述了三种智能合约状态之间的可能转换：Bidding (B), Finished (F), and Canceled (C).</p>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210412112719.png" srcset="/img/loading.gif" lazyload alt="image-20200908193601434"></p>
+<h4 id="状态转换系统state-transition-systems"><a class="markdownIt-Anchor" href="#状态转换系统state-transition-systems"></a> 状态转换系统（State-Transition Systems）</h4>
+<p>智能合约的行为自然可以解释为状态转换系统，实际上，Solidity鼓励将合约建模为状态机。状态转换模型通常由模型检查器针对特定于合同的属性进行验证，此外还具有诸如死锁/活锁-自由之类的通用时间逻辑属性.</p>
+<p>行为交互优先级（Behavior-Interaction-Priority,BIP）是用于建模智能合约和用户之间交互的分层框架。智能合约的BIP模型通常由两层组成：行为层(Behavior layer)的组件将每个智能合约的逻辑描述为FSM，而交互层(Interaction layer)则定义了其通信原理。图5展示了简单拍卖智能合约的FSM模型（图3），图5中的模型描述了三种智能合约状态之间的可能转换：Bidding (B), Finished (F), and Canceled ©.</p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210412112719.png" srcset="/img/loading.gif" lazyload alt="image-20200908193601434" /></p>
 <p>Fig. 5. A state-transition model of Simple Auction smart contract (Fig. 3) adapted from</p>
 <p>改编自Simple Auction智能合约的状态转换模型（图3）</p>
-<h4 id="基于集合的方法（Set-Based-Methods）"><a href="#基于集合的方法（Set-Based-Methods）" class="headerlink" title="基于集合的方法（Set-Based Methods）"></a>基于集合的方法（Set-Based Methods）</h4><p>基于集合的建模框架Event-B和TLA +利用集合理论和逻辑来正式指定系统，并且也已应用于智能合约。<br>与其他正式语言（例如PN）类似，基于集合的框架支持模型分析工具，使其在实施按设计更正的智能合约和对现有合约的验证中很有用。<br>尽管基于集合的形式主义对于检查安全属性非常有效，但缺乏对进展理由（例如活力属性）的表达。<br>尽管TLA +支持用于指定活动性的时间逻辑，但此功能尚未用于形式化智能合约要求。</p>
-<h3 id="Program-level-models-程序级模型"><a href="#Program-level-models-程序级模型" class="headerlink" title="Program-level models(程序级模型)"></a>Program-level models(程序级模型)</h3><p>程序级别的模型旨在基于较低级别的表示（例如源代码，编译的字节码以及派生的分析工件(derived analysis artifacts)[包括AST，数据和控制流图]）提供目标合同的白盒视图（white-box view）。程序级模型涉及以下概念：</p>
+<h4 id="基于集合的方法set-based-methods"><a class="markdownIt-Anchor" href="#基于集合的方法set-based-methods"></a> 基于集合的方法（Set-Based Methods）</h4>
+<p>基于集合的建模框架Event-B和TLA +利用集合理论和逻辑来正式指定系统，并且也已应用于智能合约。<br />
+与其他正式语言（例如PN）类似，基于集合的框架支持模型分析工具，使其在实施按设计更正的智能合约和对现有合约的验证中很有用。<br />
+尽管基于集合的形式主义对于检查安全属性非常有效，但缺乏对进展理由（例如活力属性）的表达。<br />
+尽管TLA +支持用于指定活动性的时间逻辑，但此功能尚未用于形式化智能合约要求。</p>
+<h3 id="program-level-models程序级模型"><a class="markdownIt-Anchor" href="#program-level-models程序级模型"></a> Program-level models(程序级模型)</h3>
+<p>程序级别的模型旨在基于较低级别的表示（例如源代码，编译的字节码以及派生的分析工件(derived analysis artifacts)[包括AST，数据和控制流图]）提供目标合同的白盒视图（white-box view）。程序级模型涉及以下概念：</p>
 <ol>
 <li>Abstract Syntax Tree (抽象语法树，AST)：将智能合约源代码（例如，以Solidity形式）表示为<strong>层次树结构（hierarchical tree structures）</strong>，它通常用于对合同执行进行轻量级语法分析。</li>
 <li>Bytecode  (opcode)：字节码或操作码，用低级机器指令编写，这些指令与执行环境紧密相关（例如，以太坊虚拟机（EVM））。由于字节码是在编译后获得的，因此它可以更好地反映机器级别的详细信息（例如，gas消耗量和异常），但同时可能会丢失重要的源代码级别信息。</li>
@@ -281,37 +294,51 @@
 <li>Program Traces（程序跟踪）：在运行时从执行中收集的指令序列（通常以字节码表示）和事件。这些迹线（traces）反映了特定输入下合同的确切行为，可用作执行动态分析和运行时验证的来源。</li>
 </ol>
 <p>程序级模型保留了低级执行细节，因此被广泛用于查找漏洞和检查其他与安全相关的属性。</p>
-<h4 id="AST-Level-Analyses-AST级分析"><a href="#AST-Level-Analyses-AST级分析" class="headerlink" title="AST-Level Analyses. AST级分析"></a>AST-Level Analyses. AST级分析</h4><p>直接在AST或类似的分析树结构上直接执行的智能合约分析仅限于检查预定义的代码模式。AST可以用于简化轻量级的预分析：例如，定位可能导致溢出或断言的算术运算，对内存布局信息进行解码以进行更深入的检查，以及对合同代码执行系统的检测，例如漏洞检查。</p>
+<h4 id="ast-level-analyses-ast级分析"><a class="markdownIt-Anchor" href="#ast-level-analyses-ast级分析"></a> AST-Level Analyses. AST级分析</h4>
+<p>直接在AST或类似的分析树结构上直接执行的智能合约分析仅限于检查预定义的代码模式。AST可以用于简化轻量级的预分析：例如，定位可能导致溢出或断言的算术运算，对内存布局信息进行解码以进行更深入的检查，以及对合同代码执行系统的检测，例如漏洞检查。</p>
 <p>这样的预分析（pre-analyses）可以帮助提高重量级下游分析的有效性和可扩展性。例如，当涉及统和基于深度学习的分析时，AST是智能合约代码的自然抽象。</p>
 <p>这些纯语法技术的明显缺点是，它们不一定尊重智能合约的操作语义或执行环境，从而损害了分析的可靠性/完整性。例如，gas消耗在以太坊智能合约的功能正确性和安全性中起着重要的作用，但经常被忽略。</p>
-<h4 id="Control-Flow-Automata-控制流自动机"><a href="#Control-Flow-Automata-控制流自动机" class="headerlink" title="Control-Flow Automata 控制流自动机"></a>Control-Flow Automata 控制流自动机</h4><p>控制流图（Control-flow graph，CFG）通常用于描述程序的操作语义。顾名思义，CFG是带标签的有向图，其中图节点对应于程序位置，而边对应于程序位置之间的可能过渡。</p>
+<h4 id="control-flow-automata-控制流自动机"><a class="markdownIt-Anchor" href="#control-flow-automata-控制流自动机"></a> Control-Flow Automata 控制流自动机</h4>
+<p>控制流图（Control-flow graph，CFG）通常用于描述程序的操作语义。顾名思义，CFG是带标签的有向图，其中图节点对应于程序位置，而边对应于程序位置之间的可能过渡。</p>
 <p>智能合约的CFG主要是由编译后的代码构建的，即以太坊合约的EVM字节码或EOSIO合约的WebAssembly（WASM）字节码。尽管如此，至少在以太坊的情况下，从低级字节码恢复CFG并非易事。有几个原因。首先，EVM是基于堆栈的机器，EVM是基于堆栈的计算机，因此，要恢复跳转指令的目标地址（destination of an edge，边沿的目标），需要进行能够跟踪堆栈状态的上下文相关静态分析此外，智能合约的执行包括一系列的函数调用，通常还包括对其他帐户的调用，这分别需要进行过程间（inter-procedural）分析和合同间（inter-contract）分析。</p>
 <p>在CFG上运行的分析类型包括控制/数据流分析（control-/data-flow analyses）和符号执行（symbolic execution），它们已经是成熟的传统软件程序的工具。这些工具和技术中的一些直接应用于从智能合约中提取的CFG，而其他工具和技术则是自定义构建的，以适应合约程序的特定语言功能。</p>
-<h4 id="Program-Logics-程序逻辑"><a href="#Program-Logics-程序逻辑" class="headerlink" title="Program Logics 程序逻辑"></a>Program Logics 程序逻辑</h4><p>为了严格考虑程序的正确性，多年来，已经开发了各种形式的程序逻辑，其中一些已成功应用于智能合约。程序逻辑是具有一组正式规则的证明系统，该规则可以静态地推理程序的行为。</p>
+<h4 id="program-logics-程序逻辑"><a class="markdownIt-Anchor" href="#program-logics-程序逻辑"></a> Program Logics 程序逻辑</h4>
+<p>为了严格考虑程序的正确性，多年来，已经开发了各种形式的程序逻辑，其中一些已成功应用于智能合约。程序逻辑是具有一组正式规则的证明系统，该规则可以静态地推理程序的行为。</p>
 <p>例如，Hoare逻辑，重写（rewriting）逻辑和可达性（reachability）逻辑用于证明智能合约的正确性条件。认知（epistemic）逻辑根据他们的知识描述了智能合约参与者之间的交互，这有助于验证承诺和交换协议。</p>
 <p>权限代数（authority algebra）和FOL的组合使得可以在智能合约中进行关于信任和责任的推理。通过为Java程序开发的动态逻辑，也可以验证智能合约的正确性。最后，基于保护性逻辑的形式主义可以规范和验证合法的智能合约，否则很难正式定义。</p>
 <p>可以使用称为JavaDL的动态逻辑（用于Java的程序逻辑）来验证写入或转换为Java的智能合约。带有JML规范的Java程序由KeY（演绎验证的框架）自动转换为JavaDL。虽然可以直接验证用Java编写的Hyperledger Fabric合同，但Solidity智能合约已预先转换为Java。</p>
-<h2 id="三、Formal-Specifications-of-smart-contracts-智能合约规范"><a href="#三、Formal-Specifications-of-smart-contracts-智能合约规范" class="headerlink" title="三、Formal Specifications of smart contracts 智能合约规范"></a>三、Formal Specifications of smart contracts 智能合约规范</h2><p>规范是一组属性（properties），它们描述智能合约的所预设的行为，通常由开发人员的意图定义。 对应于之前的合同级、程序级模型，这里也提出了合约级规范（contract-level specifications）和程序级规范（program-level formal specifications）。</p>
-<h3 id="Contract-Level-Specification-合约级规范"><a href="#Contract-Level-Specification-合约级规范" class="headerlink" title="Contract-Level Specification 合约级规范"></a>Contract-Level Specification 合约级规范</h3><p>智能合约的合约级别规范以各种逻辑表示。</p>
+<h2 id="三-formal-specifications-of-smart-contracts-智能合约规范"><a class="markdownIt-Anchor" href="#三-formal-specifications-of-smart-contracts-智能合约规范"></a> 三、Formal Specifications of smart contracts 智能合约规范</h2>
+<p>规范是一组属性（properties），它们描述智能合约的所预设的行为，通常由开发人员的意图定义。 对应于之前的合同级、程序级模型，这里也提出了合约级规范（contract-level specifications）和程序级规范（program-level formal specifications）。</p>
+<h3 id="contract-level-specification-合约级规范"><a class="markdownIt-Anchor" href="#contract-level-specification-合约级规范"></a> Contract-Level Specification 合约级规范</h3>
+<p>智能合约的合约级别规范以各种逻辑表示。</p>
 <ol>
 <li>时间逻辑（temporal logics）家族最普遍，其中包括线性时间逻辑（linear temporal logics）和分支时间逻辑（branching temporal logics）</li>
 <li>道义逻辑（the deontic logic deontic）和可废止的逻辑（defeasible logics），有助于根据法律契约确定智能合约的权利和义务的。</li>
 <li>命题（Propositional）和谓词逻辑（predicate logics）通常会在痕迹（the traces）上传达有关合同状态的事实陈述。</li>
 <li>由于时间（temporal ）、动态（dynamic ）、和道义（deontic）逻辑中的规范描述了系统的高级行为特征，因此它们被用来组合设计正确的智能合约。</li>
 </ol>
-<h4 id="Temporal-Logics"><a href="#Temporal-Logics" class="headerlink" title="Temporal Logics"></a>Temporal Logics</h4><p>时间逻辑表示智能合约随时间的特性。智能合约的执行逻辑通常包含时间限制，无论是法律合同条款、拍卖和投票合同。时间特性的两个关键特性是安全性（safety）和活性（liveness）。safety属性对应于这样的说法：“绝不会发生坏事”，通常用于表示不变性。</p>
+<h4 id="temporal-logics"><a class="markdownIt-Anchor" href="#temporal-logics"></a> Temporal Logics</h4>
+<p>时间逻辑表示智能合约随时间的特性。智能合约的执行逻辑通常包含时间限制，无论是法律合同条款、拍卖和投票合同。时间特性的两个关键特性是安全性（safety）和活性（liveness）。safety属性对应于这样的说法：“绝不会发生坏事”，通常用于表示不变性。</p>
 <p>Liveness属性指出“好事最终会发生”。它们表征了程序进行的可能性，对于智能合约而言，这通常体现在其放弃加密货币的能力上。</p>
-<h4 id="Linear-Temporal-Logic-LTL"><a href="#Linear-Temporal-Logic-LTL" class="headerlink" title="Linear Temporal Logic (LTL)"></a>Linear Temporal Logic (LTL)</h4><p>线性时序逻辑（LTL）是一阶逻辑（FOL，first-order logic）的一部分，用于在程序的连续状态的线性序列上定义属性。 LTL属性描述了由模型检查器验证的智能合约过渡系统模型的安全性和有效性。以太坊的两种基于ptLTL的规范语言以前都支持运算符，该运算符引用交易执行之前合约变量的值。然后，将用这些语言定义的属性转换为源代码断言。</p>
-<h4 id="Computation-Tree-Logic-CTL"><a href="#Computation-Tree-Logic-CTL" class="headerlink" title="Computation Tree Logic (CTL)"></a>Computation Tree Logic (CTL)</h4><p>计算树逻辑（Computation Tree Logic，CTL）是用于描述计算树属性的分支时间逻辑。与LTL相反，它表示从初始状态开始的程序的所有可能执行。</p>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210412112715.png" srcset="/img/loading.gif" lazyload alt="image-20200908202307563"></p>
-<h4 id="Dynamic-Logic"><a href="#Dynamic-Logic" class="headerlink" title="Dynamic Logic."></a>Dynamic Logic.</h4><p>动态逻辑允许在考虑到程序终止的情况下根据其行为来制定属性。</p>
-<h4 id="Deontic-and-Defeasible-Logics"><a href="#Deontic-and-Defeasible-Logics" class="headerlink" title="Deontic and Defeasible Logics."></a>Deontic and Defeasible Logics.</h4><h3 id="program-level-formal-specifications-程序级规范"><a href="#program-level-formal-specifications-程序级规范" class="headerlink" title="program-level formal specifications 程序级规范"></a>program-level formal specifications 程序级规范</h3><p>Hoare风格的规范（Hoare-style specifications），通常与程序逻辑（program logics）一起使用，或在实际的智能合约源代码中进行检测。</p>
-<h4 id="Hoare-Style-Properties"><a href="#Hoare-Style-Properties" class="headerlink" title="Hoare-Style Properties."></a>Hoare-Style Properties.</h4><ul>
+<h4 id="linear-temporal-logic-ltl"><a class="markdownIt-Anchor" href="#linear-temporal-logic-ltl"></a> Linear Temporal Logic (LTL)</h4>
+<p>线性时序逻辑（LTL）是一阶逻辑（FOL，first-order logic）的一部分，用于在程序的连续状态的线性序列上定义属性。 LTL属性描述了由模型检查器验证的智能合约过渡系统模型的安全性和有效性。以太坊的两种基于ptLTL的规范语言以前都支持运算符，该运算符引用交易执行之前合约变量的值。然后，将用这些语言定义的属性转换为源代码断言。</p>
+<h4 id="computation-tree-logic-ctl"><a class="markdownIt-Anchor" href="#computation-tree-logic-ctl"></a> Computation Tree Logic (CTL)</h4>
+<p>计算树逻辑（Computation Tree Logic，CTL）是用于描述计算树属性的分支时间逻辑。与LTL相反，它表示从初始状态开始的程序的所有可能执行。</p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210412112715.png" srcset="/img/loading.gif" lazyload alt="image-20200908202307563" /></p>
+<h4 id="dynamic-logic"><a class="markdownIt-Anchor" href="#dynamic-logic"></a> Dynamic Logic.</h4>
+<p>动态逻辑允许在考虑到程序终止的情况下根据其行为来制定属性。</p>
+<h4 id="deontic-and-defeasible-logics"><a class="markdownIt-Anchor" href="#deontic-and-defeasible-logics"></a> Deontic and Defeasible Logics.</h4>
+<h3 id="program-level-formal-specifications-程序级规范"><a class="markdownIt-Anchor" href="#program-level-formal-specifications-程序级规范"></a> program-level formal specifications 程序级规范</h3>
+<p>Hoare风格的规范（Hoare-style specifications），通常与程序逻辑（program logics）一起使用，或在实际的智能合约源代码中进行检测。</p>
+<h4 id="hoare-style-properties"><a class="markdownIt-Anchor" href="#hoare-style-properties"></a> Hoare-Style Properties.</h4>
+<ul>
 <li>源于时间逻辑（temporal logic）的传统的面向模型规范（model-oriented property-oriented specifications）</li>
 <li>源于霍尔逻辑（Hoare logic）的面向属性规范（property-oriented specifications）</li>
 </ul>
-<h3 id="Properties-Classification-智能合约属性分类"><a href="#Properties-Classification-智能合约属性分类" class="headerlink" title="Properties Classification 智能合约属性分类"></a>Properties Classification 智能合约属性分类</h3><p>规范从不同的角度描述智能合约的功能正确性。考虑的方面包括缺乏漏洞、尊重隐私要求、合理的资源消耗、符合业务级规则、对用户的公平性。</p>
-<h4 id="Security"><a href="#Security" class="headerlink" title="Security"></a>Security</h4><p>智能合约中安全漏洞的检测受到了很多关注。研究界研究的重要安全属性包括</p>
+<h3 id="properties-classification-智能合约属性分类"><a class="markdownIt-Anchor" href="#properties-classification-智能合约属性分类"></a> Properties Classification 智能合约属性分类</h3>
+<p>规范从不同的角度描述智能合约的功能正确性。考虑的方面包括缺乏漏洞、尊重隐私要求、合理的资源消耗、符合业务级规则、对用户的公平性。</p>
+<h4 id="security"><a class="markdownIt-Anchor" href="#security"></a> Security</h4>
+<p>智能合约中安全漏洞的检测受到了很多关注。研究界研究的重要安全属性包括</p>
 <ul>
 <li>流动性（liquidity）：最终将非零合同余额转移给某些参与者</li>
 <li>原子性（atomicity）：如果事务的一部分失败，那么整个事务都会失败，并且状态保持不变）</li>
@@ -322,43 +349,63 @@
 <li>算术正确性（arithmetic correctness）</li>
 <li>合理的资源消耗（reasonable resource consumption）</li>
 </ul>
-<h4 id="Privacy"><a href="#Privacy" class="headerlink" title="Privacy"></a>Privacy</h4><p>区块链交易是公开可访问的，因此恶意用户可以根据其他合同参与者的行动来决定自己的举动。为了防止通过设计暴露智能合约中的用户输入，实施加密协议，例如</p>
+<h4 id="privacy"><a class="markdownIt-Anchor" href="#privacy"></a> Privacy</h4>
+<p>区块链交易是公开可访问的，因此恶意用户可以根据其他合同参与者的行动来决定自己的举动。为了防止通过设计暴露智能合约中的用户输入，实施加密协议，例如</p>
 <ul>
 <li>承诺（commitment）和定时承诺（timed commitment：该协议要求每个参与者都应提交与其输入相对应的secret，并应及时予以披露；否则，参与者必须支付赔偿金。</li>
 <li>原子交换合同（atomic-swap contracts）：也考虑了类似的方面，允许双方原子地交换他们的资产，即交换对双方来说要么成功，要么失败。</li>
 </ul>
-<h4 id="Finance"><a href="#Finance" class="headerlink" title="Finance"></a>Finance</h4><p>智能合同的一个关键优势是它们能够操纵数字资产，即所谓的加密货币。智能合约自动执行财务应用程序，包括用户和合约之间的资金存储和转移。</p>
+<h4 id="finance"><a class="markdownIt-Anchor" href="#finance"></a> Finance</h4>
+<p>智能合同的一个关键优势是它们能够操纵数字资产，即所谓的加密货币。智能合约自动执行财务应用程序，包括用户和合约之间的资金存储和转移。</p>
 <ul>
 <li>初始代币发行（Initial Coin Offering，ICO/toten）是一种通过出售代币筹集资金的方法，代币是由区块链平台上的智能合约管理的可编程资产.</li>
 <li>钱包(Wallet)：不允许用户向自己转移资金，而ERC20-K允许自我转移，但认为这是特殊情况。</li>
 <li>托管（Escrow / Purchasel）：为确保智能合约具有足够的资金，Permenev等人要求，除非宣布众筹成功，否则代管余额必须至少为投资者存款的总和。</li>
 </ul>
-<h4 id="Social-Games"><a href="#Social-Games" class="headerlink" title="Social Games."></a>Social Games.</h4><p>根据一些预定义的游戏规则，我们将术语“Social Games”与一类智能合约相关联，该合约规范了多个用户的参与和互动。如果参与者在区块链上看到彼此提交的内容，则会发生隐私问题，从而损害社交游戏的公平性</p>
+<h4 id="social-games"><a class="markdownIt-Anchor" href="#social-games"></a> Social Games.</h4>
+<p>根据一些预定义的游戏规则，我们将术语“Social Games”与一类智能合约相关联，该合约规范了多个用户的参与和互动。如果参与者在区块链上看到彼此提交的内容，则会发生隐私问题，从而损害社交游戏的公平性</p>
 <ul>
 <li>拍卖（Auction）：社交游戏通常要求每个用户提交的内容均需缴纳参与费，例如投票，竞标或游戏中的举动。</li>
 <li>投票方案（voting）：检查最初可用的选票数是否等于尚待投出的票数加上整个选举过程中已投出的票数之和。</li>
 <li>赌博（Games /Gambling）</li>
 </ul>
-<h4 id="Asset-Tracking"><a href="#Asset-Tracking" class="headerlink" title="Asset Tracking"></a>Asset Tracking</h4><p>资产跟踪</p>
+<h4 id="asset-tracking"><a class="markdownIt-Anchor" href="#asset-tracking"></a> Asset Tracking</h4>
+<p>资产跟踪</p>
 <ul>
-<li>供应链（Supply Chain）：供应链通常涉及负责生产，运输和销售的多个交互方。 </li>
+<li>供应链（Supply Chain）：供应链通常涉及负责生产，运输和销售的多个交互方。</li>
 <li>市场（Marketplace）：通常是那些促进能源供应商和生产商之间交易的市场。与其他领域的合同的属性类似，安全属性通过声明允许和要求的操作链来描述市场的正确执行流程</li>
 <li>许可协议(License Agreement)：描述了参与评估的用户的权利，义务和禁止。例如，其中一项条款规定，除非允许被许可人发布评估结果，否则被许可人不得发布对产品评估的评论。</li>
 <li>管理域名（Name Registration）：为区块链账户地址提供别名的名称注册智能合约的正式规范</li>
 </ul>
-<h2 id="四、Verification-Techniques-验证技术"><a href="#四、Verification-Techniques-验证技术" class="headerlink" title="四、Verification Techniques 验证技术"></a>四、Verification Techniques 验证技术</h2><p>通过调查当前的文献和已有的研究，提出已有的来证明智能合约模型相对于所需属性（the desired properties）的正确性的形式验证技术。</p>
-<h3 id="Model-checking-模型检查"><a href="#Model-checking-模型检查" class="headerlink" title="Model checking 模型检查"></a>Model checking 模型检查</h3><p>模型检查是一种成熟的技术，用于根据其规格自动验证系统模型（具有有限状态）。当应用于智能合约时，模型检查器会根据时间逻辑规范（temporal logic）执行对合约级模型（主要是过渡系统transition systems）的验证。尽管模型检查可以成功验证多个智能合约或用户的系统，但其局限性是由模型检查器的输入语言和状态爆炸问题引起的。</p>
-<p>模型检查捕获智能合约执行的不同特征，例如并发（concurrency），不确定性（nondeterminism）或时间约束（time constraints）。<br>除了验证一个合同的功能正确性，模型检查还处理智能合同和用户交互的系统。此外，利用以时间逻辑表示的规范，模型检查能够验证活动性和进度属性，例如流动性。模型检查器（例如SPIN）还可以验证并发系统的常规要求，例如无死锁和无活锁。</p>
-<h3 id="Theorem-proving-定理证明"><a href="#Theorem-proving-定理证明" class="headerlink" title="Theorem proving 定理证明"></a>Theorem proving 定理证明</h3><p>基于定理证明的验证涉及将系统及其所需的属性编码为特定的数学逻辑（particular mathematical logic.）。<br>然后，一个定理证明者试图根据形式系统的公理和推理规则来推导满足这些性质的形式证明。与仅检查有限状态系统的模型检查不同，定理证明支持无限系统的验证。<br>另一方面，定理证明技术通常是半自动化的（semi-automated），需要人类的参与和专业知识。然而，这个缺点既不妨碍学术界也不反对行业开发受定理证明支持的工具和语言。<br>尽管定理证明方法具有潜在的表达能力，但他们很少考虑合同间的交流和智能合约的时间特性。 </p>
-<h3 id="Symbolic-execution-符号执行"><a href="#Symbolic-execution-符号执行" class="headerlink" title="Symbolic execution 符号执行"></a>Symbolic execution 符号执行</h3><p>符号执行象征性地执行程序，因此能够一次探索多个具体的执行路径。以太坊和EOSIO智能合约的符号执行都基于对CFG的遍历，该CFG是根据智能合约的字节码重建的。在智能合约的符号执行中遇到的其他困难包括大量使用哈希函数（SMT求解器难以解决）以及对符号化内存和智能合约交互进行符号化的需求。与模型检查类似，符号执行方法通常会探索特定长度的路径，这需要应用抽象解释和部分顺序约简。其他求解器，尤其是Yices2，明显优于Z3。<br>符号执行还用于指导智能模糊方法</p>
-<h3 id="Program-Verification-程序验证"><a href="#Program-Verification-程序验证" class="headerlink" title="Program Verification 程序验证"></a>Program Verification 程序验证</h3><p>许多程序验证工具都是自动化的，可以检查复合漏洞和智能合约的语义正确性。将智能合约源代码转换为验证语言可以实现其工具链的广泛功能。<br>例如，Datalog及其Soufflé引擎进行的数据和控制流分析成功检测到字节码中的漏洞以及以太坊智能合约的执行轨迹。</p>
-<h3 id="Runtime-Verification-and-Testing-运行时验证和测试"><a href="#Runtime-Verification-and-Testing-运行时验证和测试" class="headerlink" title="Runtime Verification and Testing 运行时验证和测试"></a>Runtime Verification and Testing 运行时验证和测试</h3><p>运行时验证是一种轻量级验证技术，用于检查正在运行的程序的属性。<br>与前面几节中介绍的技术不同，运行时验证一次只涉及一个执行跟踪。<br>在智能合约领域，跟踪（trace）通常表示由区块链平台执行的一系列指令，同时也可以指代智能合约发出的一系列函数调用或事件。</p>
+<h2 id="四-verification-techniques-验证技术"><a class="markdownIt-Anchor" href="#四-verification-techniques-验证技术"></a> 四、Verification Techniques 验证技术</h2>
+<p>通过调查当前的文献和已有的研究，提出已有的来证明智能合约模型相对于所需属性（the desired properties）的正确性的形式验证技术。</p>
+<h3 id="model-checking-模型检查"><a class="markdownIt-Anchor" href="#model-checking-模型检查"></a> Model checking 模型检查</h3>
+<p>模型检查是一种成熟的技术，用于根据其规格自动验证系统模型（具有有限状态）。当应用于智能合约时，模型检查器会根据时间逻辑规范（temporal logic）执行对合约级模型（主要是过渡系统transition systems）的验证。尽管模型检查可以成功验证多个智能合约或用户的系统，但其局限性是由模型检查器的输入语言和状态爆炸问题引起的。</p>
+<p>模型检查捕获智能合约执行的不同特征，例如并发（concurrency），不确定性（nondeterminism）或时间约束（time constraints）。<br />
+除了验证一个合同的功能正确性，模型检查还处理智能合同和用户交互的系统。此外，利用以时间逻辑表示的规范，模型检查能够验证活动性和进度属性，例如流动性。模型检查器（例如SPIN）还可以验证并发系统的常规要求，例如无死锁和无活锁。</p>
+<h3 id="theorem-proving-定理证明"><a class="markdownIt-Anchor" href="#theorem-proving-定理证明"></a> Theorem proving 定理证明</h3>
+<p>基于定理证明的验证涉及将系统及其所需的属性编码为特定的数学逻辑（particular mathematical logic.）。<br />
+然后，一个定理证明者试图根据形式系统的公理和推理规则来推导满足这些性质的形式证明。与仅检查有限状态系统的模型检查不同，定理证明支持无限系统的验证。<br />
+另一方面，定理证明技术通常是半自动化的（semi-automated），需要人类的参与和专业知识。然而，这个缺点既不妨碍学术界也不反对行业开发受定理证明支持的工具和语言。<br />
+尽管定理证明方法具有潜在的表达能力，但他们很少考虑合同间的交流和智能合约的时间特性。</p>
+<h3 id="symbolic-execution-符号执行"><a class="markdownIt-Anchor" href="#symbolic-execution-符号执行"></a> Symbolic execution 符号执行</h3>
+<p>符号执行象征性地执行程序，因此能够一次探索多个具体的执行路径。以太坊和EOSIO智能合约的符号执行都基于对CFG的遍历，该CFG是根据智能合约的字节码重建的。在智能合约的符号执行中遇到的其他困难包括大量使用哈希函数（SMT求解器难以解决）以及对符号化内存和智能合约交互进行符号化的需求。与模型检查类似，符号执行方法通常会探索特定长度的路径，这需要应用抽象解释和部分顺序约简。其他求解器，尤其是Yices2，明显优于Z3。<br />
+符号执行还用于指导智能模糊方法</p>
+<h3 id="program-verification-程序验证"><a class="markdownIt-Anchor" href="#program-verification-程序验证"></a> Program Verification 程序验证</h3>
+<p>许多程序验证工具都是自动化的，可以检查复合漏洞和智能合约的语义正确性。将智能合约源代码转换为验证语言可以实现其工具链的广泛功能。<br />
+例如，Datalog及其Soufflé引擎进行的数据和控制流分析成功检测到字节码中的漏洞以及以太坊智能合约的执行轨迹。</p>
+<h3 id="runtime-verification-and-testing-运行时验证和测试"><a class="markdownIt-Anchor" href="#runtime-verification-and-testing-运行时验证和测试"></a> Runtime Verification and Testing 运行时验证和测试</h3>
+<p>运行时验证是一种轻量级验证技术，用于检查正在运行的程序的属性。<br />
+与前面几节中介绍的技术不同，运行时验证一次只涉及一个执行跟踪。<br />
+在智能合约领域，跟踪（trace）通常表示由区块链平台执行的一系列指令，同时也可以指代智能合约发出的一系列函数调用或事件。</p>
 <p>Runtime verification通常在运行时提供针对漏洞或正确性违反的被动防御，并且可以潜在地识别由于状态或路径爆炸而无法通过模型检查或符号执行到达的易受攻击状态</p>
-<h3 id="Other-Techniques-其他技术"><a href="#Other-Techniques-其他技术" class="headerlink" title="Other Techniques 其他技术"></a>Other Techniques 其他技术</h3><p>新兴的研究重点是将统计和基于深度学习的技术应用于智能合约验证。该领域的第一个提案[将易受攻击的智能合约标识为包含不规则令牌序列w.r.t。 Solidity的统计语言模型。 Tann等。 使用递归神经网络来衡量智能合约操作码与由Maian标记的易受攻击的<strong>智能合约的相似度</strong>。</p>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210412112659.png" srcset="/img/loading.gif" lazyload alt="image-20200906232558833"></p>
+<h3 id="other-techniques-其他技术"><a class="markdownIt-Anchor" href="#other-techniques-其他技术"></a> Other Techniques 其他技术</h3>
+<p>新兴的研究重点是将统计和基于深度学习的技术应用于智能合约验证。该领域的第一个提案[将易受攻击的智能合约标识为包含不规则令牌序列w.r.t。 Solidity的统计语言模型。 Tann等。 使用递归神经网络来衡量智能合约操作码与由Maian标记的易受攻击的<strong>智能合约的相似度</strong>。</p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210412112659.png" srcset="/img/loading.gif" lazyload alt="image-20200906232558833" /></p>
 <p>正式的验证工具</p>
-<h2 id="五、Trends-Challenges-and-Future-directions-趋势、挑战和未来"><a href="#五、Trends-Challenges-and-Future-directions-趋势、挑战和未来" class="headerlink" title="五、Trends, Challenges, and Future directions 趋势、挑战和未来"></a>五、Trends, Challenges, and Future directions 趋势、挑战和未来</h2><p>作者的对智能合约的正式规范和验证中的主要趋势、挑战和未来方向的观察</p>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210412112651.png" srcset="/img/loading.gif" lazyload alt="image-20200906225116266"></p>
+<h2 id="五-trends-challenges-and-future-directions-趋势-挑战和未来"><a class="markdownIt-Anchor" href="#五-trends-challenges-and-future-directions-趋势-挑战和未来"></a> 五、Trends, Challenges, and Future directions 趋势、挑战和未来</h2>
+<p>作者的对智能合约的正式规范和验证中的主要趋势、挑战和未来方向的观察</p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210412112651.png" srcset="/img/loading.gif" lazyload alt="image-20200906225116266" /></p>
 <p>安全语言（Safe Languages）。新兴的方向之一是开发安全的智能合约语言，该语言可通过设计消除许多安全风险。</p>
 <p>自我修复合同（Self-Healing Contracts）。另一个突出的方向是从运行时故障/违规中恢复，也就是合同的自动修复。在2017年，Magazzeni等人，建议使用AI规划技术来自动修补未对齐的智能合约痕迹。</p>
 <p>混合分析（Hybrid Analyses）。将合同级别和程序级别的方法进行智能合同建模的组合可以帮助减轻高级行为规范和执行细节的精确建模之间的权衡。填补高级分析和低级分析之间的空白。</p>

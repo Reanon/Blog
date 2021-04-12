@@ -236,10 +236,12 @@
             <h1 style="display: none">Osiris：Hunting for Integer Bugs in Ethereum Smart Contracts</h1>
             
             <div class="markdown-body">
-              <h1 id="Osiris：Hunting-for-Integer-Bugs-in-Ethereum-Smart-Contracts"><a href="#Osiris：Hunting-for-Integer-Bugs-in-Ethereum-Smart-Contracts" class="headerlink" title="Osiris：Hunting for Integer Bugs in Ethereum Smart Contracts"></a>Osiris：Hunting for Integer Bugs in Ethereum Smart Contracts</h1><p>论文题目：（2018-ACSAC）<a target="_blank" rel="noopener" href="https://dl.acm.org/doi/abs/10.1145/3274694.3274737">Osiris: Hunting for integer bugs in ethereum smart contracts</a> ——在以太坊智能合约中寻找整数错误</p>
+              <h1 id="osirishunting-for-integer-bugs-in-ethereum-smart-contracts"><a class="markdownIt-Anchor" href="#osirishunting-for-integer-bugs-in-ethereum-smart-contracts"></a> Osiris：Hunting for Integer Bugs in Ethereum Smart Contracts</h1>
+<p>论文题目：（2018-ACSAC）<a target="_blank" rel="noopener" href="https://dl.acm.org/doi/abs/10.1145/3274694.3274737">Osiris: Hunting for integer bugs in ethereum smart contracts</a> ——在以太坊智能合约中寻找整数错误</p>
 <p>论文引用：Torres C F, Schütte J, State R. Osiris: Hunting for integer bugs in ethereum smart contracts[C]//Proceedings of the 34th Annual Computer Security Applications Conference. 2018: 664-676.</p>
 <p>代码开源：<a target="_blank" rel="noopener" href="https://github.com/christoftorres/Osiris">https://github.com/christoftorres/Osiris</a></p>
-<h2 id="一、主要内容"><a href="#一、主要内容" class="headerlink" title="一、主要内容"></a>一、主要内容</h2><p>本文的研究重点是与整数错误（integer bugs）相关的安全漏洞，这类漏洞是由以太坊虚拟机与Solidity编程语言的一些特性而导致的，所以难以避免。文章针对这类漏洞提出了OSIRIS工具，该工具是一个将==符号执行与污点分析相结合==的漏洞检测框架，旨在精确地寻找以太坊智能合约中整数错误导致的安全漏洞。</p>
+<h2 id="一-主要内容"><a class="markdownIt-Anchor" href="#一-主要内容"></a> 一、主要内容</h2>
+<p>本文的研究重点是与整数错误（integer bugs）相关的安全漏洞，这类漏洞是由以太坊虚拟机与Solidity编程语言的一些特性而导致的，所以难以避免。文章针对这类漏洞提出了OSIRIS工具，该工具是一个将<mark>符号执行与污点分析相结合</mark>的漏洞检测框架，旨在精确地寻找以太坊智能合约中整数错误导致的安全漏洞。</p>
 <p>该工具针对EVM字节码自动化检测与整数错误相关的安全漏洞，目前覆盖了三种不同种类的整数错误：</p>
 <ol>
 <li>算术错误（arithmetic bugs）</li>
@@ -247,53 +249,72 @@
 <li>符号错误（signedness bugs）</li>
 </ol>
 <p>分析了495个以太坊代币智能合约并且在一些合约中发现了未知的安全漏洞，同时针对与整数错误相关的安全漏洞提出了对EVM与Solidity编译器的修改防护方案；本文使用OSIRIS工具对截至2018年1月所有已经部署在以太坊区块链中的智能合约进行了自动化检测，发现其中有42,108个智能合约至少存在有一种上述与整数错误相关的安全漏洞；</p>
-<h2 id="二、设计实现"><a href="#二、设计实现" class="headerlink" title="二、设计实现"></a>二、设计实现</h2><h3 id="2-1-Background"><a href="#2-1-Background" class="headerlink" title="2.1 Background"></a>2.1 Background</h3><h4 id="2-1-1-以太坊虚拟机"><a href="#2-1-1-以太坊虚拟机" class="headerlink" title="2.1.1 以太坊虚拟机"></a>2.1.1 以太坊虚拟机</h4><p>矿工使用以太坊虚拟机（EVM）执行智能合约，EVM是用于执行EVM字节码的基于栈的虚拟机。</p>
-<h4 id="2-1-2-Solidity编程语言"><a href="#2-1-2-Solidity编程语言" class="headerlink" title="2.1.2 Solidity编程语言"></a>2.1.2 Solidity编程语言</h4><p>Solidity的语法虽然与C和JavaScript相似，但是Solidity存在一系列专门针对智能合约开发的独有概念。Solidity是静态类型语言，整数分为有符号整数与无符号整数，宽度最低为8bit，最高为256bit。然而在EVM中，所有的整数均以256bit大端补码的形式存放。也就是说，Solidity中的整数类型系统与EVM中的整数类型系统存在不一致，这极有可能导致严重的编码错误。</p>
-<h4 id="2-1-3-以太坊智能合约中的整数错误"><a href="#2-1-3-以太坊智能合约中的整数错误" class="headerlink" title="2.1.3 以太坊智能合约中的整数错误"></a>2.1.3 以太坊智能合约中的整数错误</h4><p>本文描述了三种类型的整数错误，这些整数错误有可能导致恶意用户窃取以太币或者更改智能合约的执行路径。</p>
-<h5 id="算术错误"><a href="#算术错误" class="headerlink" title="算术错误"></a><strong>算术错误</strong></h5><p>算术错误包括整数上溢、整数下溢、除数为零和模数为零这四种错误。值得注意的是，EVM与Solidity针对越界行为的处理方式是不完全相同的，而且在EVM和Solidity旧版本（0.4.0之前）除数为零和模数为零只会导致运算结果为0，并不会触发异常。</p>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201105190327.png" srcset="/img/loading.gif" lazyload alt="image-20201105190327479"></p>
-<h5 id="截断错误"><a href="#截断错误" class="headerlink" title="截断错误"></a><strong>截断错误</strong></h5><p>将一个整数类型数据转换为宽度更短的整数类型数据，可能会导致精度的丢失</p>
-<h5 id="符号错误"><a href="#符号错误" class="headerlink" title="符号错误"></a><strong>符号错误</strong></h5><p>将一个有符号整数类型数据转换为相同宽度的无符号整数类型数据，可能会导致一个负数变为一个很大的整数（反之亦然）。</p>
-<h3 id="2-2-METHODOLOGY"><a href="#2-2-METHODOLOGY" class="headerlink" title="2.2 METHODOLOGY"></a>2.2 METHODOLOGY</h3><h4 id="2-2-1-类型推断"><a href="#2-2-1-类型推断" class="headerlink" title="2.2.1 类型推断"></a>2.2.1 类型推断</h4><p>整数的类型信息，例如宽度和符号，通常只能从智能合约的源代码中直接获得，而不能从字节码中获得。尽管如此，通过分析Solidity编译器在编译过程中引入的代码优化规则，人们依旧能够根据特定代码优化规则从智能合约字节码中间接地推测整数的类型信息。</p>
+<h2 id="二-设计实现"><a class="markdownIt-Anchor" href="#二-设计实现"></a> 二、设计实现</h2>
+<h3 id="21-background"><a class="markdownIt-Anchor" href="#21-background"></a> 2.1 Background</h3>
+<h4 id="211-以太坊虚拟机"><a class="markdownIt-Anchor" href="#211-以太坊虚拟机"></a> 2.1.1 以太坊虚拟机</h4>
+<p>矿工使用以太坊虚拟机（EVM）执行智能合约，EVM是用于执行EVM字节码的基于栈的虚拟机。</p>
+<h4 id="212-solidity编程语言"><a class="markdownIt-Anchor" href="#212-solidity编程语言"></a> 2.1.2 Solidity编程语言</h4>
+<p>Solidity的语法虽然与C和JavaScript相似，但是Solidity存在一系列专门针对智能合约开发的独有概念。Solidity是静态类型语言，整数分为有符号整数与无符号整数，宽度最低为8bit，最高为256bit。然而在EVM中，所有的整数均以256bit大端补码的形式存放。也就是说，Solidity中的整数类型系统与EVM中的整数类型系统存在不一致，这极有可能导致严重的编码错误。</p>
+<h4 id="213-以太坊智能合约中的整数错误"><a class="markdownIt-Anchor" href="#213-以太坊智能合约中的整数错误"></a> 2.1.3 以太坊智能合约中的整数错误</h4>
+<p>本文描述了三种类型的整数错误，这些整数错误有可能导致恶意用户窃取以太币或者更改智能合约的执行路径。</p>
+<h5 id="算术错误"><a class="markdownIt-Anchor" href="#算术错误"></a> <strong>算术错误</strong></h5>
+<p>算术错误包括整数上溢、整数下溢、除数为零和模数为零这四种错误。值得注意的是，EVM与Solidity针对越界行为的处理方式是不完全相同的，而且在EVM和Solidity旧版本（0.4.0之前）除数为零和模数为零只会导致运算结果为0，并不会触发异常。</p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201105190327.png" srcset="/img/loading.gif" lazyload alt="image-20201105190327479" /></p>
+<h5 id="截断错误"><a class="markdownIt-Anchor" href="#截断错误"></a> <strong>截断错误</strong></h5>
+<p>将一个整数类型数据转换为宽度更短的整数类型数据，可能会导致精度的丢失</p>
+<h5 id="符号错误"><a class="markdownIt-Anchor" href="#符号错误"></a> <strong>符号错误</strong></h5>
+<p>将一个有符号整数类型数据转换为相同宽度的无符号整数类型数据，可能会导致一个负数变为一个很大的整数（反之亦然）。</p>
+<h3 id="22-methodology"><a class="markdownIt-Anchor" href="#22-methodology"></a> 2.2 METHODOLOGY</h3>
+<h4 id="221-类型推断"><a class="markdownIt-Anchor" href="#221-类型推断"></a> 2.2.1 类型推断</h4>
+<p>整数的类型信息，例如宽度和符号，通常只能从智能合约的源代码中直接获得，而不能从字节码中获得。尽管如此，通过分析Solidity编译器在编译过程中引入的代码优化规则，人们依旧能够根据特定代码优化规则从智能合约字节码中间接地推测整数的类型信息。</p>
 <p>对于无符号整数，编译器会使用AND操作符屏蔽不在整数宽度范围内的bit，例如编译器会将uint32数据与位掩码0Xffffffff进行AND操作。</p>
 <p>对于有符号整数，编译器会使用SIGNEXTEND操作符对数据进行符号扩展，数据的宽度可以根据SIGNEXTEND操作符的第一个参数i的值计算获得，即8 * (i + 1)。</p>
-<h4 id="2-2-2-寻找整数错误"><a href="#2-2-2-寻找整数错误" class="headerlink" title="2.2.2 寻找整数错误"></a>2.2.2 寻找整数错误</h4><h5 id="算术错误-1"><a href="#算术错误-1" class="headerlink" title="算术错误"></a>算术错误</h5><p>对于每一条可能导致整数上溢或者整数下溢错误的算术指令，作者检查在当前的路径条件下指令是否有可能违反Table 1中所列举的各条边界检查要求，如果指令可能违反任意一条边界检查要求，则该指令存在算数错误。</p>
-<h5 id="截断错误-1"><a href="#截断错误-1" class="headerlink" title="截断错误"></a>截断错误</h5><p>Solidity分别使用AND和SIGNEXTEND指令截断有符号整数和无符号整数。作者检查每一条AND指令和SIGNEXTEND指令的输入是否大于指令的输出，以判断指令是否存在截断错误。</p>
+<h4 id="222-寻找整数错误"><a class="markdownIt-Anchor" href="#222-寻找整数错误"></a> 2.2.2 寻找整数错误</h4>
+<h5 id="算术错误-2"><a class="markdownIt-Anchor" href="#算术错误-2"></a> 算术错误</h5>
+<p>对于每一条可能导致整数上溢或者整数下溢错误的算术指令，作者检查在当前的路径条件下指令是否有可能违反Table 1中所列举的各条边界检查要求，如果指令可能违反任意一条边界检查要求，则该指令存在算数错误。</p>
+<h5 id="截断错误-2"><a class="markdownIt-Anchor" href="#截断错误-2"></a> 截断错误</h5>
+<p>Solidity分别使用AND和SIGNEXTEND指令截断有符号整数和无符号整数。作者检查每一条AND指令和SIGNEXTEND指令的输入是否大于指令的输出，以判断指令是否存在截断错误。</p>
 <p>此外，为了检测并忽略Solidity编译器有意引入的截断，例如address类型数据的转换以及storage中变量的压缩存储，作者还对于检测得到存在截断错误的指令进行了进一步的筛选。</p>
-<h5 id="符号错误-1"><a href="#符号错误-1" class="headerlink" title="符号错误"></a>符号错误</h5><p>作者根据特定指令的符号限制对所有整数类型数据的符号信息进行推断。所有数据的初始标记为”Top“；如果一个数据被当做有符号整数使用过，则将该数据标记为”Signed“；如果一个数据被当做无符号整数使用过，则将该数据标记为”Unsigned“；如果一个数据既被当做有符号整数使用过，又被当做无符号整数使用过，则将该数据标记为”Bottome“，表示该整数类型数据存在符号错误。</p>
-<h4 id="2-2-3-污点分析（Taint-Analysis）"><a href="#2-2-3-污点分析（Taint-Analysis）" class="headerlink" title="2.2.3 污点分析（Taint Analysis）"></a>2.2.3 污点分析（Taint Analysis）</h4><p>作者使用污点分析筛选掉不能被实际利用攻击的整数错误，以降低误报率：</p>
+<h5 id="符号错误-2"><a class="markdownIt-Anchor" href="#符号错误-2"></a> 符号错误</h5>
+<p>作者根据特定指令的符号限制对所有整数类型数据的符号信息进行推断。所有数据的初始标记为”Top“；如果一个数据被当做有符号整数使用过，则将该数据标记为”Signed“；如果一个数据被当做无符号整数使用过，则将该数据标记为”Unsigned“；如果一个数据既被当做有符号整数使用过，又被当做无符号整数使用过，则将该数据标记为”Bottome“，表示该整数类型数据存在符号错误。</p>
+<h4 id="223-污点分析taint-analysis"><a class="markdownIt-Anchor" href="#223-污点分析taint-analysis"></a> 2.2.3 污点分析（Taint Analysis）</h4>
+<p>作者使用污点分析筛选掉不能被实际利用攻击的整数错误，以降低误报率：</p>
 <ul>
 <li>Sources：CALLDATALOAD，CALLDATACOPY；</li>
 <li>Sinks：SSTORE，JUMPI，CALL，RETURN</li>
 </ul>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201105190814.png" srcset="/img/loading.gif" lazyload alt="image-20201105190814318"></p>
-<h4 id="2-2-4-识别良性整数错误"><a href="#2-2-4-识别良性整数错误" class="headerlink" title="2.2.4 识别良性整数错误"></a>2.2.4 识别良性整数错误</h4><p>作者使用了一些启发式规则以识别良性的整数错误。例如，当发现整数错误是分支条件的一部分时，作者通过检查分支条件谓词的左右两边是否都使用了相同的变量，且其后的某一基本块是否是以JUMPI、REVERT或ASSERTFAIL指令结尾，以判断该分支条件谓词是否是设计用于检查该整数错误的。</p>
-<h3 id="2-3-OSIRIS"><a href="#2-3-OSIRIS" class="headerlink" title="2.3 OSIRIS"></a>2.3 OSIRIS</h3><p>OSIRIS是在OYENTE符号执行引擎的基础上实现的，包括三个主要的组成部分：symbolic analysis、taint analysis与integer error detection。</p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201105190814.png" srcset="/img/loading.gif" lazyload alt="image-20201105190814318" /></p>
+<h4 id="224-识别良性整数错误"><a class="markdownIt-Anchor" href="#224-识别良性整数错误"></a> 2.2.4 识别良性整数错误</h4>
+<p>作者使用了一些启发式规则以识别良性的整数错误。例如，当发现整数错误是分支条件的一部分时，作者通过检查分支条件谓词的左右两边是否都使用了相同的变量，且其后的某一基本块是否是以JUMPI、REVERT或ASSERTFAIL指令结尾，以判断该分支条件谓词是否是设计用于检查该整数错误的。</p>
+<h3 id="23-osiris"><a class="markdownIt-Anchor" href="#23-osiris"></a> 2.3 OSIRIS</h3>
+<p>OSIRIS是在OYENTE符号执行引擎的基础上实现的，包括三个主要的组成部分：symbolic analysis、taint analysis与integer error detection。</p>
 <ul>
 <li>symbolic analysisi组件：构建控制流图（CFG）、符号执行智能合约的不同路径，并将每一条指令执行的结果传递给其他两个组件；</li>
 <li>taint analysis组件：引入、传播并检查stack、memory和storage中的污点；</li>
 <li>Integer error detection组件：检查在执行的指令中是否存在整数错误</li>
 </ul>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201105191107.png" srcset="/img/loading.gif" lazyload alt="image-20201105191107158"></p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201105191107.png" srcset="/img/loading.gif" lazyload alt="image-20201105191107158" /></p>
 <center>Architecture overview of Osiris. The shaded boxes
 represent its main components.</center>
-
-<h2 id="三、实验评估"><a href="#三、实验评估" class="headerlink" title="三、实验评估"></a>三、实验评估</h2><h3 id="3-1-Empirical-Analysis-经验分析"><a href="#3-1-Empirical-Analysis-经验分析" class="headerlink" title="3.1 Empirical Analysis(经验分析)"></a>3.1 Empirical Analysis(经验分析)</h3><h4 id="Qalitative-Analysis-定性分析"><a href="#Qalitative-Analysis-定性分析" class="headerlink" title="Qalitative Analysis(定性分析)"></a>Qalitative Analysis(定性分析)</h4><p>作者将OSIRIS工具与ZEUS工具进行了比较，发现ZEUS工具无法达到其自称的零漏报率的可靠性，相比较而言OSIRIS工具能够检测出更多的漏洞，并且具有低得多的误报率。</p>
+<h2 id="三-实验评估"><a class="markdownIt-Anchor" href="#三-实验评估"></a> 三、实验评估</h2>
+<h3 id="31-empirical-analysis经验分析"><a class="markdownIt-Anchor" href="#31-empirical-analysis经验分析"></a> 3.1 Empirical Analysis(经验分析)</h3>
+<h4 id="qalitative-analysis定性分析"><a class="markdownIt-Anchor" href="#qalitative-analysis定性分析"></a> Qalitative Analysis(定性分析)</h4>
+<p>作者将OSIRIS工具与ZEUS工具进行了比较，发现ZEUS工具无法达到其自称的零漏报率的可靠性，相比较而言OSIRIS工具能够检测出更多的漏洞，并且具有低得多的误报率。</p>
 <center>Comparison between ZEUS and Osiris</center>
-
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201105191308.png" srcset="/img/loading.gif" lazyload alt="image-20201105191308777"></p>
-<h4 id="Qantitative-Analysis-定量分析"><a href="#Qantitative-Analysis-定量分析" class="headerlink" title="Qantitative Analysis(定量分析)"></a>Qantitative Analysis(定量分析)</h4><p>作者对于以太坊区块链前5,000,000个区块中的1,207,335个智能合约使用OSIRIS工具进行了大规模自动化分析。</p>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201105191509.png" srcset="/img/loading.gif" lazyload alt="image-20201105191509880"></p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201105191308.png" srcset="/img/loading.gif" lazyload alt="image-20201105191308777" /></p>
+<h4 id="qantitative-analysis定量分析"><a class="markdownIt-Anchor" href="#qantitative-analysis定量分析"></a> Qantitative Analysis(定量分析)</h4>
+<p>作者对于以太坊区块链前5,000,000个区块中的1,207,335个智能合约使用OSIRIS工具进行了大规模自动化分析。</p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201105191509.png" srcset="/img/loading.gif" lazyload alt="image-20201105191509880" /></p>
 <center>Number of vulnerable contracts reported by Osiris
 per integer bug</center>
-
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201105191525.png" srcset="/img/loading.gif" lazyload alt="image-20201105191525944"></p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201105191525.png" srcset="/img/loading.gif" lazyload alt="image-20201105191525944" /></p>
 <center>Number of vulnerable contracts per arithmetic error
 type</center>
-
-<h3 id="3-2-Detection-of-Real-World-Vulnerabilities"><a href="#3-2-Detection-of-Real-World-Vulnerabilities" class="headerlink" title="3.2 Detection of Real-World Vulnerabilities"></a>3.2 Detection of Real-World Vulnerabilities</h3><p>作者使用OSIRIS检测了排名前495的以太坊代币智能合约，重新检测出了已知的5个整数溢出错误导致的安全漏洞，并检测出其中例如RMC与UET等以太坊代币智能合约存在与整数错误相关的安全漏洞。</p>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201105191837.png" srcset="/img/loading.gif" lazyload alt="image-20201105191837115"></p>
-<h2 id="四、总结评价"><a href="#四、总结评价" class="headerlink" title="四、总结评价"></a>四、总结评价</h2><ol>
+<h3 id="32-detection-of-real-world-vulnerabilities"><a class="markdownIt-Anchor" href="#32-detection-of-real-world-vulnerabilities"></a> 3.2 Detection of Real-World Vulnerabilities</h3>
+<p>作者使用OSIRIS检测了排名前495的以太坊代币智能合约，重新检测出了已知的5个整数溢出错误导致的安全漏洞，并检测出其中例如RMC与UET等以太坊代币智能合约存在与整数错误相关的安全漏洞。</p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201105191837.png" srcset="/img/loading.gif" lazyload alt="image-20201105191837115" /></p>
+<h2 id="四-总结评价"><a class="markdownIt-Anchor" href="#四-总结评价"></a> 四、总结评价</h2>
+<ol>
 <li>Osiris是基于Oyente开发的工具，拓展了在算术运算方面的漏洞检测率，相较于Oyente改进了一些。</li>
 <li>Osiris工具上次更新已经是两年以前了，应该是没有再继续维护。</li>
 </ol>

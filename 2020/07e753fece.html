@@ -236,44 +236,57 @@
             <h1 style="display: none">ETHBMC: A Bounded Model Checker for Smart Contracts</h1>
             
             <div class="markdown-body">
-              <h1 id="ETHBMC-A-Bounded-Model-Checker-for-Smart-Contracts"><a href="#ETHBMC-A-Bounded-Model-Checker-for-Smart-Contracts" class="headerlink" title="ETHBMC: A Bounded Model Checker for Smart Contracts"></a>ETHBMC: A Bounded Model Checker for Smart Contracts</h1><p>论文题目：(2020-USENIX) <a target="_blank" rel="noopener" href="https://www.usenix.org/conference/usenixsecurity20/presentation/frank">ETHBMC: A Bounded Model Checker for Smart Contracts</a> ——智能合约的边界模型检查器</p>
+              <h1 id="ethbmc-a-bounded-model-checker-for-smart-contracts"><a class="markdownIt-Anchor" href="#ethbmc-a-bounded-model-checker-for-smart-contracts"></a> ETHBMC: A Bounded Model Checker for Smart Contracts</h1>
+<p>论文题目：(2020-USENIX) <a target="_blank" rel="noopener" href="https://www.usenix.org/conference/usenixsecurity20/presentation/frank">ETHBMC: A Bounded Model Checker for Smart Contracts</a> ——智能合约的边界模型检查器</p>
 <p>论文引用：Frank J, Aschermann C, Holz T. {ETHBMC}: A Bounded Model Checker for Smart Contracts[C]//29th {USENIX} Security Symposium ({USENIX} Security 20). 2020: 2757-2774.</p>
-<p>本文发表在<a target="_blank" rel="noopener" href="https://www.usenix.org/conference/usenixsecurity20/technical-sessions">USENIX Security ‘20</a>的第8月14日下午的Track 2 Blockchains部分，第一作者是来自位于德国的<strong>波鸿鲁尔大学</strong>(Ruhr-Universität Bochum；RUB)的<a target="_blank" rel="noopener" href="https://scholar.google.com/citations?hl=zh-CN&user=VaOyZyoAAAAJ&view_op=list_works&sortby=pubdate">Frank J</a>.，之前的工作也没有跟智能合约特别关联的。</p>
-<h2 id="一、主要内容"><a href="#一、主要内容" class="headerlink" title="一、主要内容"></a>一、主要内容</h2><p>智能合约极大地推动了加密货币的发展，然而其金钱收益的前景吸引来了别有用心之人，导致了骇人听闻的黑客攻击，导致数百万美元的货币损失。为了减少这些攻击的损失，一些强大的静态分析工具(static analysis tools)被开发了出来。本文对最近提出的八种对智能合约进行静态分析的工具进行了研究，并发现它们都无法探测到以太坊生态的所有相关特征：比如缺失精确的内存模型(a precise memory model)和只有少部分支持合约间的分析(inter-contract analysis)。基于以上，本文设计并实现了基于<strong>符号执行（symbolic execution）</strong>的边界模型检查器（a bounded model checker）——ETHBMC，它提供了一种以太坊网络的精确模型。本文通过一系列实验展现了这个EthBMC的功能：</p>
+<p>本文发表在<a target="_blank" rel="noopener" href="https://www.usenix.org/conference/usenixsecurity20/technical-sessions">USENIX Security '20</a>的第8月14日下午的Track 2 Blockchains部分，第一作者是来自位于德国的<strong>波鸿鲁尔大学</strong>(Ruhr-Universität Bochum；RUB)的<a target="_blank" rel="noopener" href="https://scholar.google.com/citations?hl=zh-CN&amp;user=VaOyZyoAAAAJ&amp;view_op=list_works&amp;sortby=pubdate">Frank J</a>.，之前的工作也没有跟智能合约特别关联的。</p>
+<h2 id="一-主要内容"><a class="markdownIt-Anchor" href="#一-主要内容"></a> 一、主要内容</h2>
+<p>智能合约极大地推动了加密货币的发展，然而其金钱收益的前景吸引来了别有用心之人，导致了骇人听闻的黑客攻击，导致数百万美元的货币损失。为了减少这些攻击的损失，一些强大的静态分析工具(static analysis tools)被开发了出来。本文对最近提出的八种对智能合约进行静态分析的工具进行了研究，并发现它们都无法探测到以太坊生态的所有相关特征：比如缺失精确的内存模型(a precise memory model)和只有少部分支持合约间的分析(inter-contract analysis)。基于以上，本文设计并实现了基于**符号执行（symbolic execution）**的边界模型检查器（a bounded model checker）——ETHBMC，它提供了一种以太坊网络的精确模型。本文通过一系列实验展现了这个EthBMC的功能：</p>
 <ol>
 <li>跟八种上述提到的八种工具进行比较，发现就算一个简单示例（relatively simple toy examples），这些工具也力有未逮。</li>
 <li>本文利用EthBMC截止2018年12月依然活跃的220万个智能合约进行漏洞扫描，自动检测到了<strong>5905个</strong>可以触发漏洞的有效输入，比之前的提出方法多检测出22.8%的输入；其中1989个可以随意摧毁合约，也就是自毁合约（suicidal contracts），而其余的漏洞可以被攻击者利用来任意提取金钱。</li>
 </ol>
-<h2 id="二、知识铺垫"><a href="#二、知识铺垫" class="headerlink" title="二、知识铺垫"></a>二、知识铺垫</h2><p>在了解具体实验部分， 首先需要了解一些基础的知识</p>
-<h3 id="2-1-以太坊虚拟机-Ethereum-Virtual-Machine"><a href="#2-1-以太坊虚拟机-Ethereum-Virtual-Machine" class="headerlink" title="2.1  以太坊虚拟机  Ethereum Virtual Machine"></a>2.1  以太坊虚拟机  Ethereum Virtual Machine</h3><p>以太坊定义了一种专用的、基于堆栈的虚拟机，称为以太坊虚拟机（EVM），用于确定智能合约执行的结果。机器对字节码（bytecode）进行操作，其中每个操作数(operand)将值弹出或推入数据堆栈，每个值具有256位字长。此外，EVM增强了针对加密货币环境量身定制的几种机制：</p>
+<h2 id="二-知识铺垫"><a class="markdownIt-Anchor" href="#二-知识铺垫"></a> 二、知识铺垫</h2>
+<p>在了解具体实验部分， 首先需要了解一些基础的知识</p>
+<h3 id="21-以太坊虚拟机-ethereum-virtual-machine"><a class="markdownIt-Anchor" href="#21-以太坊虚拟机-ethereum-virtual-machine"></a> 2.1  以太坊虚拟机  Ethereum Virtual Machine</h3>
+<p>以太坊定义了一种专用的、基于堆栈的虚拟机，称为以太坊虚拟机（EVM），用于确定智能合约执行的结果。机器对字节码（bytecode）进行操作，其中每个操作数(operand)将值弹出或推入数据堆栈，每个值具有256位字长。此外，EVM增强了针对加密货币环境量身定制的几种机制：</p>
 <ol>
 <li><strong>World State</strong>：以太坊世界状态是整个系统的状态。它由两部分组成，从帐户地址到帐户状态的映射以及当前块信息。<strong>帐户状态是</strong>一个包含多个信息的元组，例如帐户的当前余额。此外，如果帐户是智能合约，则帐户状态还包含<strong>字段代码</strong>和<strong>存储</strong>。代码字段保存智能合约的代码，而存储是用于在多个合约调用之间保留值的永久性存储器。</li>
-<li>Memory：EVM区分三种不同类型的内存：<ol>
+<li>Memory：EVM区分三种不同类型的内存：
+<ol>
 <li>Storage:该存储是一个持久键值存储，它将256位键映射到256位值。</li>
 <li>Calldata:交易的数据部分用于向合同提供用户输入，这是一个可字节寻址的数据数组（a byte addressable data array），在执行期间不可变。</li>
 <li>Execution Memory:该存储器是易失性字节数组（volatile byte array），仅在整个执行过程中一直保持不变。</li>
 </ol>
 </li>
 </ol>
-<h3 id="2-2-符号执行与可满足性模理论-Symbolic-Execution-and-SMT-Solving"><a href="#2-2-符号执行与可满足性模理论-Symbolic-Execution-and-SMT-Solving" class="headerlink" title="2.2  符号执行与可满足性模理论 Symbolic Execution and SMT Solving"></a>2.2  符号执行与可满足性模理论 Symbolic Execution and SMT Solving</h3><p>符号执行的主要思想就是将输入(input)用<strong>符号</strong>来表征而不是具体值，同时将程序变量表征成符号表达式。因此，程序的输出就会被表征成一个程序输入的函数，即fun(input)。在软件测试中，符号执行被用于生成执行路径(execution path)的输入。</p>
-<p>产生符号函数执行fun( $\alpha$ )，其中$\alpha$ 代表整个输入域，例如32位整数，从而探索程序可以采用的所有可能路径。当到达一个分支（例如，if语句）时，执行被分叉以探索两种可能的路径。为了保持较低的探索状态空间，符号执行程序将程序的当前状态（the current state of the program）以及路径条件（path condition）（例如x &lt;= 3）编码为一阶逻辑公式。使用可满足性模理论（SMT，Satisfiability Modulo Theory）求解器，以检查程序路径是否可行，避免进一步探索不可能的路径。</p>
-<p>执行路径(execution path)：一个true和false的序列seq={p0,p1,…,pn}。其中，如果是一个条件语句，那么pi=ture则表示这条条件语句取true，否则取false。<br>执行树(execution tree)：一个程序的所有执行路径则可表征成一棵执行树。</p>
+<h3 id="22-符号执行与可满足性模理论-symbolic-execution-and-smt-solving"><a class="markdownIt-Anchor" href="#22-符号执行与可满足性模理论-symbolic-execution-and-smt-solving"></a> 2.2  符号执行与可满足性模理论 Symbolic Execution and SMT Solving</h3>
+<p>符号执行的主要思想就是将输入(input)用<strong>符号</strong>来表征而不是具体值，同时将程序变量表征成符号表达式。因此，程序的输出就会被表征成一个程序输入的函数，即fun(input)。在软件测试中，符号执行被用于生成执行路径(execution path)的输入。</p>
+<p>产生符号函数执行fun( <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>α</mi></mrow><annotation encoding="application/x-tex">\alpha</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.0037em;">α</span></span></span></span> )，其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>α</mi></mrow><annotation encoding="application/x-tex">\alpha</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.0037em;">α</span></span></span></span> 代表整个输入域，例如32位整数，从而探索程序可以采用的所有可能路径。当到达一个分支（例如，if语句）时，执行被分叉以探索两种可能的路径。为了保持较低的探索状态空间，符号执行程序将程序的当前状态（the current state of the program）以及路径条件（path condition）（例如x &lt;= 3）编码为一阶逻辑公式。使用可满足性模理论（SMT，Satisfiability Modulo Theory）求解器，以检查程序路径是否可行，避免进一步探索不可能的路径。</p>
+<p>执行路径(execution path)：一个true和false的序列seq={p0,p1,…,pn}。其中，如果是一个条件语句，那么pi=ture则表示这条条件语句取true，否则取false。<br />
+执行树(execution tree)：一个程序的所有执行路径则可表征成一棵执行树。</p>
 <p>SMT公式以一阶逻辑表示（first-order logic），是命题逻辑（propositional logic）（也称为布尔逻辑）的扩展，它提供了多种不同的理论来阐述问题。SMT求解器通过枚举（enumeration）执行证明：它试图找到约束系统的满意（具体）分布，从而证明可以求解。在对程序的执行进行建模时，此具体分配为程序提供了输入，可用于达到给定状态。当我们另外将故障条件编码为逻辑公式并找到令人满意的分配（即执行和故障条件）时，此具体分配就是程序的输入，触发相应的软件故障。</p>
-<h3 id="2-3-分析智能合约的挑战"><a href="#2-3-分析智能合约的挑战" class="headerlink" title="2.3 分析智能合约的挑战"></a>2.3 分析智能合约的挑战</h3><p>本文首先通过一系列简单示例来说明在分析智能合约时遇到的常见障碍。</p>
-<h4 id="2-3-1-The-Keccak256-Function"><a href="#2-3-1-The-Keccak256-Function" class="headerlink" title="2.3.1  The Keccak256 Function"></a>2.3.1  The Keccak256 Function</h4><p>keccak25用于在执行内存区域上计算keccak哈希。该函数可以由keccak256关键字调用。展示了该函数的更“隐藏”用法，其中该指令用于计算内存位置。EVM的存储是可字寻址的存储器，固定大小的数据类型分配有固定的内存插槽。</p>
-<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20200901201737.png" srcset="/img/loading.gif" lazyload alt="image-20200712093728017"></p>
+<h3 id="23-分析智能合约的挑战"><a class="markdownIt-Anchor" href="#23-分析智能合约的挑战"></a> 2.3 分析智能合约的挑战</h3>
+<p>本文首先通过一系列简单示例来说明在分析智能合约时遇到的常见障碍。</p>
+<h4 id="231-the-keccak256-function"><a class="markdownIt-Anchor" href="#231-the-keccak256-function"></a> 2.3.1  The Keccak256 Function</h4>
+<p>keccak25用于在执行内存区域上计算keccak哈希。该函数可以由keccak256关键字调用。展示了该函数的更“隐藏”用法，其中该指令用于计算内存位置。EVM的存储是可字寻址的存储器，固定大小的数据类型分配有固定的内存插槽。</p>
+<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20200901201737.png" srcset="/img/loading.gif" lazyload alt="image-20200712093728017" /></p>
 <p>在处理动态数据类型时，即在执行期间其大小可能会增加的类型时，我们不知道要分配多少个内存插槽。基于实体的智能合约求助于动态计算内存偏移。当写入映射时（第3行），相应的存储位置将计算为keccak256（k || p），其中k是映射（映射）的键，p是在编译时选择的常数。请注意，如果可以使用此方案生成有效的哈希冲突，则先前的值将被覆盖。</p>
-<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20200901201738.png" srcset="/img/loading.gif" lazyload alt="image-20200712094233265"></p>
-<h4 id="2-3-2-Memcopy-like-Instructions"><a href="#2-3-2-Memcopy-like-Instructions" class="headerlink" title="2.3.2 Memcopy-like Instructions"></a>2.3.2 Memcopy-like Instructions</h4><p>EVM无法直接访问Calldata，它只能对执行内存中的数据进行操作，即复制输入数据。In Listing 3，string是无限制的数据类型，导致EVM利用CALLDATACOPY指令将整个输入复制到执行内存。这与具有固定宽度（例如uint256）的数据类型形成对比，该数据类型可以通过从calldata的普通读取中访问。</p>
-<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20200901201739.png" srcset="/img/loading.gif" lazyload alt="image-20200712094818820"></p>
-<h4 id="2-3-3-Inter-Contract-Communication"><a href="#2-3-3-Inter-Contract-Communication" class="headerlink" title="2.3.3 Inter-Contract Communication"></a>2.3.3 Inter-Contract Communication</h4><p>以太坊当前的合约拓扑。大多数合同不是由人部署的，而是由其他合同创建的，使这些合同成为合同内交互的一部分Listin 4中提供了一个简单的示例。在执行Target的过程中，调用了一个library contract 来模拟两个合约之间的简单交互。</p>
-<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20200901201740.png" srcset="/img/loading.gif" lazyload alt="image-20200712095251928"></p>
-<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20200901201741.png" srcset="/img/loading.gif" lazyload alt="image-20200712095227233"></p>
-<h4 id="2-3-4-The-Parity-Wallet-Bug"><a href="#2-3-4-The-Parity-Wallet-Bug" class="headerlink" title="2.3.4 The Parity Wallet Bug"></a>2.3.4 The Parity Wallet Bug</h4><p>Parity钱包分为两个合同，一个是持有大部分代码库的库合同，另一个是用户部署的客户合同。一旦部署，智能合约就不会改变，因此，在更改（或修订）合约时，必须重新部署并因此偿还整个合约。EVM提供DELEGATECALL指令，该指令用于在执行时使用另一个帐户的代码。这些指令在仍然使用原始帐户上下文和存储的同时切换了要执行的代码。</p>
+<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20200901201738.png" srcset="/img/loading.gif" lazyload alt="image-20200712094233265" /></p>
+<h4 id="232-memcopy-like-instructions"><a class="markdownIt-Anchor" href="#232-memcopy-like-instructions"></a> 2.3.2 Memcopy-like Instructions</h4>
+<p>EVM无法直接访问Calldata，它只能对执行内存中的数据进行操作，即复制输入数据。In Listing 3，string是无限制的数据类型，导致EVM利用CALLDATACOPY指令将整个输入复制到执行内存。这与具有固定宽度（例如uint256）的数据类型形成对比，该数据类型可以通过从calldata的普通读取中访问。</p>
+<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20200901201739.png" srcset="/img/loading.gif" lazyload alt="image-20200712094818820" /></p>
+<h4 id="233-inter-contract-communication"><a class="markdownIt-Anchor" href="#233-inter-contract-communication"></a> 2.3.3 Inter-Contract Communication</h4>
+<p>以太坊当前的合约拓扑。大多数合同不是由人部署的，而是由其他合同创建的，使这些合同成为合同内交互的一部分Listin 4中提供了一个简单的示例。在执行Target的过程中，调用了一个library contract 来模拟两个合约之间的简单交互。</p>
+<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20200901201740.png" srcset="/img/loading.gif" lazyload alt="image-20200712095251928" /></p>
+<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20200901201741.png" srcset="/img/loading.gif" lazyload alt="image-20200712095227233" /></p>
+<h4 id="234-the-parity-wallet-bug"><a class="markdownIt-Anchor" href="#234-the-parity-wallet-bug"></a> 2.3.4 The Parity Wallet Bug</h4>
+<p>Parity钱包分为两个合同，一个是持有大部分代码库的库合同，另一个是用户部署的客户合同。一旦部署，智能合约就不会改变，因此，在更改（或修订）合约时，必须重新部署并因此偿还整个合约。EVM提供DELEGATECALL指令，该指令用于在执行时使用另一个帐户的代码。这些指令在仍然使用原始帐户上下文和存储的同时切换了要执行的代码。</p>
 <p>如下图5，假设用户Alice要使用Parity钱包库（the Parity wallet library）。她使用存储变量来部署她的客户代码（第15-23行），该存储变量包含库合约的帐户地址（第16行）。稍后调用她的客户合同时，它将delegates给库代码（第22行），转发交易的Calldata（msg.data）。这意味着如果攻击者可以将合同的控制流重定向到自己喜欢的地址，那么他们就有能力任意执行代码（例如提取所有资金）。</p>
-<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20200901201742.png" srcset="/img/loading.gif" lazyload alt="image-20200712200747334"></p>
-<h2 id="三、设计实现"><a href="#三、设计实现" class="headerlink" title="三、设计实现"></a>三、设计实现</h2><p>文章中提供了ETHBMC架构的概述，该工具包括三个主要模块，符号执行器（symbolic executor），检测模块（ a detection module）和验证模块（a validation module）。 ETHBMC在大约13,000行Rust代码中实现。</p>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210412110934.png" srcset="/img/loading.gif" lazyload alt="image-20200712100024244"></p>
+<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20200901201742.png" srcset="/img/loading.gif" lazyload alt="image-20200712200747334" /></p>
+<h2 id="三-设计实现"><a class="markdownIt-Anchor" href="#三-设计实现"></a> 三、设计实现</h2>
+<p>文章中提供了ETHBMC架构的概述，该工具包括三个主要模块，符号执行器（symbolic executor），检测模块（ a detection module）和验证模块（a validation module）。 ETHBMC在大约13,000行Rust代码中实现。</p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210412110934.png" srcset="/img/loading.gif" lazyload alt="image-20200712100024244" /></p>
 <p>（High-level overview of ETHBMC and its inner workings）</p>
 <p>ETHBMC利用其符号执行引擎来探索程序可以到达的可用状态空间：</p>
 <ul>
@@ -282,16 +295,24 @@
 <li>利用后端SMT求解器来求解约束系统。SMT求解器通过枚举执行证明：它试图找到约束系统的满意（具体）分配，从而证明可以求解，既达到有效的暂停状态又满足攻击者模型的令人满意的任务证明了合同中的漏洞。</li>
 <li>运行具体的脱机程序执行SMT求解器找到的是智能合约的能触发漏洞的有效输入（即交易）的正确性。</li>
 </ul>
-<h3 id="3-1-Symbolic-Executor"><a href="#3-1-Symbolic-Executor" class="headerlink" title="3.1  Symbolic Executor"></a>3.1  Symbolic Executor</h3><p>以广度优先搜索方式探索智能合约，每当Executor需要断言给定代码路径的可满足性时，都会查询后端的SMT求解器（Yices2 ）。Executor会探索所有代码路径，直到它们到达停止状态、求解器超时或拒绝该路径。如果在执行过程中遇到循环，则使用循环展开（loop-unrolling），即执行n次循环，然后退出循环，并采用相同的策略来限制 求解深度（因为在具有多个帐户的环境中，合同可能会无限循环地相互调用。</p>
-<h3 id="3-2-Detection-Module"><a href="#3-2-Detection-Module" class="headerlink" title="3.2 Detection Module"></a>3.2 Detection Module</h3><p>使用其他路径约束（additional path constraints）对攻击者的目标进行编码，推出了一个附加约束，以指定在执行当前交易后，攻击者帐户的余额必须高于整个分析开始时的余额。当遇到DELEGATECALL或CALLCODE指令时，工具创建了一个附加的hijack状态，在这里我们试图劫持合同的控制流。然后为劫持添加了一个约束，将CALLCODE /DELEGATECAL的目标地址限制为攻击者的帐户地址。如果可以满足此约束条件，则可以重定向控制流（the control<br>flow）。</p>
+<h3 id="31-symbolic-executor"><a class="markdownIt-Anchor" href="#31-symbolic-executor"></a> 3.1  Symbolic Executor</h3>
+<p>以广度优先搜索方式探索智能合约，每当Executor需要断言给定代码路径的可满足性时，都会查询后端的SMT求解器（Yices2 ）。Executor会探索所有代码路径，直到它们到达停止状态、求解器超时或拒绝该路径。如果在执行过程中遇到循环，则使用循环展开（loop-unrolling），即执行n次循环，然后退出循环，并采用相同的策略来限制 求解深度（因为在具有多个帐户的环境中，合同可能会无限循环地相互调用。</p>
+<h3 id="32-detection-module"><a class="markdownIt-Anchor" href="#32-detection-module"></a> 3.2 Detection Module</h3>
+<p>使用其他路径约束（additional path constraints）对攻击者的目标进行编码，推出了一个附加约束，以指定在执行当前交易后，攻击者帐户的余额必须高于整个分析开始时的余额。当遇到DELEGATECALL或CALLCODE指令时，工具创建了一个附加的hijack状态，在这里我们试图劫持合同的控制流。然后为劫持添加了一个约束，将CALLCODE /DELEGATECAL的目标地址限制为攻击者的帐户地址。如果可以满足此约束条件，则可以重定向控制流（the control<br />
+flow）。</p>
 <p>标记执行SELFDESTRUCT指令的状态，以检测可被外部攻击者破坏的合同。请注意，如果可以使用SELFDESTRUCT指令从帐户中窃取资金，则ETHBMC会检测到这两种情况。如果我们检测到任何类型的漏洞，就会将相应的状态传递给验证模块。</p>
-<h3 id="3-3-Validation-Module"><a href="#3-3-Validation-Module" class="headerlink" title="3.3 Validation Module"></a>3.3 Validation Module</h3><p>在最后一步中，尝试为具有可行攻击路径的每个状态生成有效事务（valid transactions）。我们利用SMT求解器生成触发漏洞所需的交易数据。成功生成攻击数据后，利用go-ethereum 工具套件（尤其是EVM实用程序）以脱机方式模拟攻击，<br>以验证它们的有效性。</p>
-<h2 id="四、实验评估"><a href="#四、实验评估" class="headerlink" title="四、实验评估"></a>四、实验评估</h2><p>在几个不同的实验中对ETHBMC进行了评估，然后重点关注以下主要结果，介绍的玩具示例用作一组试验。我们将SELFDESTRUCT指令嵌入每个合同中，因为所有工具都为此提供了检测模块。此外，重新创建了上节中讨论的奇偶校验帐户黑客（Parity account hack）程序，以模拟复杂的实际情况。</p>
-<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20200901202054.png" srcset="/img/loading.gif" lazyload alt="image-20200712194526587">（Results of evaluating different analyzers on toy examples）</p>
-<p>为了进一步评估ETHBMC，他们在实验中集群：大学内部云中的20个虚拟机，运行6个2.5 Ghz虚拟化内核，每个内核分配12 GB的内存。此外，在两台服务器上运行了12个ETHBMC实例，每个实例均配备了Intel Xeon E5-2667和96GB内存。<br>截至2018年12月24日在Google BigQuery 上列出的所有2,194,650个账户进行了大规模扫描，整个集群总共花费了大约3.5个月的时间，大约相当于39个CPU年。</p>
-<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20200901202128.png" srcset="/img/loading.gif" lazyload alt="image-20200712195205101"></p>
+<h3 id="33-validation-module"><a class="markdownIt-Anchor" href="#33-validation-module"></a> 3.3 Validation Module</h3>
+<p>在最后一步中，尝试为具有可行攻击路径的每个状态生成有效事务（valid transactions）。我们利用SMT求解器生成触发漏洞所需的交易数据。成功生成攻击数据后，利用go-ethereum 工具套件（尤其是EVM实用程序）以脱机方式模拟攻击，<br />
+以验证它们的有效性。</p>
+<h2 id="四-实验评估"><a class="markdownIt-Anchor" href="#四-实验评估"></a> 四、实验评估</h2>
+<p>在几个不同的实验中对ETHBMC进行了评估，然后重点关注以下主要结果，介绍的玩具示例用作一组试验。我们将SELFDESTRUCT指令嵌入每个合同中，因为所有工具都为此提供了检测模块。此外，重新创建了上节中讨论的奇偶校验帐户黑客（Parity account hack）程序，以模拟复杂的实际情况。</p>
+<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20200901202054.png" srcset="/img/loading.gif" lazyload alt="image-20200712194526587" />（Results of evaluating different analyzers on toy examples）</p>
+<p>为了进一步评估ETHBMC，他们在实验中集群：大学内部云中的20个虚拟机，运行6个2.5 Ghz虚拟化内核，每个内核分配12 GB的内存。此外，在两台服务器上运行了12个ETHBMC实例，每个实例均配备了Intel Xeon E5-2667和96GB内存。<br />
+截至2018年12月24日在Google BigQuery 上列出的所有2,194,650个账户进行了大规模扫描，整个集群总共花费了大约3.5个月的时间，大约相当于39个CPU年。</p>
+<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20200901202128.png" srcset="/img/loading.gif" lazyload alt="image-20200712195205101" /></p>
 <p>(大规模分析结果显示找到的合同数量（括号内生成的独特漏洞利用数量）)</p>
-<h2 id="五、文章总结"><a href="#五、文章总结" class="headerlink" title="五、文章总结"></a>五、文章总结</h2><p>其是第一个能够以全自动的方式检测到奇偶校验漏洞（Parity vulnerability）的工具，发现可以通过内存复制式操作、提高合约间通信和引入新的编码方式来精确推理加密哈希函数以实现更高精确度的分析。但是在却在边界循环和设置时间受到了限制，而且限制不能完全取消，例如，总是必须对循环施加上限，但提高超时限制或循环计数可能会导致发现程序中更深处的错误。合同调用也是如此，ETHBMC无法找到需要三个以上事务的错误。此外，他们目前仅为一个攻击者帐户建模。</p>
+<h2 id="五-文章总结"><a class="markdownIt-Anchor" href="#五-文章总结"></a> 五、文章总结</h2>
+<p>其是第一个能够以全自动的方式检测到奇偶校验漏洞（Parity vulnerability）的工具，发现可以通过内存复制式操作、提高合约间通信和引入新的编码方式来精确推理加密哈希函数以实现更高精确度的分析。但是在却在边界循环和设置时间受到了限制，而且限制不能完全取消，例如，总是必须对循环施加上限，但提高超时限制或循环计数可能会导致发现程序中更深处的错误。合同调用也是如此，ETHBMC无法找到需要三个以上事务的错误。此外，他们目前仅为一个攻击者帐户建模。</p>
 
             </div>
             <hr>
@@ -338,8 +359,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2020/0629bf6aec.html">
-                        <span class="hidden-mobile">ContractFuzzer:Fuzzing Smart Contracts for Vulnerability Detection</span>
+                      <a href="/2020/062138ce9d.html">
+                        <span class="hidden-mobile">Order Matters: Semantic-Aware Neural Networks for Binary Code Similarity Detection</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

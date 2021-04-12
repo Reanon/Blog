@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      59
+      60
        分钟
     </span>
   
@@ -236,81 +236,86 @@
             <h1 style="display: none">The art of the scam: Demystifying honeypots in ethereum smart contracts</h1>
             
             <div class="markdown-body">
-              <h1 id="HoneyBadger"><a href="#HoneyBadger" class="headerlink" title="HoneyBadger"></a>HoneyBadger</h1><p>论文题目：(2019-USENIX)  <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1902.06976.pdf">The art of the scam: Demystifying honeypots in ethereum smart contracts</a>——诈骗的艺术：以太坊智能合约中的蜜罐解谜</p>
+              <h1 id="honeybadger"><a class="markdownIt-Anchor" href="#honeybadger"></a> HoneyBadger</h1>
+<p>论文题目：(2019-USENIX)  <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1902.06976.pdf">The art of the scam: Demystifying honeypots in ethereum smart contracts</a>——诈骗的艺术：以太坊智能合约中的蜜罐解谜</p>
 <p>论文引用：Torres C F, Steichen M. The art of the scam: Demystifying honeypots in ethereum smart contracts[C]//28th {USENIX} Security Symposium ({USENIX} Security 19). 2019: 1591-1607.</p>
 <p>代码开源： <a target="_blank" rel="noopener" href="https://github.com/christoftorres/HoneyBadger">https://github.com/christoftorres/HoneyBadger</a></p>
-<h2 id="一、主要内容"><a href="#一、主要内容" class="headerlink" title="一、主要内容"></a>一、主要内容</h2><p>本篇论文作者同是也是《 <a target="_blank" rel="noopener" href="https://dl.acm.org/doi/abs/10.1145/3274694.3274737">Osiris: Hunting for integer bugs in ethereum smart contracts</a>》的作者，都是基于Oyente工具开展进一步研究。本文通过调查蜜罐智能合约的普遍性、行为和对以太坊区块链的影响，首次对蜜罐智能合约进行了系统分析。作者开发了一个蜜罐技术的分类法，并使用它来构建蜜獾———一种使用符号执行和定义良好的启发式方法来公开蜜罐的工具。</p>
+<h2 id="一-主要内容"><a class="markdownIt-Anchor" href="#一-主要内容"></a> 一、主要内容</h2>
+<p>本篇论文作者同是也是《 <a target="_blank" rel="noopener" href="https://dl.acm.org/doi/abs/10.1145/3274694.3274737">Osiris: Hunting for integer bugs in ethereum smart contracts</a>》的作者，都是基于Oyente工具开展进一步研究。本文通过调查蜜罐智能合约的普遍性、行为和对以太坊区块链的影响，首次对蜜罐智能合约进行了系统分析。作者开发了一个蜜罐技术的分类法，并使用它来构建蜜獾———一种使用符号执行和定义良好的启发式方法来公开蜜罐的工具。</p>
 <p>对200多万个智能合约进行了大规模的分析，结果表明，蜜獾不仅具有很高的精度，而且还具有很高的效率。具体而言，本文做出了以下贡献:</p>
 <ol>
 <li>对以太坊出现的一种新型欺诈蜜罐进行了第一次系统分析；</li>
 <li>确定蜜罐使用的常见技术，并将其分类；</li>
 <li>提供HoneyBadger——一种自动检测以太坊智能合约中的蜜罐的工具；</li>
 </ol>
-<h2 id="二、背景介绍"><a href="#二、背景介绍" class="headerlink" title="二、背景介绍"></a>二、背景介绍</h2><p>下面提供了蜜罐的一般定义，并介绍了作者对蜜罐的分类</p>
-<h3 id="2-1-Honeypots（蜜罐）"><a href="#2-1-Honeypots（蜜罐）" class="headerlink" title="2.1 Honeypots（蜜罐）"></a>2.1 Honeypots（蜜罐）</h3><p>蜜罐是（Honeypot）一种智能合约，在用户向其发送资金的前提下，它假装将资金泄漏给任意用户（受害者）。然而，用户提供的资金将被困住，蜜罐创建者（攻击者）将能够取回它们。蜜罐一般分为三个阶段：</p>
+<h2 id="二-背景介绍"><a class="markdownIt-Anchor" href="#二-背景介绍"></a> 二、背景介绍</h2>
+<p>下面提供了蜜罐的一般定义，并介绍了作者对蜜罐的分类</p>
+<h3 id="21-honeypots蜜罐"><a class="markdownIt-Anchor" href="#21-honeypots蜜罐"></a> 2.1 Honeypots（蜜罐）</h3>
+<p>蜜罐是（Honeypot）一种智能合约，在用户向其发送资金的前提下，它假装将资金泄漏给任意用户（受害者）。然而，用户提供的资金将被困住，蜜罐创建者（攻击者）将能够取回它们。蜜罐一般分为三个阶段：</p>
 <ol>
 <li>攻击者部署一个看似脆弱的合约，并以资金的形式设置诱饵；</li>
 <li>受害人试图利用合约（转移最低所需资金，但未成功）；</li>
 <li>攻击者将诱饵连同受害者丢失的资金一起取走。</li>
 </ol>
 <p>攻击者不需要特殊功能就可以设置蜜罐，而只需要必要的资金来部署智能合约和放置诱饵。</p>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201113213130.png" srcset="/img/loading.gif" lazyload alt="image-20201113213130688"></p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201113213130.png" srcset="/img/loading.gif" lazyload alt="image-20201113213130688" /></p>
 <center>Figure 1  Actors and phases of a honeypot</center>
-
-<h3 id="2-2-Taxonomy-of-Honeypots"><a href="#2-2-Taxonomy-of-Honeypots" class="headerlink" title="2.2  Taxonomy of Honeypots"></a>2.2  Taxonomy of Honeypots</h3><p>作者总共收集了24个蜜罐，并提取了8种不同的蜜罐技术。不同的技术按其操作级别分为三类：</p>
+<h3 id="22-taxonomy-of-honeypots"><a class="markdownIt-Anchor" href="#22-taxonomy-of-honeypots"></a> 2.2  Taxonomy of Honeypots</h3>
+<p>作者总共收集了24个蜜罐，并提取了8种不同的蜜罐技术。不同的技术按其操作级别分为三类：</p>
 <ol>
 <li>以太坊虚拟机</li>
 <li>Solidity编译器</li>
 <li>以太坊区块浏览器Etherscan</li>
 </ol>
 <center>Table 1 A taxonomy of honeypot techniques in Ethereumsmart contracts.</center>
-
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201113212639.png" srcset="/img/loading.gif" lazyload alt="image-20201113212639615"></p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201113212639.png" srcset="/img/loading.gif" lazyload alt="image-20201113212639615" /></p>
 <p>第一类利用EVM的异常行为欺骗用户。尽管EVM遵循一套严格且公开的规则，但用户仍然可能被存在不一致行为的智能合约所误导。</p>
 <p>第二类涉及从Solidity编译器引入的问题。虽然有些编译器问题是众所周知的，但其他问题仍然没有记录在案，如果用户不仔细分析智能合约或不在实际条件下测试它，则可能会被忽略。</p>
 <p>第三类与Etherscan网站上显示的有限信息相关。Etherscan可能是以太坊最著名的区块链浏览器了，许多用户完全信任其中显示的数据，而不怀好意者正好利用了这点。</p>
-<h3 id="2-3-Honeypot-Technique"><a href="#2-3-Honeypot-Technique" class="headerlink" title="2.3 Honeypot Technique"></a>2.3 Honeypot Technique</h3><h4 id="2-3-1-Balance-Disorde"><a href="#2-3-1-Balance-Disorde" class="headerlink" title="2.3.1 Balance Disorde"></a>2.3.1 Balance Disorde</h4><p>图2 使用了一种我们称之为平衡紊乱技术（Balance Disorde）。<code>multiplicate</code>表示合约的余额(本余额)以及此函数调用的交易中包含的值(交易值)。如果此段代码中我们可以看到，函数的调用方包含的值如果大于或等于智能合约的当前余额，则余额会被传输到任意地址。</p>
+<h3 id="23-honeypot-technique"><a class="markdownIt-Anchor" href="#23-honeypot-technique"></a> 2.3 Honeypot Technique</h3>
+<h4 id="231-balance-disorde"><a class="markdownIt-Anchor" href="#231-balance-disorde"></a> 2.3.1 Balance Disorde</h4>
+<p>图2 使用了一种我们称之为平衡紊乱技术（Balance Disorde）。<code>multiplicate</code>表示合约的余额(本余额)以及此函数调用的交易中包含的值(交易值)。如果此段代码中我们可以看到，函数的调用方包含的值如果大于或等于智能合约的当前余额，则余额会被传输到任意地址。</p>
 <p>因此，居心不良的用户会相信他所需要做的，就是用一个高于当前余额的值调用这个函数，作为回报，他将收获本钱以及合约余额。但是，如果用户试图这样做，他会很快意识到第5行没有执行，因为第4行的条件不成立。原因是因为在实际执行智能合约之前，余额已随交易值递增。最后的结果只能是合约永远比你有钱。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript">contract  MultiplicatorX3 &#123;<br>    ...<br>    <span class="hljs-function"><span class="hljs-keyword">function</span>  <span class="hljs-title">multiplicate</span>(<span class="hljs-params">address  adr</span>) <span class="hljs-title">payable</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (msg.value  &gt;= <span class="hljs-built_in">this</span>.balance)<br>            adr.transfer(<span class="hljs-built_in">this</span>.balance+msg.value);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
 <center>Figure 2: An example of a balance disorder honeypot</center>
-
-<h4 id="2-3-2-Inheritance-Disorder"><a href="#2-3-2-Inheritance-Disorder" class="headerlink" title="2.3.2 Inheritance  Disorder"></a>2.3.2 Inheritance  Disorder</h4><p>有一个继承自合同Ownable的合同KingOfTheHill：函数takeAll只允许变量拥有者中存储的地址提取合同余额，但可以通过调用消息值大于当前值的回退函数来修改owner变量。</p>
+<h4 id="232-inheritance-disorder"><a class="markdownIt-Anchor" href="#232-inheritance-disorder"></a> 2.3.2 Inheritance  Disorder</h4>
+<p>有一个继承自合同Ownable的合同KingOfTheHill：函数takeAll只允许变量拥有者中存储的地址提取合同余额，但可以通过调用消息值大于当前值的回退函数来修改owner变量。</p>
 <p>现在，如果用户试图调用函数以将自己设置为所有者，则交易成功。但是，如果他或她后来试图收回余额，交易失败。原因是在第9行声明的变量所有者与在第2行声明的变量所有者不同。调用者希望第9行的所有者将被第2行的所有者覆盖，但事实并非如此。Solidity编译器将这两个变量视为不同的变量，因此在第9行写入调用者也不会导致修改合约Ownable中定义所有者。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs javascript">contract  Ownable &#123;<br>    address  owner = msg.sender;<br>    modifier  onlyOwner &#123;<br>        <span class="hljs-built_in">require</span>(msg.sender  ==  owner);<br>        _;<br>    &#125;<br>&#125;<br>contract  KingOfTheHill  is  Ownable &#123;<br>    address  public  owner;<br>    ...<br>    <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>)  <span class="hljs-title">public</span>  <span class="hljs-title">payable</span> </span>&#123;<br>        <span class="hljs-keyword">if</span>(msg.value &gt;jackpot)owner=msg.sender;<br>        jackpot  += msg.value;<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">function</span>  <span class="hljs-title">takeAll</span> (<span class="hljs-params"></span>)  <span class="hljs-title">public</span>  <span class="hljs-title">onlyOwner</span> </span>&#123;<br>        msg.sender.transfer(<span class="hljs-built_in">this</span>.balance);<br>        jackpot = <span class="hljs-number">0</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
 <p>Figure 3: An example of an inheritance disorder honeypot</p>
-<h4 id="2-3-3-Skip-Empty-String-Literal"><a href="#2-3-3-Skip-Empty-String-Literal" class="headerlink" title="2.3.3 Skip  Empty  String  Literal"></a>2.3.3 Skip  Empty  String  Literal</h4><p>跳跃空字符串文本.所示的合同允许用户通过向合同的功能投资发送最小数量的以太币来进行投资。所示的合约允许投资者可以通过调用剥离功能来撤回投资。</p>
+<h4 id="233-skip-empty-string-literal"><a class="markdownIt-Anchor" href="#233-skip-empty-string-literal"></a> 2.3.3 Skip  Empty  String  Literal</h4>
+<p>跳跃空字符串文本.所示的合同允许用户通过向合同的功能投资发送最小数量的以太币来进行投资。所示的合约允许投资者可以通过调用剥离功能来撤回投资。</p>
 <p>从代码上来看没有什么能阻止投资者剥离比最初投资额更大的资产，有些天真的用户认为可以利用剥离的功能。但是实际上Solidity编译器的编码器将跳过函数loggedtranfer（第14行）参数提供的空字符串文本。</p>
 <p>其效果是，此参数之后的所有参数的编码向左移动32字节，因此函数调用参数msg接收target的值，而target被赋予currentOwner的值，最后currentOwner接收默认值零。因此，最终loggedtranfer函数执行到currentOwner而不是target。用户试图利用智能合约的明显漏洞，最后却将投资转移给合约所有者。</p>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201113214321.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201113214321.png" srcset="/img/loading.gif" lazyload alt="" /></p>
 <center>Figure 4: An example of a skip empty string literal honeypot.</center>
-
-<h4 id="2-3-4-Type-Deduction-Overflow"><a href="#2-3-4-Type-Deduction-Overflow" class="headerlink" title="2.3.4 Type Deduction Overflow"></a>2.3.4 Type Deduction Overflow</h4><p>在Solidity中，当将变量声明为类型var时，编译器使用类型演绎法从分配给该变量的第一个表达式中自动推断出可能的最小类型。下图描述了一个蜜罐示例，它使用了一种我们称为类型演绎法溢出的技术。最初，合约表明用户可以将投资翻番。</p>
+<h4 id="234-type-deduction-overflow"><a class="markdownIt-Anchor" href="#234-type-deduction-overflow"></a> 2.3.4 Type Deduction Overflow</h4>
+<p>在Solidity中，当将变量声明为类型var时，编译器使用类型演绎法从分配给该变量的第一个表达式中自动推断出可能的最小类型。下图描述了一个蜜罐示例，它使用了一种我们称为类型演绎法溢出的技术。最初，合约表明用户可以将投资翻番。</p>
 <p>但是变量i的类型为uint8，该类型的最大值为255，小于2*msg . value（2 * 0.1 ether = 2 * 1017 wei）。因此第7行的循环将是无限的。尽管如此，如果变量multi小于amountToTransfer，循环仍然可以停止。这是可能的，因为amountToTransfer被赋值为multi，multi最终在第8行发生整数溢出，将小于amountToTransfer，一旦循环退出，合约将会将一个值返还给访问者，尽管其金额最多为255 wei（以太币的最小子面值为1 ether=10^18 wei），因此远远低于用户最初投资的价值，访问者亏大了。</p>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201113214343.png" srcset="/img/loading.gif" lazyload alt="image-20201113214343780"></p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201113214343.png" srcset="/img/loading.gif" lazyload alt="image-20201113214343780" /></p>
 <center>Figure 5:  An example of a type deduction overflow honey-pot.
-
-<h4 id="2-3-5-Uninitialised-Struct"><a href="#2-3-5-Uninitialised-Struct" class="headerlink" title="2.3.5 Uninitialised  Struct"></a>2.3.5 Uninitialised  Struct</h4><p>未初始化结构蜜罐。为了收回合约的余额，合约要求用户要支付一笔以太币并猜测合约中存储的随机数。然而，任何用户都可以很容易地获得随机数的值，因为存储在区块链上的每个数据都是公开可用的。用户只需从区块链中读取随机数，然后通过支付以太币并提供正确的数字来调用函数guessNumber。</p>
+<h4 id="235-uninitialised-struct"><a class="markdownIt-Anchor" href="#235-uninitialised-struct"></a> 2.3.5 Uninitialised  Struct</h4>
+<p>未初始化结构蜜罐。为了收回合约的余额，合约要求用户要支付一笔以太币并猜测合约中存储的随机数。然而，任何用户都可以很容易地获得随机数的值，因为存储在区块链上的每个数据都是公开可用的。用户只需从区块链中读取随机数，然后通过支付以太币并提供正确的数字来调用函数guessNumber。</p>
 <p>但是，结构没有像受害者想象的那样通过关键字正确初始化。结果，Solidity编译器将结构（player）中包含的第一个变量的存储位置映射到合约（randomNumber）中包含的第一个变量的存储位置，从而用调用方的地址覆盖随机数，致使第14行的条件失败。值得注意的是，蜜罐创建者知道用户可能试图猜测覆盖的值。因此，创建者在第10行这儿将数字限制在1到10之间，这大大减少了用户生成满足此条件的地址的机会。</p>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201113221924.png" srcset="/img/loading.gif" lazyload alt="image-20201113221924467"></p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201113221924.png" srcset="/img/loading.gif" lazyload alt="image-20201113221924467" /></p>
 <center>Figure 6: An example of an uninitialised struct honeypot.
-
-<h4 id="2-3-6-Hidden-State-Update"><a href="#2-3-6-Hidden-State-Update" class="headerlink" title="2.3.6 Hidden State Update"></a>2.3.6 Hidden State Update</h4><p>隐藏状态更新；除正常交易外，Etherscan还显示所谓的内部消息，这些消息是源自其他合约而非用户帐户的交易。但是Etherscan不显示包含空交易值的内部消息。下图中余额被传递给能够猜出计算存储散列的正确值的人。</p>
+<h4 id="236-hidden-state-update"><a class="markdownIt-Anchor" href="#236-hidden-state-update"></a> 2.3.6 Hidden State Update</h4>
+<p>隐藏状态更新；除正常交易外，Etherscan还显示所谓的内部消息，这些消息是源自其他合约而非用户帐户的交易。但是Etherscan不显示包含空交易值的内部消息。下图中余额被传递给能够猜出计算存储散列的正确值的人。</p>
 <p>贪婪的用户尝试调用未受保护的SetPass函数，该函数允许使用已知值重写哈希，前提是至少有1个以太币被传输到合约。在分析Etherscan上的内部消息时，用户将找不到调用pashasbeenset函数的任何证据，因此假设pashasbeenset设置为false。但是，为了无声地更新变量passHasBeenSet的状态，蜜罐创建者利用Etherscan执行的过滤，从另一个合约调用函数passHasBeenSet并使用空交易值。因此，通过查看显示在Etherscan上的内部消息，不知情的用户会认为变量设置为false，并放大胆地将以太币传输到SetPass函数。</p>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201113214654.png" srcset="/img/loading.gif" lazyload alt="image-20201113214654700"></p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201113214654.png" srcset="/img/loading.gif" lazyload alt="image-20201113214654700" /></p>
 <center>Figure 7: An example of a hidden state update honeypot.
-
-<h4 id="2-3-7-Hidden-Transfer"><a href="#2-3-7-Hidden-Transfer" class="headerlink" title="2.3.7 Hidden Transfer"></a>2.3.7 Hidden Transfer</h4><p>隐藏转移；Etherscan在一个HTML textarea元素中显示源代码，在这个元素中，较大的代码行将只显示到一定的宽度，而代码行的其余部分将被隐藏并单独可见。下面的的合约利用了这个“特性”，在函数drawall的第4行引入了一长串空白，有效地隐藏了下面的代码。如果函数的调用方不是所有者，则隐藏代码将抛出，从而阻止随后向函数的任何调用方传递余额。</p>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201113214719.png" srcset="/img/loading.gif" lazyload alt="image-20201113214718962"></p>
+<h4 id="237-hidden-transfer"><a class="markdownIt-Anchor" href="#237-hidden-transfer"></a> 2.3.7 Hidden Transfer</h4>
+<p>隐藏转移；Etherscan在一个HTML textarea元素中显示源代码，在这个元素中，较大的代码行将只显示到一定的宽度，而代码行的其余部分将被隐藏并单独可见。下面的的合约利用了这个“特性”，在函数drawall的第4行引入了一长串空白，有效地隐藏了下面的代码。如果函数的调用方不是所有者，则隐藏代码将抛出，从而阻止随后向函数的任何调用方传递余额。</p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201113214719.png" srcset="/img/loading.gif" lazyload alt="image-20201113214718962" /></p>
 <p>Figure 8: An example of a hidden transfer honeypot.</p>
-<h4 id="2-3-8-Straw-Man-Contract"><a href="#2-3-8-Straw-Man-Contract" class="headerlink" title="2.3.8 Straw Man Contract"></a>2.3.8 Straw Man Contract</h4><p>稻草人合约；用户需要首先调用Deposit（定金）并传输最小数量的以太币。最后，用户调用CashOut函数，该函数执行对TransferLog中存储的合约地址的调用。但是实际上蜜罐创建者没有使用合约log的地址初始化合约。相反，它是用另一个地址初始化的，而此时这个地址指向的是实现同一接口的其他合约，而如果函数AddMessage的调用方不是蜜罐创建者，则执行异常，用户执行的调用将始终失败。另一种选择，是在转移余额之前使用Delegatecall。Delegatecall允许攻击者将用户地址与其自己的地址交换，所以当从Delegatecall返回时，余额将转移给攻击者而不是用户。</p>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201113214743.png" srcset="/img/loading.gif" lazyload alt="image-20201113214743650"></p>
+<h4 id="238-straw-man-contract"><a class="markdownIt-Anchor" href="#238-straw-man-contract"></a> 2.3.8 Straw Man Contract</h4>
+<p>稻草人合约；用户需要首先调用Deposit（定金）并传输最小数量的以太币。最后，用户调用CashOut函数，该函数执行对TransferLog中存储的合约地址的调用。但是实际上蜜罐创建者没有使用合约log的地址初始化合约。相反，它是用另一个地址初始化的，而此时这个地址指向的是实现同一接口的其他合约，而如果函数AddMessage的调用方不是蜜罐创建者，则执行异常，用户执行的调用将始终失败。另一种选择，是在转移余额之前使用Delegatecall。Delegatecall允许攻击者将用户地址与其自己的地址交换，所以当从Delegatecall返回时，余额将转移给攻击者而不是用户。</p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201113214743.png" srcset="/img/loading.gif" lazyload alt="image-20201113214743650" /></p>
 <center>Figure 9: An example of a straw man contract honeypot.
-
-<h2 id="三、设计实现"><a href="#三、设计实现" class="headerlink" title="三、设计实现"></a>三、设计实现</h2><h3 id="3-1-HONEYBADGER"><a href="#3-1-HONEYBADGER" class="headerlink" title="3.1 HONEYBADGER"></a>3.1 HONEYBADGER</h3><p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201113215018.png" srcset="/img/loading.gif" lazyload alt="image-20201113215001706"></p>
+<h2 id="三-设计实现"><a class="markdownIt-Anchor" href="#三-设计实现"></a> 三、设计实现</h2>
+<h3 id="31-honeybadger"><a class="markdownIt-Anchor" href="#31-honeybadger"></a> 3.1 HONEYBADGER</h3>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201113215018.png" srcset="/img/loading.gif" lazyload alt="image-20201113215001706" /></p>
 <center>Figure 10: An overview of the analysis pipeline of HONEY-BADGER. The shaded boxes represent the main components.</center>
-
 <p>HONEYBADGER 将EVM字节码作为输入，并返回一个关于它检测到的不同蜜罐技术的详细报告作为输出。HONEYBADGER主要由三部分组成：符号分析、现金流分析和蜜罐分析。</p>
 <ol>
 <li>符号分析的结果随后传播到现金流分析组件和蜜罐分析组件。</li>
@@ -318,11 +323,15 @@
 <li>最后，蜜罐分析组件旨在结合启发式和符号分析的结果来检测本文研究的不同蜜罐技术。</li>
 </ol>
 <p>这三个组件中的每一个都使用Z3 SMT解算器来检查公式满足性（对变量取值使得某个公式成立）</p>
-<h3 id="3-2-Implementation"><a href="#3-2-Implementation" class="headerlink" title="3.2  Implementation"></a>3.2  Implementation</h3><p>HONEYBADGERis在Python中实现，大约有4000行代码。下面简要描述每个主要组件的实现细节。</p>
-<h4 id="3-2-1-Symbolic-Analysis"><a href="#3-2-1-Symbolic-Analysis" class="headerlink" title="3.2.1 Symbolic Analysis"></a>3.2.1 Symbolic Analysis</h4><p>符号分析的目的是收集各种可能有助于以后分析的信息。此信息包括存储写入的列表、执行路径<code>P</code>的列表、不可行和可行的基本块的列表、执行的乘法和加法的列表以及调用的列表<code>C</code>。一个调用由元组<code>(Cr，Cv，Cf，Ca，Ct，Cg)</code>组成，其中<code>Cr</code>是接收者，<code>Cv</code>是调用值，<code>Cf</code>是被调用的合约函数，<code>Ca</code>是函数参数列表，<code>Ct</code>是调用类型（即调用或委托调用），<code>Cg</code>是调用的矿工费。</p>
-<h4 id="3-2-2-Cash-Flow-Analysis"><a href="#3-2-2-Cash-Flow-Analysis" class="headerlink" title="3.2.2 Cash Flow Analysis"></a>3.2.2 Cash Flow Analysis</h4><p>蜜罐必须能够接收资金（例如受害者的投资）和转移资金（例如攻击者的赃物）。现金流分析的目的是通过排除无法接收或转移资金的合约来提高蜜獾的检测效率。编译器在编译期间添加一个检查，如果非应付函数接收到大于零的交易值，则该检查将还原交易。</p>
+<h3 id="32-implementation"><a class="markdownIt-Anchor" href="#32-implementation"></a> 3.2  Implementation</h3>
+<p>HONEYBADGERis在Python中实现，大约有4000行代码。下面简要描述每个主要组件的实现细节。</p>
+<h4 id="321-symbolic-analysis"><a class="markdownIt-Anchor" href="#321-symbolic-analysis"></a> 3.2.1 Symbolic Analysis</h4>
+<p>符号分析的目的是收集各种可能有助于以后分析的信息。此信息包括存储写入的列表、执行路径<code>P</code>的列表、不可行和可行的基本块的列表、执行的乘法和加法的列表以及调用的列表<code>C</code>。一个调用由元组<code>(Cr，Cv，Cf，Ca，Ct，Cg)</code>组成，其中<code>Cr</code>是接收者，<code>Cv</code>是调用值，<code>Cf</code>是被调用的合约函数，<code>Ca</code>是函数参数列表，<code>Ct</code>是调用类型（即调用或委托调用），<code>Cg</code>是调用的矿工费。</p>
+<h4 id="322-cash-flow-analysis"><a class="markdownIt-Anchor" href="#322-cash-flow-analysis"></a> 3.2.2 Cash Flow Analysis</h4>
+<p>蜜罐必须能够接收资金（例如受害者的投资）和转移资金（例如攻击者的赃物）。现金流分析的目的是通过排除无法接收或转移资金的合约来提高蜜獾的检测效率。编译器在编译期间添加一个检查，如果非应付函数接收到大于零的交易值，则该检查将还原交易。</p>
 <p>基于这些观察，首先遍历P中包含的所有可能的执行路径，从而验证合约是否能够接收资金。之后，使用Z3 SMT解算器来验证在执行路径p的给定路径条件下，约束<code>Iv&gt;0</code>(交易值大于0)是否可以满足，如果p满足约束，便可知资金可以流入合约。同时通过遍历C中包含的所有调用并检查是否存在调用C（其中Cv是符号的或Cv&gt;0）以及遍历P中包含的所有执行路径并检查是否存在以自毁方式终止的执行路径P。如果找到至少一个满足上述条件的调用C或执行路径p，资金可能流出合约。</p>
-<h4 id="3-2-3-Honeypot-Analysis"><a href="#3-2-3-Honeypot-Analysis" class="headerlink" title="3.2.3 Honeypot Analysis"></a>3.2.3 Honeypot Analysis</h4><p>蜜罐分析包括几个子组件。每个子组件负责检测特定的蜜罐技术。每种蜜罐技术都是通过试探法来确定的，下面描述每个子组件的实现</p>
+<h4 id="323-honeypot-analysis"><a class="markdownIt-Anchor" href="#323-honeypot-analysis"></a> 3.2.3 Honeypot Analysis</h4>
+<p>蜜罐分析包括几个子组件。每个子组件负责检测特定的蜜罐技术。每种蜜罐技术都是通过试探法来确定的，下面描述每个子组件的实现</p>
 <p>1、平衡紊乱</p>
 <p>遍历调用列表C中包含的所有调用，如果有调用符合<code>Cv=Iv+σ[Ia]b</code>，调用值=交易值（受害者打入的钱）+合约余额，则报告一个平衡紊乱。</p>
 <p>2、遗传障碍</p>
@@ -336,29 +345,33 @@
 <p>6、隐藏状态更新</p>
 <p>遍历C中包含的所有调用并检查是否存在调用C来检测隐藏状态更新，该调用C的路径条件取决于可以通过另一个函数修改的存储值，而不是进行资金转移（源码中即使资金转移了，还是无法调用成功，因为条件不满足，这个无法满足的条件在受害者看来是满足的）。</p>
 <p>7、隐藏转移</p>
-<p>如果存在两个连续的调用C和C’存在于同一执行路径p上，且其调用接收者不同，满足<code>Cr∈σ[Ia]s∧Cv=σ[Ia]b，C&#39;r=Is∧C&#39;v=σ[Ia]b</code>，上报一个隐藏转移</p>
+<p>如果存在两个连续的调用C和C’存在于同一执行路径p上，且其调用接收者不同，满足<code>Cr∈σ[Ia]s∧Cv=σ[Ia]b，C'r=Is∧C'v=σ[Ia]b</code>，上报一个隐藏转移</p>
 <p>8、稻草人合约</p>
-<p>验证两个连续的调用c和c’是否沿着相同的执行路径p存在，其中<code>Cr =C&#39;r</code>。然后两种情况：一是C在C’之后执行，其中<code>C&#39;t=DELEGATECALL∧Cv=σ[Ia]b∧Cr=Is</code>；另一种是C在C’之前执行，其中<code>C&#39;t=CALL∧Is∈C&#39;a</code></p>
-<h2 id="四、实验评估"><a href="#四、实验评估" class="headerlink" title="四、实验评估"></a>四、实验评估</h2><h3 id="4-1-Experimental-Setup"><a href="#4-1-Experimental-Setup" class="headerlink" title="4.1 Experimental Setup"></a>4.1 Experimental Setup</h3><p>所有实验均在具有960 GB内存的10个节点的高性能计算集群上进行，其中每个节点具有2个Intel Xeon L5640 CPU，每个CPU具有12个内核，时钟频率为2.26 GHz，运行64位Debian Jessie 8.10。</p>
-<h3 id="4-2-实验结果"><a href="#4-2-实验结果" class="headerlink" title="4.2 实验结果"></a>4.2 实验结果</h3><p>在151935个独特的智能合约集上运行HONEYBADGER，在分析的151935份合约中，48487份被标记为现金流合约。</p>
+<p>验证两个连续的调用c和c’是否沿着相同的执行路径p存在，其中<code>Cr =C'r</code>。然后两种情况：一是C在C’之后执行，其中<code>C't=DELEGATECALL∧Cv=σ[Ia]b∧Cr=Is</code>；另一种是C在C’之前执行，其中<code>C't=CALL∧Is∈C'a</code></p>
+<h2 id="四-实验评估"><a class="markdownIt-Anchor" href="#四-实验评估"></a> 四、实验评估</h2>
+<h3 id="41-experimental-setup"><a class="markdownIt-Anchor" href="#41-experimental-setup"></a> 4.1 Experimental Setup</h3>
+<p>所有实验均在具有960 GB内存的10个节点的高性能计算集群上进行，其中每个节点具有2个Intel Xeon L5640 CPU，每个CPU具有12个内核，时钟频率为2.26 GHz，运行64位Debian Jessie 8.10。</p>
+<h3 id="42-实验结果"><a class="markdownIt-Anchor" href="#42-实验结果"></a> 4.2 实验结果</h3>
+<p>在151935个独特的智能合约集上运行HONEYBADGER，在分析的151935份合约中，48487份被标记为现金流合约。</p>
 <p>换言之，在分析的合约中，只有32%能够接收和发送资金。总共690个合约被确定为蜜罐，其中包括22个平衡障碍（BD）、75个继承障碍（ID）、11个跳过空字符串文字（SESL）、5个类型演绎溢出（TDO）、80个未初始化结构（US）、382个隐藏状态更新（HSU）、14个隐藏传输（HT）以及101个稻草人合约（SMC）。</p>
-<h4 id="Validation"><a href="#Validation" class="headerlink" title="Validation"></a>Validation</h4><p>为了确认蜜獾的正确性，作者对标记为蜜罐的合约的源代码进行了手动检查。通过手动扫描源代码以确定检测到的蜜罐技术的特征来验证标记的合约。例如，如果合约被标记为平衡紊乱，则检查源代码是否包含一个函数，该函数在且仅当发送到函数的值大于或等于合约的余额时，才将合同的余额传输给调用方。</p>
+<h4 id="validation"><a class="markdownIt-Anchor" href="#validation"></a> Validation</h4>
+<p>为了确认蜜獾的正确性，作者对标记为蜜罐的合约的源代码进行了手动检查。通过手动扫描源代码以确定检测到的蜜罐技术的特征来验证标记的合约。例如，如果合约被标记为平衡紊乱，则检查源代码是否包含一个函数，该函数在且仅当发送到函数的值大于或等于合约的余额时，才将合同的余额传输给调用方。</p>
 <center>Table 2:  Number of true positives (TP), false positives (FP)and precisionp(in %) per detected honeypot technique forcontracts with source code.
-
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201113215916.png" srcset="/img/loading.gif" lazyload alt="image-20201113215916206"></p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201113215916.png" srcset="/img/loading.gif" lazyload alt="image-20201113215916206" /></p>
 <p>真阳性（TP）、假阳性（FP）和精度p（in%）其中p计算为p=TP/（TP+FP），真阳性表示合同就所报告的技术而言确实是蜜罐，假阳性表示合同就所报告的技术而言不是蜜罐。</p>
 <p>总的来说，蜜獾显示了非常高的精确度和非常低的假阳性率。分析的8个蜜罐技术中有5个达到了0%的假阳性率。</p>
-<h4 id="Liveness"><a href="#Liveness" class="headerlink" title="Liveness"></a>Liveness</h4><p>作者使用简单的启发式方法将每个地址标记为攻击者或受害者。如果一个地址是：1）创建了蜜罐；2）是向蜜罐发送以太币的第一个地址；3）收到的以太币比实际花在蜜罐上的以太币多，则该地址会被标记为攻击者。</p>
+<h4 id="liveness"><a class="markdownIt-Anchor" href="#liveness"></a> Liveness</h4>
+<p>作者使用简单的启发式方法将每个地址标记为攻击者或受害者。如果一个地址是：1）创建了蜜罐；2）是向蜜罐发送以太币的第一个地址；3）收到的以太币比实际花在蜜罐上的以太币多，则该地址会被标记为攻击者。</p>
 <p>如果一个地址没有被标记为攻击者，并且收到的以太币少于在蜜罐上实际花费的以太币，则该地址被标记为受害者。最后，利用这些信息判断蜜罐是成功的、中止的还是仍然处于活动状态。如果检测到受害者，则蜜罐标记为成功；如果余额为零且未检测到受害者，则蜜罐标记为中止；如果余额大于零且未检测到受害者，则蜜罐标记为活动。</p>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201113220417.png" srcset="/img/loading.gif" lazyload alt="image-20201113220417376"></p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201113220417.png" srcset="/img/loading.gif" lazyload alt="image-20201113220417376" /></p>
 <center>Figure 13 Number of successful, active and aborted honey-pots per honeypot technique
-
 <p>上图显示了每个蜜罐技术成功、中止和活动的蜜罐数。结果表明，跳过空字符串文字是最有效的蜜罐技术，成功率约为78%，而隐藏传输是最不有效的技术，成功率仅为33%。蜜罐的总成功率似乎很低，约为37%</p>
-<h4 id="Profitability"><a href="#Profitability" class="headerlink" title="Profitability"></a>Profitability</h4><center>Table 3: Bytecode similarity (in %) per honeypot technique
-
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201113220525.png" srcset="/img/loading.gif" lazyload alt="image-20201113220525070"></p>
+<h4 id="profitability"><a class="markdownIt-Anchor" href="#profitability"></a> Profitability</h4>
+<center>Table 3: Bytecode similarity (in %) per honeypot technique
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201113220525.png" srcset="/img/loading.gif" lazyload alt="image-20201113220525070" /></p>
 <p>作者统计了每种蜜罐技术的盈利能力。盈利能力按收到金额计算（支出金额+交易费用），最赚钱的蜜罐是稻草人合同蜜罐，平均值为1.76以太币，而最不赚钱的蜜罐是未初始化结构蜜罐，平均值为0.46以太币。</p>
-<h2 id="五、总结评价"><a href="#五、总结评价" class="headerlink" title="五、总结评价"></a>五、总结评价</h2><p>1、论文的核心思想是利用已经检测出来的几种恶意蜜罐的技术特点，来构建一款探测蜜罐的工具，以帮助选择智能合约的客户规避陷阱。</p>
+<h2 id="五-总结评价"><a class="markdownIt-Anchor" href="#五-总结评价"></a> 五、总结评价</h2>
+<p>1、论文的核心思想是利用已经检测出来的几种恶意蜜罐的技术特点，来构建一款探测蜜罐的工具，以帮助选择智能合约的客户规避陷阱。</p>
 <p>2、工具的名字也是生动形象极具创意：HONEYBADGER（蜜獾，一种非常喜欢食用蜜的动物），工具通过三层结构来分别分析遇到的智能合约的三个方面，其中都用了Z3 SMT求解器来检查合约是否满足约束条件，三层线索层层叠加，最后判断蜜罐技术类型。</p>
 
             </div>
@@ -396,9 +409,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2020/111f0a6cc4.html">
+                      <a href="/2020/11b0e81d94.html">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Securify: Practical Security Analysis of Smart Contracts</span>
+                        <span class="hidden-mobile">Smart Contract Vulnerability Detection Using Graph Neural Networks</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     

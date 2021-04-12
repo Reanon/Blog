@@ -14,11 +14,11 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="description" content="本文提出的 Oyente 是最早关注到自动化合约漏洞挖掘的工作之一, 其提供了一个实现较为精简的合约符号执行引擎；尽管Oyente的部分检测方案并不完善, 涉及的漏洞也不够全面, 但依旧作为开创性的工作, 为后续研究提供了很好的支持。">
+  <meta name="description" content="SIF 可以生成Solidity 语言的AST、CFG等结构。">
   <meta name="author" content="Reanon">
   <meta name="keywords" content="JAVA">
   
-  <title>Making Smart Contracts Smarter - Reanon</title>
+  <title>SIF: A Framework for Solidity Contract Instrumentation and Analysis - Reanon</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
@@ -163,7 +163,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Making Smart Contracts Smarter">
+            <span class="h2" id="subtitle" title="SIF: A Framework for Solidity Contract Instrumentation and Analysis">
               
             </span>
 
@@ -173,8 +173,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2020-10-22 10:25" pubdate>
-        2020年10月22日 上午
+      <time datetime="2021-01-03 10:25" pubdate>
+        2021年1月3日 上午
       </time>
     </span>
   
@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.1k 字
+      2k 字
     </span>
   
 
@@ -233,58 +233,75 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Making Smart Contracts Smarter</h1>
+            <h1 style="display: none">SIF: A Framework for Solidity Contract Instrumentation and Analysis</h1>
             
             <div class="markdown-body">
-              <h1 id="making-smart-contracts-smarter"><a class="markdownIt-Anchor" href="#making-smart-contracts-smarter"></a> Making Smart Contracts Smarter</h1>
-<p>论文标题：(2016-CCS) <a target="_blank" rel="noopener" href="https://dl.acm.org/doi/abs/10.1145/2976749.2978309">Making Smart Contracts Smarter</a> ——使智能合约更智能</p>
-<p>论文引用：Luu L, Chu D H, Olickel H, et al. Making smart contracts smarter[C]//Proceedings of the 2016 ACM SIGSAC conference on computer and communications security. 2016: 254-269.</p>
-<p>代码开源：<a target="_blank" rel="noopener" href="https://github.com/enzymefinance/oyente">oyente: An Analysis Tool for Smart Contracts</a></p>
-<h2 id="主要内容"><a class="markdownIt-Anchor" href="#主要内容"></a> 主要内容</h2>
-<p>在本文中，作者研究了在类似加密货币的开放式分布式网络中基于以太坊运行智能合约的安全性。并且介绍了几个安全性问题，在这些问题中，对手可以操纵智能合约的执行以获取利益。这些错误表明在理解底层平台的分布式语义方面存在细微的差距。作者提出了增强以太坊操作语义的方法，以减少合同的脆弱性。对于为现有的以太坊系统写智能合约的开发人员，构建了一个名为Oyente的符号执行工具来发现潜在的安全漏洞。</p>
-<p>在19366份现有以太坊合同中，Oyente标记其中8833份为易受攻击的合同，其中包括TheDAO错误，该错误导致2016年6月损失了6000万美元。</p>
-<h3 id="背景知识符号执行"><a class="markdownIt-Anchor" href="#背景知识符号执行"></a> 背景知识：符号执行</h3>
-<p>符号执行是一种传统的自动化漏洞挖掘技术, 目前也被广泛用于智能合约的漏洞挖掘。符号执行引擎为目标代码提供符号化的虚拟运行环境, 将程序所需的外部输入抽象为取值不固定的符号值, 并通过不断求解路径约束, 来尽可能的探索程序分支。</p>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201029221259.png" srcset="/img/loading.gif" lazyload alt="" /></p>
-<p>符号执行的主要思想是把程序执行过程中不确定的输入转换为符号值, 以推动程序执行与分析我们以下面代码为例, 对符号执行的基本流程进行解释。图1对应的示例代码如下:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs javascript">contract sample&#123;        <br>	uint  g_var;          <br>	<span class="hljs-function"><span class="hljs-keyword">function</span>  <span class="hljs-title">foo1</span>(<span class="hljs-params">uint  m, uint n</span>) <span class="hljs-title">public</span></span>&#123;         <br>		<span class="hljs-keyword">if</span>(m &gt; n)&#123;                         <br>			g_var  =  m;         <br>		&#125;<span class="hljs-keyword">else</span>&#123;                         <br>			g_var  =  n;         <br>		&#125;     <br>	&#125;         <br>	<span class="hljs-function"><span class="hljs-keyword">function</span>  <span class="hljs-title">foo2</span>(<span class="hljs-params">uint  x</span>) <span class="hljs-title">public</span></span>&#123;<br>    	<span class="hljs-keyword">if</span>(g_var  &lt;  x)&#123;<br>        	g_var  =  x;         <br>         &#125;     <br>	&#125; <br>&#125;<br></code></pre></td></tr></table></figure>
-<p>无论是智能合约还是传统平台中的程序, 都可以被抽象为一棵执行树。在正常的执行流程中, 由于程序输入为定值, 每个条件判断都可以得到确定的答案, 因此仅有一条分支被探索。</p>
-<p>而在符号执行中, 输入值为不定的符号变量, 当遇到条件判断时, 符号执行引擎会利用<mark>约束求解器</mark>对包含符号变量的表达式进行求解。对于所有有解的分支, 符号执行都会进行分析, 并记录路径中的约束。</p>
-<p>在上图中, 合约调用的输入有两个, 一个是待调用的函数, 一个是函数的输入。对于图1中的路径  1  来说, 当程序执行到叶子节点时, 该路径的约束有两个: [Func == foo1, m &gt; n], m和n皆为符号化的输入值。对于符号执行来说, 智能合约与传统程序的差异主要在于合约中全局变量的取值是不确定的。因此通常情况下除了输入值, 智能合约的全局变量也需要被处理为符号值。</p>
-<h2 id="设计实现"><a class="markdownIt-Anchor" href="#设计实现"></a> 设计实现</h2>
-<h3 id="oyente"><a class="markdownIt-Anchor" href="#oyente"></a> Oyente</h3>
-<p>Oyente是在论文发表之后一段时间才由melon.fund于2018年10月发布的一款为现有的以太坊智能合约开发人员构建的符号执行工具，以发现智能合约中潜在的安全漏洞。其基本介绍：</p>
+              <h1 id="sif"><a class="markdownIt-Anchor" href="#sif"></a> SIF</h1>
+<p>论文题目： <a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/abstract/document/8945726">SIF：A Framework for Solidity Contract Instrumentation and Analysis</a> —— Solidity合约检测和分析框架</p>
+<p>论文引用：Peng C, Akca S, Rajan A. SIF: A framework for solidity contract instrumentation and analysis[C]//2019 26th Asia-Pacific Software Engineering Conference (APSEC). IEEE, 2019: 466-473.</p>
+<p>代码开源：<a target="_blank" rel="noopener" href="https://github.com/chao-peng/SIF">chao-peng/SIF</a></p>
+<h2 id="背景"><a class="markdownIt-Anchor" href="#背景"></a> 背景</h2>
+<p>传统的编程语言通常有综合框架支持，用于代码检测、监视、优化和代码生成的支持，例如C/C ++的LLVM / Clang [4]）。Solidity这样的智能合约程序设计语言缺少此类的框架支持。</p>
+<p>分析Solidity合同安全漏洞的现有工作和工具主要基于是智能合约的字节码，或将Solidity代码翻译为可执行安全性分析的其他语言或中间形式。比如，Oyente [5]分析来自Solidity编译器的字节码并成功报告漏洞的存在。但是，它缺乏跟踪和定位Solidity代码中的错误的能力。</p>
+<p>Zeus [10]将智能合约转换为LLVM位代码，但不支持完整的Solidity语法，包括throw语句，自销毁（self-destructs），虚函数和汇编代码块。</p>
+<p>这些技术虽然可以有效地检测安全漏洞，但它们并不是通用的代码检测和分析工具。</p>
+<p>结果是，使用现有技术很难构建目的不同于检测安全漏洞的程序分析工具。在这些技术中，Solidity源代码的可追溯性也是一个常见问题。本文作者提出了一种通用分析框架，可以满足对Solidity合同的这种需求。</p>
+<p>为了实现此目标，我们设计并实施具有以下功能的Solidity Instrumentation Framework（SIF）</p>
+<ul>
+<li>提供一个可供用户查询Solidity代码的抽象语法树（AST）的接口</li>
+<li>预定义的helper 函数支持代码检测、转换，同时可以修改AST。</li>
+<li>支持从AST生成Solidity代码</li>
+</ul>
+<p>我们通过使用SIF框架实现7种不同的Solidity合同工具或实用程序来证明SIF框架在支持代码检测和分析方面的通用性。<br />
+其中四个工具查询Solidity抽象语法树（AST）以提供有关合同代码的信息，而其他三个工具则使用AST修改代码。下面提供了这些工具的简要说明</p>
+<ul>
+<li>Function Listing：列出了所有函数定义，包括函数名称，返回列表，参数列表以及它们所属的协定。在总结和审查Solidity合同时很有用。</li>
+<li>AST Diff：一种语法差异工具（syntactic diff tool），用于在AST级别比较智能合约。它忽略注释，空格和空白行。</li>
+<li>Call Graph Generator：调用图生成器生成函数调用图，以描述Solidity合同中的函数之间的调用关系。节点代表功能，边代表调用关系。在理解和审查智能合约时很有用。</li>
+<li><mark>Control Flow Graph Generato</mark>r：控制流图生成器生成Solidity合同中控制流的图形表示。<br />
+控制流程图在静态分析和程序优化中非常有用。</li>
+<li>SIF Rename ：可以轻松地重命名现有标识符。所有对指定标识符的定义和引用将更改为提供的新名称</li>
+<li>Fault Seeder：允许开发人员人为地在智能合约中植入错误。该工具目前支持3种常见的错误/漏洞类型。植入的错误可用于评估发现漏洞的测试或验证工具的有效性。</li>
+<li>Assertion Analyser：断言分析器检查智能合约的所有AST节点，并确定该节点是否易受漏洞影响，例如被零除，上溢和下溢。断言将通过该工具插入易受这些漏洞影响的合同位置，在修改后的合同执行期间将检查断言。</li>
+</ul>
+<h2 id="一-主要内容"><a class="markdownIt-Anchor" href="#一-主要内容"></a> 一、主要内容</h2>
+<p>SIF为Solidity合同开发人员和测试人员提供支持，以建立用于分析，理解，诊断，优化和代码生成的源代码级技术。</p>
+<p>通过在框架之上构建实用工具并在以太坊网络上部署的1838个真实智能合约上运行它们，作者展示了该框架的可行性和适用性。</p>
+<p>通用框架SIF使用C ++实现，SIF支持整个Solidity语法，最高版本为0.5.3，该框架还提供了从AST生成Solidity代码的功能。</p>
+<p>SIF的工作流程如图1所示。SIF从 Solidity 编译器生成的AST of Solidity代码开始。然后，它接受有关查询和/或所需修改的用户说明。然后，框架收集所需的查询信息或对AST进行修改，最后从AST生成Solidity代码。</p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210102153904.png" srcset="/img/loading.gif" lazyload alt="image-20210102153903991" /></p>
+<h2 id="sif-design"><a class="markdownIt-Anchor" href="#sif-design"></a> SIF Design</h2>
+<p>SIF的操作分为三个阶段：</p>
 <ol>
-<li>开发语言：Python</li>
-<li>工具类型：静态分析工具</li>
-<li>分析内容：EVM字节码</li>
-<li>工具原理：Oyente将需要分析的合约的<mark>字节码</mark>和当前以太坊的全局状态作为输入，检测合约是否存在安全问题，并向用户输入有问题的符号路径。在这个过程中，使用Z3求解器来确定可满足性。</li>
-<li>模块划分：包含  4  个核心组件,    控制流图生成器(CFG   Builder),   探索器(Explorer), 分析器(Core Analysis)和验证器(Validator)。</li>
+<li>第1阶段 着重于将AST节点表示为具有检索和修改节点信息的方法的C ++类。</li>
+<li>第2阶段 与 用户定义的查询和/或工具功能进行交互，并遍历AST以执行所需的操作。</li>
+<li>第3阶段从AST生成Solidity代码。我们将在本节的其余部分中详细讨论每个阶段。</li>
 </ol>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201029222806.png" srcset="/img/loading.gif" lazyload alt="image-20201029221903218" /></p>
+<p>我们使用清单1中显示的名为Request的示例结构定义示例，其中包含一个数据元素和一个方法，以说明不同的阶段。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Request</span> &#123;</span><br>	bytes data;<br>	<span class="hljs-built_in">function</span> (bytes memory) external callback;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="ast-representation"><a class="markdownIt-Anchor" href="#ast-representation"></a> AST Representation</h3>
+<p>Solidity编译器从Solidity代码以两种格式生成AST：</p>
 <ul>
-<li>
-<p>控制流图生成器（CFGBuilder）：对合约进行预分析, 为合约构建基本的控制流图, 以基本块为节点, 跳转关系为边；然而部分跳转关系并不能由生成器完全确定。</p>
-</li>
-<li>
-<p>探索器（Explorer）：对智能合约进行符号执行, 并在执行过程中将这些信息补齐。探索器承担着收集合约信息的重要责任, 它本质上是一个循环, 依次执行合约控制流图中各个基本块的代码。它利用  <strong>Z3  求解器</strong>对合约中的条件跳转进行求解, 探索器根据求解结果决定对哪个分支进行分析, 当条件跳转的两个分支条件都有解时, 两个分支都会被探索。</p>
-</li>
-<li>
-<p>分析器（CoreAnalsis）：包含用于检测合同的子组件，这些合同是TOD，与时间戳相关或异常处理的异常。Explorer仅收集表现出不同的以太流的路径。 因此，根据当交易顺序改变时发出的以太币是否不同来检测合约是否为TOD。 同样，如果要发送的条件包括块时间戳，我们将检查合同是否与时间戳相关。 我们描述了我们如何执行以下分析</p>
-<ul>
-<li>TOD（transaction-ordering dependent）检测。 Explorer返回一组路径以及每个路径对应的以太流。 因此，我们的分析将检查两条不同的路径是否有不同的以太流。 如果合同中有这样的痕迹对，Oyente会将其报告为TOD合同。</li>
-<li>时间戳依赖性检测。 我们使用特殊的符号变量来表示块时间戳。 请注意，块时间戳在执行期间保持不变。 因此，给定轨迹的路径条件，我们检查是否包含此符号变量。 如果合同的任何跟踪依赖于此符号变量，则将合同标记为与时间戳相关。</li>
-<li>错误处理的异常。 检测错误处理的异常很简单。 回想一下，如果被调用方产生了例外，它将0推入调用方的操作数堆栈。 因此，我们仅需要在每次调用后检查合同是否执行ISZERO指令（该指令检查堆栈的最高值是否为0）。 如果不是，则忽略被调用方中发生的任何异常。 因此，我们将此类合同标记为处理异常的合同。</li>
-<li>重入检测。 我们利用路径条件来检查重入漏洞。 在遇到的每个CALL，我们在执行CALL之前获取执行的路径条件。 然后，我们检查这个条件带有更新变量（例如存储值）是否仍然成立（即，是否可以再次执行call 指令）。 如果是这样，我们认为这是一个漏洞，因为被调用者有可能在完成调用之前重新执行调用操作。</li>
+<li>纯文本</li>
+<li>JSON（JavaScript对象表示法，结构化数据格式）。</li>
 </ul>
-</li>
-<li>
-<p>验证器（Validator）：试图消除误报。 例如，假设CoreAnalysis将一个合同标记为TOD，并且其两条迹线t1和t2表现出不同的以太流量，验证器将查询Z3以检查排序（t1，t2）和（t2，t1）是否都可行。 如果不存在这样的t1和t2，则将该案例视为误报。 但是，由于我们还没有完全模拟以太坊的执行环境，Validator还远远不够完善。 对于第6节中介绍的结果，我们采用尽力而为的 手动分析来确认安全漏洞。 换句话说，Oyente当前的主要用途是标记潜在的易受攻击的合同。 全面的误报检测将留待以后的工作。</p>
-</li>
-</ul>
-<h2 id="总结评价"><a class="markdownIt-Anchor" href="#总结评价"></a> 总结评价</h2>
-<p>1、Oyente是最早关注到自动化合约漏洞挖掘的工作之一, 提供了一个实现较为精简的合约符号执行引擎；尽管  Oyente  的部分检测方案并不完善, 涉及的漏洞也不够全面, 但依旧作为开创性的工作, 为后续研究提供了很好的支持。</p>
-<p>2、Oyente 在论文中介绍了对条件竞争、时间戳依赖、未校验返回值以及重入漏洞等四种合约漏洞的检测方案，并在开源代码中进一步补充了整数上溢、整数下溢、调用栈溢出等常见漏洞的检测代码。</p>
+<p>为了使我们的代码检测工具通用且易于使用，我们将C++类用作中间AST表示形式。</p>
+<p>给定Solidity AST，SIF首先遍历AST，并为每个节点实例化具有所有相关信息的该节点类型的类。<br />
+图2显示了一个示例AST中出现的结构定义。</p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210102154338.png" srcset="/img/loading.gif" lazyload alt="image-20210102154338155" /></p>
+<p>这些类在其数据字段中包含有关AST节点的信息，并提供查询和修改数据的方法。<br />
+清单2 显示了AST中的结构定义节点的C ++类表示。 C ++类提供了获取结构名称，将其设置为其他名称，查询结构中字段数，获取特定字段，添加，删除和更新字段的方法。这些方法有助于查询和修改AST节点。</p>
+<h3 id="相关工作"><a class="markdownIt-Anchor" href="#相关工作"></a> 相关工作</h3>
+<p>过去几年中出现了几种用于智能合约的静态分析和漏洞检测工具。我们介绍并讨论有关漏洞检测，代码生成，查询和检测的Solidity合同的现有工作。</p>
+<p>1、漏洞检测：许多现有技术都依靠字节码分析来检查潜在的漏洞[3]，[5] – [7]。<br />
+字节码是智能合约的已编译十六进制格式。在字节码级别进行Solidity合同验证足以检测漏洞，但是，将问题追溯到Solidity源代码，开发人员可以解决该问题具有挑战性。一些技术将Solidity代码转换为F* 语言或以中间形式表示代码，例如LLVM IR（中间表示）或XML [8] – [10]。<br />
+然后对 中间表示 进行漏洞分析。</p>
+<p>该技术不支持将中间形式转换回Solidity，这会导致源代码的可追溯性丧失。</p>
+<p>2、Solidity code generation from AST/Intermediate form：当前，从中间形式或AST转换回Solidity的支持有限。我们只知道一种工具Soltar [12]，它支持将Solidity AST转换回Solidity代码。<br />
+但是，Soltar 不提供SIF支持的功能来查询和修改AST。此外，Soltar不被维护，并且不支持Solidity版本0.4.3及更高版本。第三部分介绍的SIF能够处理最新的Solidity版本0.5.3和较旧的版本。</p>
+<p>现有的工具Zeus [10]支持将Solidity代码转换为LLVM位代码，但不具备从位代码返回Solidity的功能。<br />
+另外，不支持完整的Solidity语法（throw语句，自销毁，虚拟函数和汇编代码块），并且没有提供代码检测的准备。Porosity[13]和以太坊智能合约反编译器JEB [14]可以将字节码转换回Solidity码。<br />
+但是，这些工具不支持Solidity代码查询，修改和检测。</p>
 
             </div>
             <hr>
@@ -304,8 +321,6 @@
                     
                       <a class="hover-with-bg" href="/tags/Smart-Contract/">Smart Contract</a>
                     
-                      <a class="hover-with-bg" href="/tags/%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/">符号执行</a>
-                    
                   </div>
                 
               </div>
@@ -321,9 +336,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2020/103af384f2.html">
+                      <a href="/2021/01826cf81f.html">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Slither: A Static Analysis Framework For Smart</span>
+                        <span class="hidden-mobile">Learning features from enhanced function call graphs for Android  malware detection</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -331,8 +346,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2020/10c7caf55.html">
-                        <span class="hidden-mobile">Contractward: Automated vulnerability detection models for ethereum smart contracts</span>
+                      <a href="/2020/125ff8d3f9.html">
+                        <span class="hidden-mobile">Evaluating Smart Contract Static Analysis Tools Using Bug Injection</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.8k 字
+      2.9k 字
     </span>
   
 
@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      35
+      36
        分钟
     </span>
   
@@ -236,31 +236,39 @@
             <h1 style="display: none">Machine Learning Model for Smart Contracts Security Analysis</h1>
             
             <div class="markdown-body">
-              <h1 id="Machine-Learning-Model-for-Smart-Contracts-Security-Analysis"><a href="#Machine-Learning-Model-for-Smart-Contracts-Security-Analysis" class="headerlink" title="Machine Learning Model for Smart Contracts Security Analysis"></a>Machine Learning Model for Smart Contracts Security Analysis</h1><p>论文标题：(2019-PST) <a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/8949045">Machine Learning Model for Smart Contracts Security Analysis</a>——智能合约安全性分析的机器学习模型</p>
+              <h1 id="machine-learning-model-for-smart-contracts-security-analysis"><a class="markdownIt-Anchor" href="#machine-learning-model-for-smart-contracts-security-analysis"></a> Machine Learning Model for Smart Contracts Security Analysis</h1>
+<p>论文标题：(2019-PST) <a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/8949045">Machine Learning Model for Smart Contracts Security Analysis</a>——智能合约安全性分析的机器学习模型</p>
 <p>论文引用：Momeni P, Wang Y, Samavi R. Machine Learning Model for Smart Contracts Security Analysis[C]//2019 17th International Conference on Privacy, Security and Trust (PST). IEEE, 2019: 1-6.</p>
 <p>代码开源：<strong>本文代码并未开源</strong>。</p>
 <p>本文发表于<a target="_blank" rel="noopener" href="https://pstnet.ca/pst2019/">2019 17th International Conference on Privacy, Security and Trust (PST)</a>，三名作者都是来自加拿大的<a target="_blank" rel="noopener" href="https://www.mcmaster.ca/">麦克马斯特大学</a>。</p>
-<h2 id="一、主要内容"><a href="#一、主要内容" class="headerlink" title="一、主要内容"></a>一、主要内容</h2><p>本文介绍了一种机器学习的预测模型（machine learning predictive model ）用以检测智能合约中的漏洞。作者采用了<a target="_blank" rel="noopener" href="https://github.com/crytic/slither">Slither</a>和<a target="_blank" rel="noopener" href="https://github.com/ConsenSys/mythril">Mythril</a>两个静态代码分析器【都已在GitHub上开源】（static code analyzers）来标记1000多个已在以太坊平台上验证并使用的智能合约，然后提取合约中的46种漏洞，对每一种漏洞都采用五重交叉验证（five-fold cross validation）进行建模。使用模型预测了16种类型的漏洞，平均准确度为95％，F1score为79％。</p>
-<h2 id="二、智能合约静态代码分析"><a href="#二、智能合约静态代码分析" class="headerlink" title="二、智能合约静态代码分析"></a>二、智能合约静态代码分析</h2><p>静态代码分析器无需执行程序即可在计算机软件中搜索bug。静态代码分析有两种：分析源代码和分析目标代码。</p>
-<h3 id="智能合约安全挑战"><a href="#智能合约安全挑战" class="headerlink" title="智能合约安全挑战"></a>智能合约安全挑战</h3><ol>
+<h2 id="一-主要内容"><a class="markdownIt-Anchor" href="#一-主要内容"></a> 一、主要内容</h2>
+<p>本文介绍了一种机器学习的预测模型（machine learning predictive model ）用以检测智能合约中的漏洞。作者采用了<a target="_blank" rel="noopener" href="https://github.com/crytic/slither">Slither</a>和<a target="_blank" rel="noopener" href="https://github.com/ConsenSys/mythril">Mythril</a>两个静态代码分析器【都已在GitHub上开源】（static code analyzers）来标记1000多个已在以太坊平台上验证并使用的智能合约，然后提取合约中的46种漏洞，对每一种漏洞都采用五重交叉验证（five-fold cross validation）进行建模。使用模型预测了16种类型的漏洞，平均准确度为95％，F1score为79％。</p>
+<h2 id="二-智能合约静态代码分析"><a class="markdownIt-Anchor" href="#二-智能合约静态代码分析"></a> 二、智能合约静态代码分析</h2>
+<p>静态代码分析器无需执行程序即可在计算机软件中搜索bug。静态代码分析有两种：分析源代码和分析目标代码。</p>
+<h3 id="智能合约安全挑战"><a class="markdownIt-Anchor" href="#智能合约安全挑战"></a> 智能合约安全挑战</h3>
+<ol>
 <li>将智能合约上传到区块链后，任何其他合约或用户都可以调用该合约。这会生成无法在合同的未经测试的执行路径上执行的输入的不可预测的组合。</li>
 <li>因为合约的二进制代码及其状态存储在区块链的不变账本中，智能合约无法修补，如果安全问题严重，则平台管理员可以用分叉来更改或删除分类帐，但是分叉代价极大。</li>
 </ol>
 <p>Solidity源代码中提取了抽象语法树（AST）作为程序的中间表示形式，因为AST提供了有关程序代码的信息，这些信息可用作查找漏洞的特征。</p>
-<h3 id="抽象语法树（AST）"><a href="#抽象语法树（AST）" class="headerlink" title="抽象语法树（AST）"></a>抽象语法树（AST）</h3><p>AST在编译器中广泛使用的代表程序代码结构的数据结构。 AST中的每个节点代表一种编程语言的语法元素，树显示了这些元素的使用顺序。静态代码分析器支持AST，因为AST提供了有关源代码特征的丰富详细信息，例如函数定义或其他合同中的合同的数量。使用<code>Solc</code>（Solidity命令行编译器）从Solidity代码生成AST。</p>
-<h3 id="控制流程图（CFG）"><a href="#控制流程图（CFG）" class="headerlink" title="控制流程图（CFG）"></a>控制流程图（CFG）</h3><p>CFG表示程序可以表示采取的所有执行路径。可以从AST提取CFG，在AST编译器使用CFG的目的是从程序的语句生成汇编代码。 CFG还常用于静态代码分析工具中，以在程序中定位无法访问的代码。</p>
-<h3 id="静态代码分析"><a href="#静态代码分析" class="headerlink" title="静态代码分析"></a>静态代码分析</h3><p>为了运行静态分析器，需要首先通过词法分析器（lexer tools）工具解析源代码。然后，从解析的代码生成抽象语法树（AST），并从AST中提取控制流图（CFG）。通过执行这些步骤，静态代码分析器能够检查通过CFG的所有执行路径是否存在潜在的错误。静态代码分析器根据不同类型的漏洞执行不同的分析，例如符号执行和污点分析。</p>
-<h2 id="三、基于机器学习的智能合约代码分析"><a href="#三、基于机器学习的智能合约代码分析" class="headerlink" title="三、基于机器学习的智能合约代码分析"></a>三、基于机器学习的智能合约代码分析</h2><p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210412113202.png" srcset="/img/loading.gif" lazyload alt="基于机器学习的代码分析器概述"></p>
+<h3 id="抽象语法树ast"><a class="markdownIt-Anchor" href="#抽象语法树ast"></a> 抽象语法树（AST）</h3>
+<p>AST在编译器中广泛使用的代表程序代码结构的数据结构。 AST中的每个节点代表一种编程语言的语法元素，树显示了这些元素的使用顺序。静态代码分析器支持AST，因为AST提供了有关源代码特征的丰富详细信息，例如函数定义或其他合同中的合同的数量。使用<code>Solc</code>（Solidity命令行编译器）从Solidity代码生成AST。</p>
+<h3 id="控制流程图cfg"><a class="markdownIt-Anchor" href="#控制流程图cfg"></a> 控制流程图（CFG）</h3>
+<p>CFG表示程序可以表示采取的所有执行路径。可以从AST提取CFG，在AST编译器使用CFG的目的是从程序的语句生成汇编代码。 CFG还常用于静态代码分析工具中，以在程序中定位无法访问的代码。</p>
+<h3 id="静态代码分析"><a class="markdownIt-Anchor" href="#静态代码分析"></a> 静态代码分析</h3>
+<p>为了运行静态分析器，需要首先通过词法分析器（lexer tools）工具解析源代码。然后，从解析的代码生成抽象语法树（AST），并从AST中提取控制流图（CFG）。通过执行这些步骤，静态代码分析器能够检查通过CFG的所有执行路径是否存在潜在的错误。静态代码分析器根据不同类型的漏洞执行不同的分析，例如符号执行和污点分析。</p>
+<h2 id="三-基于机器学习的智能合约代码分析"><a class="markdownIt-Anchor" href="#三-基于机器学习的智能合约代码分析"></a> 三、基于机器学习的智能合约代码分析</h2>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210412113202.png" srcset="/img/loading.gif" lazyload alt="基于机器学习的代码分析器概述" /></p>
 <center>图1 基于机器学习的代码分析器概述</center>
-
-<h3 id="数据收集与预处理"><a href="#数据收集与预处理" class="headerlink" title="数据收集与预处理"></a>数据收集与预处理</h3><p>数据集是从Etherscan 收集的，我们总共收集了以Solidity编写的13,745个唯一的活动智能合约源代码。由于Solidity编译器的版本4不向后兼容，因此专注于数据集中版本为0.4.18的智能合约，合格智能合约的数量减少到1,013。将数据集分为80％训练和20％测试集。</p>
-<h3 id="建立AST和特征提取"><a href="#建立AST和特征提取" class="headerlink" title="建立AST和特征提取"></a>建立AST和特征提取</h3><p>从数据集中，我们从AST中提取了17个特征，如表I所示。这些特征是常见的Solidity代码结构，在我们的数据集中出现了1000多次。这些功能代表了代码的复杂性，可以分为两类：</p>
+<h3 id="数据收集与预处理"><a class="markdownIt-Anchor" href="#数据收集与预处理"></a> 数据收集与预处理</h3>
+<p>数据集是从Etherscan 收集的，我们总共收集了以Solidity编写的13,745个唯一的活动智能合约源代码。由于Solidity编译器的版本4不向后兼容，因此专注于数据集中版本为0.4.18的智能合约，合格智能合约的数量减少到1,013。将数据集分为80％训练和20％测试集。</p>
+<h3 id="建立ast和特征提取"><a class="markdownIt-Anchor" href="#建立ast和特征提取"></a> 建立AST和特征提取</h3>
+<p>从数据集中，我们从AST中提取了17个特征，如表I所示。这些特征是常见的Solidity代码结构，在我们的数据集中出现了1000多次。这些功能代表了代码的复杂性，可以分为两类：</p>
 <ol>
 <li>代表执行路径（例如，函数调用）并直接添加到控制流程图的特征；</li>
 <li>代表启发式猜测（heuristic guesses）的其他功能代码的复杂性，例如代码行（LOC）。</li>
 </ol>
 <center>表1 AST中提取的特征</center>
-
 <table>
 <thead>
 <tr>
@@ -268,7 +276,8 @@
 <th></th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>1 Lines of code  (LOC)</td>
 <td>10 Bytes</td>
 </tr>
@@ -300,11 +309,12 @@
 <td>9 Event  definitions</td>
 <td>17 Hexadecimal  addresses</td>
 </tr>
-</tbody></table>
-<h3 id="静态代码分析-1"><a href="#静态代码分析-1" class="headerlink" title="静态代码分析"></a>静态代码分析</h3><p>使用了两个智能合约静态代码分析器Mythril 和Slither。这两个工具在区块链社区中具有很高的影响力和声誉。Mythril Classic：此分析器使用多种技术（例如符号执行和污点分析）来检测Solidity代码中的安全漏洞。Mythril可以检测19种类型的漏洞。如表II所示，在这19个漏洞中，我们的数据集中发现了11个漏洞。</p>
+</tbody>
+</table>
+<h3 id="静态代码分析-2"><a class="markdownIt-Anchor" href="#静态代码分析-2"></a> 静态代码分析</h3>
+<p>使用了两个智能合约静态代码分析器Mythril 和Slither。这两个工具在区块链社区中具有很高的影响力和声誉。Mythril Classic：此分析器使用多种技术（例如符号执行和污点分析）来检测Solidity代码中的安全漏洞。Mythril可以检测19种类型的漏洞。如表II所示，在这19个漏洞中，我们的数据集中发现了11个漏洞。</p>
 <p>Slither：此分析器使用污点分析来跟踪Solidity代码分析中的值，并且可以找到31种类型的漏洞，它们具有四个不同的影响级别（高，中，低和信息性）。在我们的数据集中，这31种类型的漏洞中有30种存在。在静态代码分析中使用两个不同的分析器时，我们遇到的挑战之一是两个分析器之间的句法和语义上的差异。</p>
 <center>表2 静态代码分析器检测到的安全漏洞</center>
-
 <table>
 <thead>
 <tr>
@@ -314,7 +324,8 @@
 <th>Slither</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>1</td>
 <td>Integer  underﬂow</td>
 <td>x</td>
@@ -524,39 +535,48 @@
 <td></td>
 <td>x</td>
 </tr>
-</tbody></table>
-<h3 id="标记Labeling"><a href="#标记Labeling" class="headerlink" title="标记Labeling"></a>标记Labeling</h3><p>在此步骤中，使用先前静态代码分析器提取的36种漏洞被用来标记智能合约。如果静态代码分析器检测到漏洞，则我们将该漏洞标记为存在，否则标记为不存在。为了捕获差异，创建了五个新的安全漏洞，作为两个分析器检测到的安全漏洞的组合值。当任一分析工具报告存在该漏洞时，我们将组合值标记为存在；否则，我们将其标记为不存在。</p>
-<h3 id="分类Classification"><a href="#分类Classification" class="headerlink" title="分类Classification"></a>分类Classification</h3><p>选择了四个常用的监督二元分类器：支持向量机（Support Vector Machine，SVM），神经网络（Neural Network，NN），随机森林（Random Forest，RF）和决策树（Decision Tree，DT）来训练模型。由于安全漏洞彼此独立，因此分别为每个漏洞训练了二进制分类器，总共训练了184（4 * 46）个二元分类器。</p>
-<h2 id="四、结果和讨论"><a href="#四、结果和讨论" class="headerlink" title="四、结果和讨论"></a>四、结果和讨论</h2><h3 id="评估指标"><a href="#评估指标" class="headerlink" title="评估指标"></a>评估指标</h3><ol>
-<li><p>首先定义以下几个概念</p>
+</tbody>
+</table>
+<h3 id="标记labeling"><a class="markdownIt-Anchor" href="#标记labeling"></a> 标记Labeling</h3>
+<p>在此步骤中，使用先前静态代码分析器提取的36种漏洞被用来标记智能合约。如果静态代码分析器检测到漏洞，则我们将该漏洞标记为存在，否则标记为不存在。为了捕获差异，创建了五个新的安全漏洞，作为两个分析器检测到的安全漏洞的组合值。当任一分析工具报告存在该漏洞时，我们将组合值标记为存在；否则，我们将其标记为不存在。</p>
+<h3 id="分类classification"><a class="markdownIt-Anchor" href="#分类classification"></a> 分类Classification</h3>
+<p>选择了四个常用的监督二元分类器：支持向量机（Support Vector Machine，SVM），神经网络（Neural Network，NN），随机森林（Random Forest，RF）和决策树（Decision Tree，DT）来训练模型。由于安全漏洞彼此独立，因此分别为每个漏洞训练了二进制分类器，总共训练了184（4 * 46）个二元分类器。</p>
+<h2 id="四-结果和讨论"><a class="markdownIt-Anchor" href="#四-结果和讨论"></a> 四、结果和讨论</h2>
+<h3 id="评估指标"><a class="markdownIt-Anchor" href="#评估指标"></a> 评估指标</h3>
 <ol>
-<li>$TP$（True Positive）真阳性：预测为正，实际也为正</li>
-<li>$FP$（False Positive）假阳性：预测为正，实际为负</li>
-<li>$FN$（False Negative）假阴性：预测与负、实际为正</li>
-<li>$TN$（True Negative）真阴性：预测为负、实际也为负</li>
+<li>
+<p>首先定义以下几个概念</p>
+<ol>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>T</mi><mi>P</mi></mrow><annotation encoding="application/x-tex">TP</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span></span></span></span>（True Positive）真阳性：预测为正，实际也为正</li>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>F</mi><mi>P</mi></mrow><annotation encoding="application/x-tex">FP</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span></span></span></span>（False Positive）假阳性：预测为正，实际为负</li>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>F</mi><mi>N</mi></mrow><annotation encoding="application/x-tex">FN</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span></span></span></span>（False Negative）假阴性：预测与负、实际为正</li>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>T</mi><mi>N</mi></mrow><annotation encoding="application/x-tex">TN</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span></span></span></span>（True Negative）真阴性：预测为负、实际也为负</li>
 </ol>
 </li>
-<li><p>通过第一步的统计值计算每个类别下的precision和recall</p>
+<li>
+<p>通过第一步的统计值计算每个类别下的precision和recall</p>
 <ol>
-<li>精准度 / 查准率($precision_k=\frac{TP}{TP+FP}$)：指被分类器判定正例中的正样本的比重</li>
-<li>召回率 / 查全率 ($recall_k=\frac{TP}{TP+FN}$)：指的是被预测为正例的占总的正例的比重</li>
-<li>准确率($accuracy=\frac{TP+TN}{TP+FN+TN+FP}$)：代表分类器对整个样本判断正确的比重</li>
+<li>精准度 / 查准率(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>p</mi><mi>r</mi><mi>e</mi><mi>c</mi><mi>i</mi><mi>s</mi><mi>i</mi><mi>o</mi><msub><mi>n</mi><mi>k</mi></msub><mo>=</mo><mfrac><mrow><mi>T</mi><mi>P</mi></mrow><mrow><mi>T</mi><mi>P</mi><mo>+</mo><mi>F</mi><mi>P</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">precision_k=\frac{TP}{TP+FP}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.85396em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">p</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">e</span><span class="mord mathdefault">c</span><span class="mord mathdefault">i</span><span class="mord mathdefault">s</span><span class="mord mathdefault">i</span><span class="mord mathdefault">o</span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.275662em;vertical-align:-0.403331em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.872331em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">T</span><span class="mord mathdefault mtight" style="margin-right:0.13889em;">P</span><span class="mbin mtight">+</span><span class="mord mathdefault mtight" style="margin-right:0.13889em;">F</span><span class="mord mathdefault mtight" style="margin-right:0.13889em;">P</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">T</span><span class="mord mathdefault mtight" style="margin-right:0.13889em;">P</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.403331em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span>)：指被分类器判定正例中的正样本的比重</li>
+<li>召回率 / 查全率 (<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>r</mi><mi>e</mi><mi>c</mi><mi>a</mi><mi>l</mi><msub><mi>l</mi><mi>k</mi></msub><mo>=</mo><mfrac><mrow><mi>T</mi><mi>P</mi></mrow><mrow><mi>T</mi><mi>P</mi><mo>+</mo><mi>F</mi><mi>N</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">recall_k=\frac{TP}{TP+FN}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">e</span><span class="mord mathdefault">c</span><span class="mord mathdefault">a</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.01968em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.275662em;vertical-align:-0.403331em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.872331em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">T</span><span class="mord mathdefault mtight" style="margin-right:0.13889em;">P</span><span class="mbin mtight">+</span><span class="mord mathdefault mtight" style="margin-right:0.13889em;">F</span><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">T</span><span class="mord mathdefault mtight" style="margin-right:0.13889em;">P</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.403331em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span>)：指的是被预测为正例的占总的正例的比重</li>
+<li>准确率(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>a</mi><mi>c</mi><mi>c</mi><mi>u</mi><mi>r</mi><mi>a</mi><mi>c</mi><mi>y</mi><mo>=</mo><mfrac><mrow><mi>T</mi><mi>P</mi><mo>+</mo><mi>T</mi><mi>N</mi></mrow><mrow><mi>T</mi><mi>P</mi><mo>+</mo><mi>F</mi><mi>N</mi><mo>+</mo><mi>T</mi><mi>N</mi><mo>+</mo><mi>F</mi><mi>P</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">accuracy=\frac{TP+TN}{TP+FN+TN+FP}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">a</span><span class="mord mathdefault">c</span><span class="mord mathdefault">c</span><span class="mord mathdefault">u</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">a</span><span class="mord mathdefault">c</span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.275662em;vertical-align:-0.403331em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.872331em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">T</span><span class="mord mathdefault mtight" style="margin-right:0.13889em;">P</span><span class="mbin mtight">+</span><span class="mord mathdefault mtight" style="margin-right:0.13889em;">F</span><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span><span class="mbin mtight">+</span><span class="mord mathdefault mtight" style="margin-right:0.13889em;">T</span><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span><span class="mbin mtight">+</span><span class="mord mathdefault mtight" style="margin-right:0.13889em;">F</span><span class="mord mathdefault mtight" style="margin-right:0.13889em;">P</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">T</span><span class="mord mathdefault mtight" style="margin-right:0.13889em;">P</span><span class="mbin mtight">+</span><span class="mord mathdefault mtight" style="margin-right:0.13889em;">T</span><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.403331em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span>)：代表分类器对整个样本判断正确的比重</li>
 </ol>
 </li>
-<li><p>计算结果计算每个类别下的<code>F1-score</code>，计算方式如下</p>
+<li>
+<p>计算结果计算每个类别下的<code>F1-score</code>，计算方式如下</p>
 <ol>
-<li>$F1_{k}=2\times \frac{precision_k·recall_k}{precision_k+recall_k}$</li>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>F</mi><msub><mn>1</mn><mi>k</mi></msub><mo>=</mo><mn>2</mn><mo>×</mo><mfrac><mrow><mi>p</mi><mi>r</mi><mi>e</mi><mi>c</mi><mi>i</mi><mi>s</mi><mi>i</mi><mi>o</mi><msub><mi>n</mi><mi>k</mi></msub><mo separator="true">⋅</mo><mi>r</mi><mi>e</mi><mi>c</mi><mi>a</mi><mi>l</mi><msub><mi>l</mi><mi>k</mi></msub></mrow><mrow><mi>p</mi><mi>r</mi><mi>e</mi><mi>c</mi><mi>i</mi><mi>s</mi><mi>i</mi><mi>o</mi><msub><mi>n</mi><mi>k</mi></msub><mo>+</mo><mi>r</mi><mi>e</mi><mi>c</mi><mi>a</mi><mi>l</mi><msub><mi>l</mi><mi>k</mi></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">F1_{k}=2\times \frac{precision_k·recall_k}{precision_k+recall_k}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="mord"><span class="mord">1</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.4133239999999998em;vertical-align:-0.481108em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9322159999999999em;"><span style="top:-2.6550000000000002em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">p</span><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight">e</span><span class="mord mathdefault mtight">c</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">s</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">o</span><span class="mord mtight"><span class="mord mathdefault mtight">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3487714285714287em;margin-left:0em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15122857142857138em;"><span></span></span></span></span></span></span><span class="mbin mtight">+</span><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight">e</span><span class="mord mathdefault mtight">c</span><span class="mord mathdefault mtight">a</span><span class="mord mathdefault mtight" style="margin-right:0.01968em;">l</span><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.01968em;">l</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3487714285714287em;margin-left:-0.01968em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15122857142857138em;"><span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.446108em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">p</span><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight">e</span><span class="mord mathdefault mtight">c</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">s</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">o</span><span class="mord mtight"><span class="mord mathdefault mtight">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3487714285714287em;margin-left:0em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15122857142857138em;"><span></span></span></span></span></span></span><span class="mpunct mtight">⋅</span><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight">e</span><span class="mord mathdefault mtight">c</span><span class="mord mathdefault mtight">a</span><span class="mord mathdefault mtight" style="margin-right:0.01968em;">l</span><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.01968em;">l</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3487714285714287em;margin-left:-0.01968em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15122857142857138em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.481108em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></li>
 </ol>
 </li>
-<li><p>通过对第三步求得的各个类别下的<code>F1-score</code>求均值，得到最后的评测结果，计算方式如下</p>
+<li>
+<p>通过对第三步求得的各个类别下的<code>F1-score</code>求均值，得到最后的评测结果，计算方式如下</p>
 <ol>
-<li>$score=\frac{1}{n}\sum F1_k$</li>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi><mi>c</mi><mi>o</mi><mi>r</mi><mi>e</mi><mo>=</mo><mfrac><mn>1</mn><mi>n</mi></mfrac><mo>∑</mo><mi>F</mi><msub><mn>1</mn><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">score=\frac{1}{n}\sum F1_k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">s</span><span class="mord mathdefault">c</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">e</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.190108em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.845108em;"><span style="top:-2.6550000000000002em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">n</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop op-symbol small-op" style="position:relative;top:-0.0000050000000000050004em;">∑</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="mord"><span class="mord">1</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></li>
 </ol>
 </li>
 </ol>
-<h3 id="评价结果"><a href="#评价结果" class="headerlink" title="评价结果"></a>评价结果</h3><p>我们在表III中报告了实验结果。在此表的每一行中，我们列出了一个漏洞和基于上述指标产生最佳结果的机器学习算法。例如，Integer下溢由决策树算法识别，F1分数为86％，准确性为99％，准确性为100％，召回率为75％。模型在发现漏洞方面的合理准确性和精确度表明了利用机器学习在智能合约中查找安全漏洞的可能性。根据我们模型的结果，我们得出以下结论。</p>
+<h3 id="评价结果"><a class="markdownIt-Anchor" href="#评价结果"></a> 评价结果</h3>
+<p>我们在表III中报告了实验结果。在此表的每一行中，我们列出了一个漏洞和基于上述指标产生最佳结果的机器学习算法。例如，Integer下溢由决策树算法识别，F1分数为86％，准确性为99％，准确性为100％，召回率为75％。模型在发现漏洞方面的合理准确性和精确度表明了利用机器学习在智能合约中查找安全漏洞的可能性。根据我们模型的结果，我们得出以下结论。</p>
 <center>表3 安全漏洞检测的准确性</center>
-
 <table>
 <thead>
 <tr>
@@ -574,7 +594,8 @@
 <th>Recall</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>1</td>
 <td>Integer  underﬂow</td>
 <td>High</td>
@@ -798,8 +819,10 @@
 <td>100%</td>
 <td>100%</td>
 </tr>
-</tbody></table>
-<h2 id="五、总结与评价"><a href="#五、总结与评价" class="headerlink" title="五、总结与评价"></a>五、总结与评价</h2><p> 本篇论文对我蛮有启发的，其提出了一个很中肯的方案将机器学习的方法与智能合约结合起来。心理预想了一遍，感觉实现过程比较清晰：</p>
+</tbody>
+</table>
+<h2 id="五-总结与评价"><a class="markdownIt-Anchor" href="#五-总结与评价"></a> 五、总结与评价</h2>
+<p>本篇论文对我蛮有启发的，其提出了一个很中肯的方案将机器学习的方法与智能合约结合起来。心理预想了一遍，感觉实现过程比较清晰：</p>
 <ol>
 <li>从Etherscan上爬取合约，然后通过一些限制条件去除大部分智能合约。</li>
 <li>对这些智能合约使用开源的<a target="_blank" rel="noopener" href="https://github.com/crytic/slither">Slither</a>和<a target="_blank" rel="noopener" href="https://github.com/ConsenSys/mythril">Mythril</a>两个静态代码分析器检测是否存在漏洞。</li>

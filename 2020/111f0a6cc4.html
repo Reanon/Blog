@@ -236,30 +236,34 @@
             <h1 style="display: none">Securify: Practical Security Analysis of Smart Contracts</h1>
             
             <div class="markdown-body">
-              <h1 id="Securify-Practical-security-analysis-of-smart-contracts"><a href="#Securify-Practical-security-analysis-of-smart-contracts" class="headerlink" title="Securify: Practical security analysis of smart contracts"></a>Securify: Practical security analysis of smart contracts</h1><p>论文题目：(2018-CCS)  <a target="_blank" rel="noopener" href="https://dl.acm.org/doi/abs/10.1145/3243734.3243780">Securify: Practical security analysis of smart contracts</a></p>
+              <h1 id="securify-practical-security-analysis-of-smart-contracts"><a class="markdownIt-Anchor" href="#securify-practical-security-analysis-of-smart-contracts"></a> Securify: Practical security analysis of smart contracts</h1>
+<p>论文题目：(2018-CCS)  <a target="_blank" rel="noopener" href="https://dl.acm.org/doi/abs/10.1145/3243734.3243780">Securify: Practical security analysis of smart contracts</a></p>
 <p>论文引用：Tsankov P, Dan A, Drachsler-Cohen D, et al. Securify: Practical security analysis of smart contracts[C]//Proceedings of the 2018 ACM SIGSAC Conference on Computer and Communications Security. 2018: 67-82.</p>
 <p>代码开源： <a target="_blank" rel="noopener" href="https://github.com/crytic/slither">crytic/slither</a></p>
-<h2 id="一、主要内容"><a href="#一、主要内容" class="headerlink" title="一、主要内容"></a>一、主要内容</h2><p>Securify是一个全自动化，并且可扩展的分析智能合约，检测漏洞的工具。Securify基于模式匹配。其能在给定特征的情况下分析智能合约是否存在漏洞。</p>
+<h2 id="一-主要内容"><a class="markdownIt-Anchor" href="#一-主要内容"></a> 一、主要内容</h2>
+<p>Securify是一个全自动化，并且可扩展的分析智能合约，检测漏洞的工具。Securify基于模式匹配。其能在给定特征的情况下分析智能合约是否存在漏洞。</p>
 <p>Securify 的分析针对字节码（bytecode），即智能合约源代码（solidity语言）被编译后的结果。通过对bytecode的分析，得出dependency graph，进而得到合约的语义信息。之后根据给定的特征分析合约语义信息是否满足遵循或违背这些特征，判断合约是否存在漏洞。</p>
 <p>Securify的输入为智能合约的bytecode或源代码（被编译成bytecode输入工具）以及一系列模式，模式采用domain-specific language（DSL，领域特定语言）描述。输出为具体出现漏洞的位置。用户可以自己书写模式，因此Securify有可扩展性。</p>
-<h2 id="二、MOTIVATION-EXAMPLES"><a href="#二、MOTIVATION-EXAMPLES" class="headerlink" title="二、MOTIVATION EXAMPLES"></a>二、MOTIVATION EXAMPLES</h2><h3 id="Stealing-Ether"><a href="#Stealing-Ether" class="headerlink" title="Stealing Ether"></a>Stealing Ether</h3><p>以下是一个存在漏洞的具体合约。红色标明的部分为漏洞存在的地方</p>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201126192221.png" srcset="/img/loading.gif" lazyload alt="image-20201126192221139"></p>
+<h2 id="二-motivation-examples"><a class="markdownIt-Anchor" href="#二-motivation-examples"></a> 二、MOTIVATION EXAMPLES</h2>
+<h3 id="stealing-ether"><a class="markdownIt-Anchor" href="#stealing-ether"></a> Stealing Ether</h3>
+<p>以下是一个存在漏洞的具体合约。红色标明的部分为漏洞存在的地方</p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201126192221.png" srcset="/img/loading.gif" lazyload alt="image-20201126192221139" /></p>
 <center>Figure 3：A vulnerable wallet that allows any user to withdraw
 all ether stored in it</center> 
-
 <p>由于函数默认的访问限制为public，因此initWallet()函数默认可以被外部调用（向该合约发送交易），导致任何人都可以更改钱包的所有者。</p>
 <p>Securify的模式有两大类，compliance &amp; violation；对应上述的合约，Securify可以匹配出violation pattern为owner的赋值不依赖于交易的发送者。那么对应的安全特征为owner的写入是必须受限的。</p>
-<h3 id="Frozen-Funds"><a href="#Frozen-Funds" class="headerlink" title="Frozen Funds"></a>Frozen Funds</h3><p>deposit函数有关键字payable，表明交易发送者可以通过调用该函数来向这个合约转账。这个合约的漏洞在于，它本身没有向其他账户转账的函数，实现的功能是通过调用别的合约作为library实现的。而合约可以被销毁。那么假设有一个攻击者销毁了library，那么调用这个library来实现转账的那个合约里面的资产会被全部冻结。</p>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201126192523.png" srcset="/img/loading.gif" lazyload alt="image-20201126192450461"></p>
+<h3 id="frozen-funds"><a class="markdownIt-Anchor" href="#frozen-funds"></a> Frozen Funds</h3>
+<p>deposit函数有关键字payable，表明交易发送者可以通过调用该函数来向这个合约转账。这个合约的漏洞在于，它本身没有向其他账户转账的函数，实现的功能是通过调用别的合约作为library实现的。而合约可以被销毁。那么假设有一个攻击者销毁了library，那么调用这个library来实现转账的那个合约里面的资产会被全部冻结。</p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201126192523.png" srcset="/img/loading.gif" lazyload alt="image-20201126192450461" /></p>
 <center>Figure 4: A wallet that delegates functionality to a library
 contract walletLibrary</center> 
-
 <p>匹配该漏洞的violation pattern为：</p>
 <ol>
 <li>用户可向合约存钱，即stop指令（调用结束指令）不依赖于转账的以太币为0（即可以向合约成功存钱）</li>
 <li>对于所有的call指令（调用函数指令），转出的以太币为0（即合约本身没有能力向外转出钱）</li>
 </ol>
-<h2 id="三、THE-SECURIFY-SYSTEM"><a href="#三、THE-SECURIFY-SYSTEM" class="headerlink" title="三、THE SECURIFY SYSTEM"></a>三、THE SECURIFY SYSTEM</h2><p>本部分展示整个系统的实现：</p>
+<h2 id="三-the-securify-system"><a class="markdownIt-Anchor" href="#三-the-securify-system"></a> 三、THE SECURIFY SYSTEM</h2>
+<p>本部分展示整个系统的实现：</p>
 <ol>
 <li>绿色部分指代输入，即EVM bytecode and security patterns</li>
 <li>红色部分指代输出，即a violated instruction</li>
@@ -271,28 +275,33 @@ contract walletLibrary</center>
 <li>推断有关合同的语义事实（semantics facts）；</li>
 <li>匹配合同上受限写属性（restricted write property）的违反模式（the violation pattern）。</li>
 </ol>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201126192830.png" srcset="/img/loading.gif" lazyload alt="image-20201126192828618"></p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201126192830.png" srcset="/img/loading.gif" lazyload alt="image-20201126192828618" /></p>
 <center>Figure Figure 5: High-level flow illustrating how Securify finds the unrestricted write to the owner field of the contract</center> 
-
-<h3 id="INPUTS"><a href="#INPUTS" class="headerlink" title="INPUTS"></a>INPUTS</h3><ol>
+<h3 id="inputs"><a class="markdownIt-Anchor" href="#inputs"></a> INPUTS</h3>
+<ol>
 <li>合约的bytecode或者solidity源代码（编译成bytecode）</li>
 <li>patterns，用DSL描述</li>
 </ol>
-<h4 id="Decomplie"><a href="#Decomplie" class="headerlink" title="Decomplie"></a>Decomplie</h4><p>bytecode在以太坊虚拟机EVM上运行。EVM是一个基于栈的虚拟机。</p>
+<h4 id="decomplie"><a class="markdownIt-Anchor" href="#decomplie"></a> Decomplie</h4>
+<p>bytecode在以太坊虚拟机EVM上运行。EVM是一个基于栈的虚拟机。</p>
 <p>Securify将基于栈运行的bytecode转换为不基于栈的SSA表达形式，具体做法未详细给出。</p>
 <p>之后恢复CFG，其中针对Securify的整体分析方法做了一些优化。</p>
-<h4 id="Inferring-Semantic-Facts"><a href="#Inferring-Semantic-Facts" class="headerlink" title="Inferring Semantic Facts"></a>Inferring Semantic Facts</h4><p>该部分Securify分析合约的 semantic facts，使用Datalog描述。整个过程使用已有的Datalog Solver全自动化工具。分析包含了数据依赖和控制依赖。</p>
+<h4 id="inferring-semantic-facts"><a class="markdownIt-Anchor" href="#inferring-semantic-facts"></a> Inferring Semantic Facts</h4>
+<p>该部分Securify分析合约的 semantic facts，使用Datalog描述。整个过程使用已有的Datalog Solver全自动化工具。分析包含了数据依赖和控制依赖。</p>
 <p>首先Securify分析针对指令分析出base fact，比如说</p>
 <blockquote>
 <p>l1: a = 4 分析得到</p>
 <p>assign(l1, a, 4)</p>
 </blockquote>
 <p>之后，分析每一个指令后，将得到的所有base facts输入到已有的工具，推断出进一步的语义信息，即semantic facts。</p>
-<h4 id="Checking-Security-Patterns"><a href="#Checking-Security-Patterns" class="headerlink" title="Checking Security Patterns"></a>Checking Security Patterns</h4><p>patterns使用securify自己的语言描述。模式匹配时，Security 迭代指令，处理含有some和all量词的pattern，以及，为了检查推断出的facts, Securify直接向Datalog Solver查询。Securify的模式匹配局限之处为：安全特征比较宽泛，没有对具体的合约分析</p>
-<h2 id="四、实验评估"><a href="#四、实验评估" class="headerlink" title="四、实验评估"></a>四、实验评估</h2><p>作者主要进行了一下几个实验</p>
+<h4 id="checking-security-patterns"><a class="markdownIt-Anchor" href="#checking-security-patterns"></a> Checking Security Patterns</h4>
+<p>patterns使用securify自己的语言描述。模式匹配时，Security 迭代指令，处理含有some和all量词的pattern，以及，为了检查推断出的facts, Securify直接向Datalog Solver查询。Securify的模式匹配局限之处为：安全特征比较宽泛，没有对具体的合约分析</p>
+<h2 id="四-实验评估"><a class="markdownIt-Anchor" href="#四-实验评估"></a> 四、实验评估</h2>
+<p>作者主要进行了一下几个实验</p>
 <ol>
 <li>对真实的合约做分析，评估Securify的有效性</li>
-<li>将Securify与Oyente和Mythril（两个已有智能合约分析工具）比较<ul>
+<li>将Securify与Oyente和Mythril（两个已有智能合约分析工具）比较
+<ul>
 <li>注意Oyente和Mythril均是基于符号执行的，因此被这两个工具分析出的结果是必定会被执行到的</li>
 </ul>
 </li>
@@ -304,10 +313,10 @@ contract walletLibrary</center>
 <li>约25K的bytecode数据集（EVM dataset）</li>
 <li>100个solidity数据集（solidity dataset）</li>
 </ol>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201126191157.png" srcset="/img/loading.gif" lazyload alt="image-20201126191157161"></p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201126191157.png" srcset="/img/loading.gif" lazyload alt="image-20201126191157161" /></p>
 <center>Figure 11: Securify results on the EVM dataset</center>
-
-<h2 id="五、总结评价"><a href="#五、总结评价" class="headerlink" title="五、总结评价"></a>五、总结评价</h2><p>主要贡献：</p>
+<h2 id="五-总结评价"><a class="markdownIt-Anchor" href="#五-总结评价"></a> 五、总结评价</h2>
+<p>主要贡献：</p>
 <ol>
 <li>使用反汇编Datalog描述智能合约</li>
 <li>通过compliance 和 violation的pattrn，来检查给定安全特征是否满足</li>
@@ -361,8 +370,8 @@ contract walletLibrary</center>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2020/1140f574c1.html">
-                        <span class="hidden-mobile">The art of the scam: Demystifying honeypots in ethereum smart contracts</span>
+                      <a href="/2020/11b0e81d94.html">
+                        <span class="hidden-mobile">Smart Contract Vulnerability Detection Using Graph Neural Networks</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

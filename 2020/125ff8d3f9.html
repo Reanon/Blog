@@ -236,66 +236,68 @@
             <h1 style="display: none">Evaluating Smart Contract Static Analysis Tools Using Bug Injection</h1>
             
             <div class="markdown-body">
-              <h1 id="SolidiFI"><a href="#SolidiFI" class="headerlink" title="SolidiFI"></a>SolidiFI</h1><p>论文题目：(2020-ISSTA) <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2005.11613">How Effective are Smart Contract Analysis Tools? Evaluating Smart Contract Static Analysis Tools Using Bug Injection</a></p>
+              <h1 id="solidifi"><a class="markdownIt-Anchor" href="#solidifi"></a> SolidiFI</h1>
+<p>论文题目：(2020-ISSTA) <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2005.11613">How Effective are Smart Contract Analysis Tools? Evaluating Smart Contract Static Analysis Tools Using Bug Injection</a></p>
 <p>论文引用：Ghaleb A, Pattabiraman K. How Effective are Smart Contract Analysis Tools? Evaluating Smart Contract Static Analysis Tools Using Bug Injection[J]. arXiv preprint arXiv:2005.11613, 2020.</p>
-<hr>
-<h2 id="一、主要内容"><a href="#一、主要内容" class="headerlink" title="一、主要内容"></a>一、主要内容</h2><p>本研究的主要目标是建立一种系统的方法来评估检测智能合约的静态分析，关键思想是将漏洞注入到智能合约源代码中的所有有效位置。本文提出了SolidiFI用于评估智能合约静态分析工具的自动化系统方法。 SolidiFI基于将 Bugs（即代码缺陷）注入到智能合约的所有潜在位置中以引入针对性的安全漏洞。然SolidiFI使用静态分析工具检查生成的合同，并识别工具无法检测到的错误（假阴性，False negatives，FN）和假阳性（FP，false positives）的错误。 SolidiFI评估了六个广泛使用的静态分析工具，即Oyente，Securify，Mythril，SmartCheck，Manticore和Slither，使用了9369个不同的漏洞注入的==50个合同==。</p>
-<h3 id="智能合约背景"><a href="#智能合约背景" class="headerlink" title="智能合约背景"></a>智能合约背景</h3><p>智能合约的理论一旦部署在区块链上实际上就无法更新，并且Etherscan上的交易是一成不变的，此外，智能合约的丰厚的利益回报还为攻击者提供了诱因，使攻击者可以针对智能合约寻找漏洞。<br>针对智能合约的攻击事件以及这些攻击导致价值数百万美元的损失，因此实际上需要对智能合约进行分析以发现错误并进行修复，然后再部署到区块链上，当然已经提出了这样的工具使开发人员能够发现智能合约中的安全漏洞，不幸的是，这些工具不影响安全智能合约的部署，没有这样的系统性方法或方法可以用来评估此功能的有效性。（<a target="_blank" rel="noopener" href="https://applicature.com/blog/blockchain-technology/history-of-ethereum-security-vulnerabilities-hacks-and-their-fixes">以太坊安全漏洞，黑客及其修复的历史</a>）</p>
+<hr />
+<h2 id="一-主要内容"><a class="markdownIt-Anchor" href="#一-主要内容"></a> 一、主要内容</h2>
+<p>本研究的主要目标是建立一种系统的方法来评估检测智能合约的静态分析，关键思想是将漏洞注入到智能合约源代码中的所有有效位置。本文提出了SolidiFI用于评估智能合约静态分析工具的自动化系统方法。 SolidiFI基于将 Bugs（即代码缺陷）注入到智能合约的所有潜在位置中以引入针对性的安全漏洞。然SolidiFI使用静态分析工具检查生成的合同，并识别工具无法检测到的错误（假阴性，False negatives，FN）和假阳性（FP，false positives）的错误。 SolidiFI评估了六个广泛使用的静态分析工具，即Oyente，Securify，Mythril，SmartCheck，Manticore和Slither，使用了9369个不同的漏洞注入的<mark>50个合同</mark>。</p>
+<h3 id="智能合约背景"><a class="markdownIt-Anchor" href="#智能合约背景"></a> 智能合约背景</h3>
+<p>智能合约的理论一旦部署在区块链上实际上就无法更新，并且Etherscan上的交易是一成不变的，此外，智能合约的丰厚的利益回报还为攻击者提供了诱因，使攻击者可以针对智能合约寻找漏洞。<br />
+针对智能合约的攻击事件以及这些攻击导致价值数百万美元的损失，因此实际上需要对智能合约进行分析以发现错误并进行修复，然后再部署到区块链上，当然已经提出了这样的工具使开发人员能够发现智能合约中的安全漏洞，不幸的是，这些工具不影响安全智能合约的部署，没有这样的系统性方法或方法可以用来评估此功能的有效性。（<a target="_blank" rel="noopener" href="https://applicature.com/blog/blockchain-technology/history-of-ethereum-security-vulnerabilities-hacks-and-their-fixes">以太坊安全漏洞，黑客及其修复的历史</a>）</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs javascript">pragma solidity &gt;=<span class="hljs-number">0.4</span><span class="hljs-number">.21</span> &lt;<span class="hljs-number">0.6</span><span class="hljs-number">.0</span>;<br>contract EGame &#123;<br>	address payable private winner ;<br>	uint startTime ;<br><br>	<span class="hljs-title">constructor</span> (<span class="hljs-params"></span>) <span class="hljs-title">public</span> &#123;<br>		winner = msg . sender ;<br>		startTime = block . timestamp ; <span class="hljs-comment">// timestamp dependency bug</span><br>    &#125;<br>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">play</span> (<span class="hljs-params"> bytes32 guess </span>) <span class="hljs-title">public</span> </span>&#123;<br>		<span class="hljs-keyword">if</span>( keccak256 (abi.encode(guess)) ==keccak256 (abi.encode (<span class="hljs-string">&#x27;solution &#x27;</span>)))&#123;<br>			<span class="hljs-keyword">if</span> ( startTime + (<span class="hljs-number">5</span> * <span class="hljs-number">1</span> days ) == block . timestamp)&#123; <span class="hljs-comment">// timestamp dependency bug</span><br>				winner = msg.sender ;&#125;&#125;&#125;<span class="hljs-comment">// transaction ordering dependence(TOD)</span><br>   <br>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getReward</span> (<span class="hljs-params"></span>) <span class="hljs-title">payable</span> <span class="hljs-title">public</span> </span>&#123;<br>		winner.transfer ( msg.value );&#125;<span class="hljs-comment">// TOD</span><br>&#125;<br></code></pre></td></tr></table></figure>
-
-
-
-<h2 id="二、设计实现"><a href="#二、设计实现" class="headerlink" title="二、设计实现"></a>二、设计实现</h2><h3 id="漏洞类型"><a href="#漏洞类型" class="headerlink" title="漏洞类型"></a>漏洞类型</h3><h4 id="Timestamp-dependency"><a href="#Timestamp-dependency" class="headerlink" title="Timestamp dependency"></a>Timestamp dependency</h4><p>合同可以使用该块的当前时间戳来触发一些与时间有关的事件。考虑到以太坊的分散性，矿工可以（在某种程度上）更改时间戳。恶意矿工可以使用此功能并更改时间戳以使自己满意。<br>该漏洞已在==GoverMental Ponzi计划==攻击中被利用。因此，开发人员不应依赖该块时间戳的精度。图4显示了代表该错误的代码段示例</p>
+<h2 id="二-设计实现"><a class="markdownIt-Anchor" href="#二-设计实现"></a> 二、设计实现</h2>
+<h3 id="漏洞类型"><a class="markdownIt-Anchor" href="#漏洞类型"></a> 漏洞类型</h3>
+<h4 id="timestamp-dependency"><a class="markdownIt-Anchor" href="#timestamp-dependency"></a> Timestamp dependency</h4>
+<p>合同可以使用该块的当前时间戳来触发一些与时间有关的事件。考虑到以太坊的分散性，矿工可以（在某种程度上）更改时间戳。恶意矿工可以使用此功能并更改时间戳以使自己满意。<br />
+该漏洞已在<mark>GoverMental Ponzi计划</mark>攻击中被利用。因此，开发人员不应依赖该块时间戳的精度。图4显示了代表该错误的代码段示例</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bug_tmstmp</span> (<span class="hljs-params"></span>) <span class="hljs-title">public</span> <span class="hljs-title">returns</span> (<span class="hljs-params"> bool </span>)</span><br><span class="hljs-function"></span>&#123; <br>    <span class="hljs-keyword">return</span> block.timestamp &gt;= <span class="hljs-number">1546300</span>;<span class="hljs-comment">// Timestamp dependency</span><br>&#125;<br></code></pre></td></tr></table></figure>
-
 <center>Timestamp dependency examples.</center>
-
-<h4 id="Unhandled-exceptions"><a href="#Unhandled-exceptions" class="headerlink" title="Unhandled exceptions"></a>Unhandled exceptions</h4><p>在以太坊中，合约可以相互调用，并相互发送以太币（例如，send指令，call指令等）。如果被调合约抛出了异常（例如，执行所需的限制气体），则合同终止，其状态恢复，并且将false返回给调用合同。<br>因此，调用合同中未经检查的返回值可用于攻击合同，从而导致不良行为。此漏洞的严重版本出现在==”King of the Ether”== 中。下图显示了一个示例（send()指令要求检查其返回值是否存在异常以确保其安全性）。</p>
+<h4 id="unhandled-exceptions"><a class="markdownIt-Anchor" href="#unhandled-exceptions"></a> Unhandled exceptions</h4>
+<p>在以太坊中，合约可以相互调用，并相互发送以太币（例如，send指令，call指令等）。如果被调合约抛出了异常（例如，执行所需的限制气体），则合同终止，其状态恢复，并且将false返回给调用合同。<br />
+因此，调用合同中未经检查的返回值可用于攻击合同，从而导致不良行为。此漏洞的严重版本出现在==“King of the Ether”== 中。下图显示了一个示例（send()指令要求检查其返回值是否存在异常以确保其安全性）。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">unhandledsend</span> (<span class="hljs-params"></span>) <span class="hljs-title">public</span> </span>&#123;<br>    callee.send(<span class="hljs-number">5</span> ether);<span class="hljs-comment">// Unhandled exceptions</span><br>&#125;<br></code></pre></td></tr></table></figure>
-
 <center>Unhandled exceptions</center>
-
-<h4 id="Integer-overflow-underflow"><a href="#Integer-overflow-underflow" class="headerlink" title="Integer overflow/underflow"></a>Integer overflow/underflow</h4><p>在Solidity中，将值存储在大于或小于其限制的整数变量中会导致整数上溢或下溢。<br>攻击者可以使用它来欺诈地窃取资金。例如，下图显示了一个示例代码片段，其中攻击者可以通过调用函数incrLockTime并传递256作为参数来为用户重置lockTime，这将导致溢出，并最终将lockTime设置为0。==Batch Transfer Overflow==是个真实例子。</p>
+<h4 id="integer-overflowunderflow"><a class="markdownIt-Anchor" href="#integer-overflowunderflow"></a> Integer overflow/underflow</h4>
+<p>在Solidity中，将值存储在大于或小于其限制的整数变量中会导致整数上溢或下溢。<br />
+攻击者可以使用它来欺诈地窃取资金。例如，下图显示了一个示例代码片段，其中攻击者可以通过调用函数incrLockTime并传递256作为参数来为用户重置lockTime，这将导致溢出，并最终将lockTime设置为0。<mark>Batch Transfer Overflow</mark>是个真实例子。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">incrLockTime</span> (<span class="hljs-params"> uint _sec </span>) <span class="hljs-title">public</span> </span>&#123;<br>    lockTime [msg.sender ] += _sec ;<span class="hljs-comment">// Integer overflow</span><br>&#125;<br></code></pre></td></tr></table></figure>
-
 <center>Integer overflow example</center>
-
-<h4 id="Use-of-tx-origin"><a href="#Use-of-tx-origin" class="headerlink" title="Use of tx.origin"></a>Use of tx.origin</h4><p>在调用链中，当合同彼此调用函数时，使用tx.origin（返回最初发送调用的第一个调用者）进行身份验证而不是使用msg.sender（返回直接调用者）进行身份验证。导致==phishing-like attacks==类攻击。下图显示了一个示例片段，其中使用tx.origin提取资金</p>
+<h4 id="use-of-txorigin"><a class="markdownIt-Anchor" href="#use-of-txorigin"></a> Use of tx.origin</h4>
+<p>在调用链中，当合同彼此调用函数时，使用tx.origin（返回最初发送调用的第一个调用者）进行身份验证而不是使用msg.sender（返回直接调用者）进行身份验证。导致<mark>phishing-like attacks</mark>类攻击。下图显示了一个示例片段，其中使用tx.origin提取资金</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bug_txorigin</span> (<span class="hljs-params">address _recipient</span>) <span class="hljs-title">public</span> </span>&#123;<br>    <span class="hljs-built_in">require</span> (tx.origin == owner);<br>    _recipient.transfer (<span class="hljs-built_in">this</span>.balance );<br>&#125;<br></code></pre></td></tr></table></figure>
-
 <center>Use of tx.origin example</center>
-
-<h4 id="Re-entrancy"><a href="#Re-entrancy" class="headerlink" title="Re-entrancy"></a>Re-entrancy</h4><p>合同在其接口中公开外部调用。攻击者可以劫持这些外部调用，以多次调用合约本身内的函数，从而在合约本身内执行意外操作。例如，攻击者可以使用图中所示的代码段的第3行中的外部调用来重复调用bug_reEntrancy()函数，从而有可能导致以太币的提取多于用户的余额。 ==DAO攻击[dao 2016]==是利用此bug的一个著名示例。</p>
+<h4 id="re-entrancy"><a class="markdownIt-Anchor" href="#re-entrancy"></a> Re-entrancy</h4>
+<p>合同在其接口中公开外部调用。攻击者可以劫持这些外部调用，以多次调用合约本身内的函数，从而在合约本身内执行意外操作。例如，攻击者可以使用图中所示的代码段的第3行中的外部调用来重复调用bug_reEntrancy()函数，从而有可能导致以太币的提取多于用户的余额。 ==DAO攻击[dao 2016]==是利用此bug的一个著名示例。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bug_reEntrancy</span> (<span class="hljs-params"> uint256 _Amt </span>) <span class="hljs-title">public</span> </span>&#123;<br>    <span class="hljs-built_in">require</span> (balances [msg.sender ] &gt;= _Amt );<br>    <span class="hljs-built_in">require</span> (msg.sender.call.value( _Amt )); <span class="hljs-comment">// Re-entrancy</span><br>    balances [msg.sender ] -= _Amt ;<br>&#125;<br></code></pre></td></tr></table></figure>
-
 <center>Re-entrance example</center>
-
-<h4 id="Unchecked-send"><a href="#Unchecked-send" class="headerlink" title="Unchecked send"></a>Unchecked send</h4><p>如果外部用户对公众可见，即使他们没有正确的凭据，也可以由外部用户调用未经授权的以太坊传输，例如非零发送。这意味着未经授权的用户可以调用此类功能，并从易受攻击的合同[sol [n.d.]]中转移以太币。下图显示了一个示例代码片段。</p>
+<h4 id="unchecked-send"><a class="markdownIt-Anchor" href="#unchecked-send"></a> Unchecked send</h4>
+<p>如果外部用户对公众可见，即使他们没有正确的凭据，也可以由外部用户调用未经授权的以太坊传输，例如非零发送。这意味着未经授权的用户可以调用此类功能，并从易受攻击的合同[sol [n.d.]]中转移以太币。下图显示了一个示例代码片段。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bug_unchkSend</span> (<span class="hljs-params"></span>) <span class="hljs-title">payable</span> <span class="hljs-title">public</span> </span>&#123;<br>    msg.sender.transfer (<span class="hljs-number">1</span> ether );<br>&#125;<br></code></pre></td></tr></table></figure>
-
-
-
 <center>Unchecked send example</center>
-
-<h4 id="Transaction-Ordering-Dependence-TOD"><a href="#Transaction-Ordering-Dependence-TOD" class="headerlink" title="Transaction Ordering Dependence (TOD)"></a>Transaction Ordering Dependence (TOD)</h4><p>TOD bug 是开发人员不应依赖智能合约的状态。</p>
-<p>在具有多次调用合同的单个块中更改交易顺序会导致更改最终输出。<br>恶意矿工可以从中受益。易受此bug攻击的示例代码片段如下图所示。在此示例中，攻击者可以通过在bug_tod1()之前执行bug_tod2()来向自己而不是游戏的赢家发送解决难题的奖励。</p>
+<h4 id="transaction-ordering-dependence-tod"><a class="markdownIt-Anchor" href="#transaction-ordering-dependence-tod"></a> Transaction Ordering Dependence (TOD)</h4>
+<p>TOD bug 是开发人员不应依赖智能合约的状态。</p>
+<p>在具有多次调用合同的单个块中更改交易顺序会导致更改最终输出。<br />
+恶意矿工可以从中受益。易受此bug攻击的示例代码片段如下图所示。在此示例中，攻击者可以通过在bug_tod1()之前执行bug_tod2()来向自己而不是游戏的赢家发送解决难题的奖励。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs javascript">address payable winner_tod ;<br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setWinner_tod</span> (<span class="hljs-params"></span>) <span class="hljs-title">public</span> </span>&#123;<br>    winner_tod = msg.sender ;&#125;<br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getReward_tod</span> (<span class="hljs-params"></span>)<span class="hljs-title">payable</span> <span class="hljs-title">public</span> </span>&#123;<br>    winner_tod.transfer ( msg.value );&#125;<br></code></pre></td></tr></table></figure>
-
 <center>TOD example</center>
-
-<h3 id="Bug-injection-challenges"><a href="#Bug-injection-challenges" class="headerlink" title="Bug injection challenges"></a>Bug injection challenges</h3><p>将bug注入智能合约的最简单方法是将它们注入随机位置，但是，随机注入并不是一种经济有效的方法，因为我们必须遵循特定的准则才能使注入的bug可以被利用。确定了两个主要挑战</p>
-<h4 id="Bug-injection-locations"><a href="#Bug-injection-locations" class="headerlink" title="Bug injection locations"></a>Bug injection locations</h4><p>由于某些工具使用的基础技术（例如，符号执行）取决于所分析合约中的控制和数据流，因此将每个Bug的实例注入单个位置是不够的。因此，应将bug注入合同代码中的所有潜在位置。<br>另一方面，确定潜在位置的过程取决于原始合同的代码，还取决于每个错误的类型和性质。</p>
-<h4 id="Semantics-dependency"><a href="#Semantics-dependency" class="headerlink" title="Semantics dependency"></a>Semantics dependency</h4><p>为了使注入的漏洞成为攻击者可以利用的活动漏洞（active bug），必须使其与原始合同的语义保持一致。例如，假设我们要通过调用外部合同来注入拒绝服务（DoS，Denial of Service）Bug。可以将if语句与包含对另一个合约函数的调用的条件一起使用。但是，要执行此错误，我们还需要定义适当的外部合同。 </p>
-<p>SolidiFI通过将Solidity语言==解析为抽象语法树（AST）并将bug注入所有语法有效的位置==来解决第一个挑战。它通过为==每种错误类型制定可利用的代码段==来应对第二个挑战。</p>
-<h3 id="Bug-model"><a href="#Bug-model" class="headerlink" title="Bug model"></a>Bug model</h3><p>SolidiFI执行步骤：</p>
+<h3 id="bug-injection-challenges"><a class="markdownIt-Anchor" href="#bug-injection-challenges"></a> Bug injection challenges</h3>
+<p>将bug注入智能合约的最简单方法是将它们注入随机位置，但是，随机注入并不是一种经济有效的方法，因为我们必须遵循特定的准则才能使注入的bug可以被利用。确定了两个主要挑战</p>
+<h4 id="bug-injection-locations"><a class="markdownIt-Anchor" href="#bug-injection-locations"></a> Bug injection locations</h4>
+<p>由于某些工具使用的基础技术（例如，符号执行）取决于所分析合约中的控制和数据流，因此将每个Bug的实例注入单个位置是不够的。因此，应将bug注入合同代码中的所有潜在位置。<br />
+另一方面，确定潜在位置的过程取决于原始合同的代码，还取决于每个错误的类型和性质。</p>
+<h4 id="semantics-dependency"><a class="markdownIt-Anchor" href="#semantics-dependency"></a> Semantics dependency</h4>
+<p>为了使注入的漏洞成为攻击者可以利用的活动漏洞（active bug），必须使其与原始合同的语义保持一致。例如，假设我们要通过调用外部合同来注入拒绝服务（DoS，Denial of Service）Bug。可以将if语句与包含对另一个合约函数的调用的条件一起使用。但是，要执行此错误，我们还需要定义适当的外部合同。</p>
+<p>SolidiFI通过将Solidity语言<mark>解析为抽象语法树（AST）并将bug注入所有语法有效的位置</mark>来解决第一个挑战。它通过为<mark>每种错误类型制定可利用的代码段</mark>来应对第二个挑战。</p>
+<h3 id="bug-model"><a class="markdownIt-Anchor" href="#bug-model"></a> Bug model</h3>
+<p>SolidiFI执行步骤：</p>
 <ol>
-<li>将安全漏洞的代码段插入所有可能位置的每个智能合约的源代码中,注入位置的选择取决于要注入的漏洞类型。 </li>
+<li>将安全漏洞的代码段插入所有可能位置的每个智能合约的源代码中,注入位置的选择取决于要注入的漏洞类型。</li>
 <li>静态分析工具扫描注入的代码。</li>
 <li>检查每个工具的结果，并测量假阴性和假阳性。</li>
 </ol>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201205190103.png" srcset="/img/loading.gif" lazyload alt="image-20201205190103555"></p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201205190103.png" srcset="/img/loading.gif" lazyload alt="image-20201205190103555" /></p>
 <center>SolidiFI Workflow</center>
-
 <p>SolidiFI从作者准备的预定义可扩展漏洞库中读取要插入的代码段，对于每个工具，仅注入该工具声称可以检测的漏洞类型。</p>
 <ul>
 <li>Code snippets which lead to vulnerabilities</li>
@@ -303,69 +305,89 @@
 <li>Playing the role of developers rather attackers</li>
 <li>Injecting distinct bugs as possible</li>
 </ul>
-<h3 id="Bug-injection"><a href="#Bug-injection" class="headerlink" title="Bug injection"></a>Bug injection</h3><p>通过三种方式将安全漏洞注入源代码。</p>
-<h4 id="Full-code-snippet"><a href="#Full-code-snippet" class="headerlink" title="Full code snippet"></a>Full code snippet</h4><p>为每个漏洞准备了几个代码段。</p>
-<h4 id="Code-transformation"><a href="#Code-transformation" class="headerlink" title="Code transformation"></a>Code transformation</h4><p>这种方法旨在在不更改其功能的情况下转换一段代码，但使其易于受到特定bug的影响。我们利用已知的易受攻击的代码模式来注入此bug。使用这种方法来注入与该方法兼容的两个错误类，即（1）整数上溢/下溢和（2）使用tx.origin。</p>
+<h3 id="bug-injection"><a class="markdownIt-Anchor" href="#bug-injection"></a> Bug injection</h3>
+<p>通过三种方式将安全漏洞注入源代码。</p>
+<h4 id="full-code-snippet"><a class="markdownIt-Anchor" href="#full-code-snippet"></a> Full code snippet</h4>
+<p>为每个漏洞准备了几个代码段。</p>
+<h4 id="code-transformation"><a class="markdownIt-Anchor" href="#code-transformation"></a> Code transformation</h4>
+<p>这种方法旨在在不更改其功能的情况下转换一段代码，但使其易于受到特定bug的影响。我们利用已知的易受攻击的代码模式来注入此bug。使用这种方法来注入与该方法兼容的两个错误类，即（1）整数上溢/下溢和（2）使用tx.origin。</p>
 <p>表1显示了替换为引入错误的代码模式的示例，以及每种错误类型的易受攻击的模式。</p>
 <center>Table1 Code transformation patterns</center>
-
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201206112723.png" srcset="/img/loading.gif" lazyload alt="image-20201206112723654"></p>
-<p>图11显示了使用这种方法进行漏洞注入之前和之后的示例。在此示例中，transfer 指令用于在验证sendto()的直接调用方为所有者之后，将指定的以太金额转移到接收者的帐户中。<br>要注入tx.origin错误，应将授权条件 msg.sender == owner 替换为 tx.origin == owner，其中owner不是sendto()的直接调用者。但是，授权检查已成功通过，这使攻击者可以进行自我授权，并从合同发送以太币，即使他们不是所有者。</p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201206112723.png" srcset="/img/loading.gif" lazyload alt="image-20201206112723654" /></p>
+<p>图11显示了使用这种方法进行漏洞注入之前和之后的示例。在此示例中，transfer 指令用于在验证sendto()的直接调用方为所有者之后，将指定的以太金额转移到接收者的帐户中。<br />
+要注入tx.origin错误，应将授权条件 msg.sender == owner 替换为 tx.origin == owner，其中owner不是sendto()的直接调用者。但是，授权检查已成功通过，这使攻击者可以进行自我授权，并从合同发送以太币，即使他们不是所有者。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">/*( Before )*/</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sendto</span> (<span class="hljs-params"> address receiver , uint amount </span>) <span class="hljs-title">public</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-built_in">require</span> ( msg.sender == owner );<br>    receiver.transfer ( amount );&#125;<br><span class="hljs-comment">/*( After injection )*/</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sendto</span> (<span class="hljs-params"> address receiver , uint amount </span>) <span class="hljs-title">public</span> </span>&#123;<br>    <span class="hljs-built_in">require</span> (tx.origin == owner);<br>    receiver.transfer (amount);&#125;<br></code></pre></td></tr></table></figure>
-
 <center>Code transformation example.</center>
-
-<h4 id="Security-weakening"><a href="#Security-weakening" class="headerlink" title="Security weakening"></a>Security weakening</h4><p>这种方法削弱了智能合约代码中的安全保护机制，可以保护外部调用。我们的目标是评估静态分析工具，而不是智能合约本身。我们使用这种方法来注入未处理的异常错误。<br>下图显示了一个示例，其中通过删除revert()语句（通过该语句在转移交易失败时还原合同状态）来注入未处理的异常bug即使交易失败，余额也会错误地变为0。</p>
+<h4 id="security-weakening"><a class="markdownIt-Anchor" href="#security-weakening"></a> Security weakening</h4>
+<p>这种方法削弱了智能合约代码中的安全保护机制，可以保护外部调用。我们的目标是评估静态分析工具，而不是智能合约本身。我们使用这种方法来注入未处理的异常错误。<br />
+下图显示了一个示例，其中通过删除revert()语句（通过该语句在转移交易失败时还原合同状态）来注入未处理的异常bug即使交易失败，余额也会错误地变为0。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">/*( Before )*/</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">withdrawBal</span> (<span class="hljs-params"></span>) <span class="hljs-title">public</span> </span>&#123;<br>    Balances [ msg . sender ] = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">if</span> (! msg . sender . send ( Balances [ msg . sender ]))&#123; <br>        revert (); &#125;&#125;<br><br><span class="hljs-comment">/*( After injection )*/</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">withdrawBal</span> (<span class="hljs-params"></span>) <span class="hljs-title">public</span> </span>&#123;<br>    Balances [ msg . sender ] = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">if</span> (! msg . sender . send ( Balances [ msg . sender ]))<br>    &#123; <span class="hljs-comment">// revert (); </span><br>    &#125;&#125;<br></code></pre></td></tr></table></figure>
-
-<h3 id="SOLIDIFI-ALGORITHM"><a href="#SOLIDIFI-ALGORITHM" class="headerlink" title="SOLIDIFI ALGORITHM"></a>SOLIDIFI ALGORITHM</h3><p>注入漏洞的过程将智能合约的抽象语法树（AST）作为输入，并具有以下步骤：</p>
+<h3 id="solidifi-algorithm"><a class="markdownIt-Anchor" href="#solidifi-algorithm"></a> SOLIDIFI ALGORITHM</h3>
+<p>注入漏洞的过程将智能合约的抽象语法树（AST）作为输入，并具有以下步骤：</p>
 <p>1、确定潜在的漏洞注入位置，并生成带注释的AST（annotated AST），标记所有确定的位置。</p>
 <p>2、将bug注入所有标记的位置以生成包含漏洞的合同</p>
 <p>3、使用评估工具检查包含漏洞的合同，并检查结果是否正确检测到漏洞。</p>
-<h4 id="Bug-locations-identification"><a href="#Bug-locations-identification" class="headerlink" title="Bug locations identification"></a>Bug locations identification</h4><p>AST传递给漏洞位置标识符（Bug Locations Identifier），该漏洞标识符为给定的安全漏洞驱动目标合同中所有可能的注入位置的漏洞注入配置文件（BIP，bug injection profile）。</p>
+<h4 id="bug-locations-identification"><a class="markdownIt-Anchor" href="#bug-locations-identification"></a> Bug locations identification</h4>
+<p>AST传递给漏洞位置标识符（Bug Locations Identifier），该漏洞标识符为给定的安全漏洞驱动目标合同中所有可能的注入位置的漏洞注入配置文件（BIP，bug injection profile）。</p>
 <p>使用基于AST的分析通过算法1来识别智能合约代码中的潜在注入位置，从而得出BIP。</p>
 <p>算法1将AST和要注入的漏洞类型作为输入，并输出BIP。</p>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201206114121.png" srcset="/img/loading.gif" lazyload alt="image-20201206114121170"></p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201206114121.png" srcset="/img/loading.gif" lazyload alt="image-20201206114121170" /></p>
 <p>bugs 采取两种形式：单独的语句和语句块。</p>
-<p>语句块可以定义为独立功能，也可以定义为非功能块，例如”if”语句。因此，对于每种形式的错误，都使用一个规则，该规则定义了注入错误的位置。</p>
-<p>为了识别这样的位置，对于定义要注入的错误类型的每种不同形式的代码片段，我们根据代码片段形式和相关规则（算法1中的2-10行）遍历AST.WalkAST（simpleStatement），例如，将解析AST，并找到可以在不使合同的编译状态无效的情况下插入简单语句的所有位置，对于其他形式的错误类型的代码段也是如此。在确定了注入错误代码段的位置之后，我们还将寻==找削弱现有安全机制以引入相关错误的方法，并寻找要转换以引入缺陷的代码模式==（第11和12行）。</p>
-<p>After identifying the locations for injecting code snippets of bugs, we also look for existing security mechanisms to be weakened to introduce the related bug, and the code patterns to<br>be transformed for introducing the bug (lines 11 and 12).</p>
-<h4 id="Bug-injection-and-code-transformation"><a href="#Bug-injection-and-code-transformation" class="headerlink" title="Bug injection and code transformation"></a>Bug injection and code transformation</h4><p>SolidiFI使用系统的方法将错误注入目标合同中的潜在位置。错误注入器模型会为BIP中指定的每个位置播种错误。它使用基于文本的代码转换来修改代码，其中从AST派生的信息用于修改代码以注入错误。使用了三种不同的方法来注入错误。除了在目标合同中注入错误之外，Bug Injector还会生成一个BugLog，该BugLog为每个注入的bug指定唯一的标识符，并在目标合同中将其注入的对应位置指定一个或多个。</p>
-<h4 id="Buggy-code-check-and-results-inspection"><a href="#Buggy-code-check-and-results-inspection" class="headerlink" title="Buggy code check and results inspection"></a>Buggy code check and results inspection</h4><p>生成的带漏洞合同将传递到工具评估器，后者使用评估中的工具检查越野车代码。<br>然后，在Bug Injector生成的BugLog的帮助下，扫描由工具生成的结果以查找已注入但未被检测到的bug。 SolidiFI仅考虑未检测到的注入错误。因此，如果经过评估的工具在注入错误的位置以外的其他位置报告了错误，则SolidiFI不会在其误报输出中考虑这些错误。这是为了避免SolidiFI报告原始合同中的潜在漏洞，从而使结果不正确。此外，SolidiFI会检查由工具生成的结果，以查找其他报告的错误，并检查它们是否为真正的错误或错误警报。</p>
-<h2 id="三、实验评估"><a href="#三、实验评估" class="headerlink" title="三、实验评估"></a>三、实验评估</h2><p>在我们的实验中，我们使用了从50种智能合约中选择的数据集，这些智能合约从具有不同大小和不同连接能力的扫描中选择，实际上这些合约代表了兴趣，而在我们的研究中，我们回答了这三个研究问题，分别是假阴性和假阳性</p>
-<h3 id="Evaluation"><a href="#Evaluation" class="headerlink" title="Evaluation"></a>Evaluation</h3><ul>
-<li>6 static analysis tools<br>(Oyente, Securify,Mythril, Smartcheck,Manticore,Slither)</li>
+<p>语句块可以定义为独立功能，也可以定义为非功能块，例如&quot;if&quot;语句。因此，对于每种形式的错误，都使用一个规则，该规则定义了注入错误的位置。</p>
+<p>为了识别这样的位置，对于定义要注入的错误类型的每种不同形式的代码片段，我们根据代码片段形式和相关规则（算法1中的2-10行）遍历AST.WalkAST（simpleStatement），例如，将解析AST，并找到可以在不使合同的编译状态无效的情况下插入简单语句的所有位置，对于其他形式的错误类型的代码段也是如此。在确定了注入错误代码段的位置之后，我们还将寻<mark>找削弱现有安全机制以引入相关错误的方法，并寻找要转换以引入缺陷的代码模式</mark>（第11和12行）。</p>
+<p>After identifying the locations for injecting code snippets of bugs, we also look for existing security mechanisms to be weakened to introduce the related bug, and the code patterns to<br />
+be transformed for introducing the bug (lines 11 and 12).</p>
+<h4 id="bug-injection-and-code-transformation"><a class="markdownIt-Anchor" href="#bug-injection-and-code-transformation"></a> Bug injection and code transformation</h4>
+<p>SolidiFI使用系统的方法将错误注入目标合同中的潜在位置。错误注入器模型会为BIP中指定的每个位置播种错误。它使用基于文本的代码转换来修改代码，其中从AST派生的信息用于修改代码以注入错误。使用了三种不同的方法来注入错误。除了在目标合同中注入错误之外，Bug Injector还会生成一个BugLog，该BugLog为每个注入的bug指定唯一的标识符，并在目标合同中将其注入的对应位置指定一个或多个。</p>
+<h4 id="buggy-code-check-and-results-inspection"><a class="markdownIt-Anchor" href="#buggy-code-check-and-results-inspection"></a> Buggy code check and results inspection</h4>
+<p>生成的带漏洞合同将传递到工具评估器，后者使用评估中的工具检查越野车代码。<br />
+然后，在Bug Injector生成的BugLog的帮助下，扫描由工具生成的结果以查找已注入但未被检测到的bug。 SolidiFI仅考虑未检测到的注入错误。因此，如果经过评估的工具在注入错误的位置以外的其他位置报告了错误，则SolidiFI不会在其误报输出中考虑这些错误。这是为了避免SolidiFI报告原始合同中的潜在漏洞，从而使结果不正确。此外，SolidiFI会检查由工具生成的结果，以查找其他报告的错误，并检查它们是否为真正的错误或错误警报。</p>
+<h2 id="三-实验评估"><a class="markdownIt-Anchor" href="#三-实验评估"></a> 三、实验评估</h2>
+<p>在我们的实验中，我们使用了从50种智能合约中选择的数据集，这些智能合约从具有不同大小和不同连接能力的扫描中选择，实际上这些合约代表了兴趣，而在我们的研究中，我们回答了这三个研究问题，分别是假阴性和假阳性</p>
+<h3 id="evaluation"><a class="markdownIt-Anchor" href="#evaluation"></a> Evaluation</h3>
+<ul>
+<li>6 static analysis tools<br />
+(Oyente, Securify,Mythril, Smartcheck,Manticore,Slither)</li>
 <li>50 Smart Contracts representative of Etherscan (39-741 loc) ~Most Etherscancontracts size &lt;1000 loc</li>
 <li>Different functionalities and syntactic elements</li>
 </ul>
 <p>RQ1: False negatives of the evaluated tools?</p>
 <p>RQ2: False positives of the evaluated tools?</p>
 <p>RQ3: Injected bugs can be activated?</p>
-<h3 id="setup"><a href="#setup" class="headerlink" title="setup"></a>setup</h3><ul>
+<h3 id="setup"><a class="markdownIt-Anchor" href="#setup"></a> setup</h3>
+<ul>
 <li>7 common bug classesconsidered by the tools</li>
 <li>9,369 distinct bugs</li>
 <li>Timeout: 15 minutes persmart contract</li>
 </ul>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201205184313.png" srcset="/img/loading.gif" lazyload alt="image-20201205184313316"></p>
-<h3 id="RQ1-False-negatives-of-the-evaluated-tools"><a href="#RQ1-False-negatives-of-the-evaluated-tools" class="headerlink" title="RQ1: False negatives of the evaluated tools?"></a>RQ1: False negatives of the evaluated tools?</h3><p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201205184258.png" srcset="/img/loading.gif" lazyload alt="image-20201205184258116"></p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201205184313.png" srcset="/img/loading.gif" lazyload alt="image-20201205184313316" /></p>
+<h3 id="rq1-false-negatives-of-the-evaluated-tools"><a class="markdownIt-Anchor" href="#rq1-false-negatives-of-the-evaluated-tools"></a> RQ1: False negatives of the evaluated tools?</h3>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201205184258.png" srcset="/img/loading.gif" lazyload alt="image-20201205184258116" /></p>
 <ul>
-<li><p>None of the tools detect all bugs</p>
+<li>
+<p>None of the tools detect all bugs</p>
 </li>
-<li><p>Many undetectedcorner cases</p>
+<li>
+<p>Many undetectedcorner cases</p>
 </li>
-<li><p>Misidentification is high as well</p>
+<li>
+<p>Misidentification is high as well</p>
 </li>
 </ul>
-<h3 id="RQ2-False-positives-of-the-evaluated-tools"><a href="#RQ2-False-positives-of-the-evaluated-tools" class="headerlink" title="RQ2: False positives of the evaluated tools?"></a>RQ2: False positives of the evaluated tools?</h3><h4 id="Challenges"><a href="#Challenges" class="headerlink" title="Challenges:"></a>Challenges:</h4><ul>
+<h3 id="rq2-false-positives-of-the-evaluated-tools"><a class="markdownIt-Anchor" href="#rq2-false-positives-of-the-evaluated-tools"></a> RQ2: False positives of the evaluated tools?</h3>
+<h4 id="challenges"><a class="markdownIt-Anchor" href="#challenges"></a> Challenges:</h4>
+<ul>
 <li>Lack of ground truth</li>
 <li>Large number of bugs</li>
 </ul>
-<h4 id="Approach"><a href="#Approach" class="headerlink" title="Approach:"></a>Approach:</h4><p>为了使确定假阳性的问题易于处理，我们提出了以下方法。主要思想是仅手动检查每个智能合约的大多数其他工具未报告的错误。保守地假设==大多数工具报告的错误不能为假阳性==。<br>对于每种工具，我们随机选择了大多数方法未排除的每种错误类型类别的20个错误，并手动对其进行了检查。对于那些错误数量小于或等于20的情况，我们进行了全部检查。</p>
+<h4 id="approach"><a class="markdownIt-Anchor" href="#approach"></a> Approach:</h4>
+<p>为了使确定假阳性的问题易于处理，我们提出了以下方法。主要思想是仅手动检查每个智能合约的大多数其他工具未报告的错误。保守地假设<mark>大多数工具报告的错误不能为假阳性</mark>。<br />
+对于每种工具，我们随机选择了大多数方法未排除的每种错误类型类别的20个错误，并手动对其进行了检查。对于那些错误数量小于或等于20的情况，我们进行了全部检查。</p>
 <p>假设一个工具报告的错误总数为100。在这100个错误中，我们假设大多数其他智能合约工具也报告了60个错误，因此我们将其排除在外。在剩下的40个经过过滤的错误中，我们手动检查了随机选择的20个错误。假设其中16个确实为假阳性。过滤掉的错误中有80％是假阳性，并且估计假阳性的数量为32。</p>
 <ul>
 <li>Assuming a bug reported by the majority of the tools cannot be false positive</li>
 </ul>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201205185024.png" srcset="/img/loading.gif" lazyload alt="image-20201205185024364"></p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201205185024.png" srcset="/img/loading.gif" lazyload alt="image-20201205185024364" /></p>
 <p>在表中：</p>
 <ul>
 <li>Threshold：表示多数阈值，即必须检测该错误才能将其排除在外的工具数量，此数量取决于能够检测到该错误类型的工具数量</li>
@@ -374,10 +396,14 @@
 <li>子列<code>FP</code>显示了基于上述人工检查的工具的误报。</li>
 <li>「miscellaneous」：某些工具检测到7类之外的错误</li>
 </ul>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201206160927.png" srcset="/img/loading.gif" lazyload alt="image-20201206160927503"></p>
-<h3 id="RQ3-Injected-bugs-can-be-activated"><a href="#RQ3-Injected-bugs-can-be-activated" class="headerlink" title="RQ3: Injected bugs can be activated?"></a>RQ3: Injected bugs can be activated?</h3><p>由于存在大量未检测到的错误，从不同的合同中为每种错误类型随机选择了5个未检测到的错误，以测试它们的激活。<br>表6显示了我们激活实验的结果。在表中“ –”表示我们无法对该错误类型进行实验，因为它要求攻击者充当矿工，这将消耗大量的计算资源。<br>结果表明，人们可以利用（激活）其相关带有漏洞的合同中的所有选定错误。因此，激活错误（the infeasibility of activation）是不可行的，并不是评估工具无法检测到注入的错误的原因。</p>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201206162235.png" srcset="/img/loading.gif" lazyload alt="image-20201206162235814"></p>
-<h2 id="四、总结评价"><a href="#四、总结评价" class="headerlink" title="四、总结评价"></a>四、总结评价</h2><p>1、本文主要贡献发现当前的静态分析工具依然仍然不成熟，并且假阴性（false negatives，FN）和假阳性（FP，false positives）的数量过高，这个跟之前的SmartBugs的工作类似，不过是采取的另一种方法。</p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201206160927.png" srcset="/img/loading.gif" lazyload alt="image-20201206160927503" /></p>
+<h3 id="rq3-injected-bugs-can-be-activated"><a class="markdownIt-Anchor" href="#rq3-injected-bugs-can-be-activated"></a> RQ3: Injected bugs can be activated?</h3>
+<p>由于存在大量未检测到的错误，从不同的合同中为每种错误类型随机选择了5个未检测到的错误，以测试它们的激活。<br />
+表6显示了我们激活实验的结果。在表中“ –”表示我们无法对该错误类型进行实验，因为它要求攻击者充当矿工，这将消耗大量的计算资源。<br />
+结果表明，人们可以利用（激活）其相关带有漏洞的合同中的所有选定错误。因此，激活错误（the infeasibility of activation）是不可行的，并不是评估工具无法检测到注入的错误的原因。</p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201206162235.png" srcset="/img/loading.gif" lazyload alt="image-20201206162235814" /></p>
+<h2 id="四-总结评价"><a class="markdownIt-Anchor" href="#四-总结评价"></a> 四、总结评价</h2>
+<p>1、本文主要贡献发现当前的静态分析工具依然仍然不成熟，并且假阴性（false negatives，FN）和假阳性（FP，false positives）的数量过高，这个跟之前的SmartBugs的工作类似，不过是采取的另一种方法。</p>
 <p>2、提出了一种系统性注入漏洞的方法：SolidifI</p>
 
             </div>
@@ -413,9 +439,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/04bd7e40d4.html">
+                      <a href="/2021/01107033a6.html">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Hexo + Github 搭建博客</span>
+                        <span class="hidden-mobile">SIF: A Framework for Solidity Contract Instrumentation and Analysis</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -423,8 +449,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2020/126557f196.html">
-                        <span class="hidden-mobile">teEther: Gnawing at Ethereum to Automatically Exploit Smart Contracts</span>
+                      <a href="/2020/1243c4a066.html">
+                        <span class="hidden-mobile">S-gram: towards semantic-aware security auditing for ethereum smart contracts</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
