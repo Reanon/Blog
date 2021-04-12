@@ -1,0 +1,569 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/toast.png">
+  <link rel="icon" href="/img/toast.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="本文提出的TEETHER可以在允许仅在给定二进制字节码的情况下进行智能合约的自动漏洞识别和漏洞利用能力，并且对所有38,757个以太坊合约进行了大规模分析，在其中815个合约中找到了漏洞。">
+  <meta name="author" content="Reanon">
+  <meta name="keywords" content="JAVA">
+  
+  <title>teEther: Gnawing at Ethereum to Automatically Exploit Smart Contracts - Reanon</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"reanon.top","root":"/","version":"1.8.9-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"ee358a24a3d27e65fdc3801fa166e19a","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"aAmqsr4YuWrtrQmYt7oJIgRW-gzGzoHsz","app_key":"Y7jgoCiJCgvS7HIg2H1r4BDv","server_url":"https://aamqsr4y.lc-cn-n1-shared.com"}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>吐司博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="teEther: Gnawing at Ethereum to Automatically Exploit Smart Contracts">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-12-12 10:25" pubdate>
+        2020年12月12日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.5k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      15
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- LeanCloud 统计文章PV -->
+      <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="leancloud-page-views"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">teEther: Gnawing at Ethereum to Automatically Exploit Smart Contracts</h1>
+            
+            <div class="markdown-body">
+              <h1 id="2020-12-12-TEETHER"><a href="#2020-12-12-TEETHER" class="headerlink" title="2020.12.12 TEETHER"></a>2020.12.12 TEETHER</h1><p>论文题目：(2018-USENIX) <a target="_blank" rel="noopener" href="https://www.usenix.org/conference/usenixsecurity18/presentation/krupp">teEther: Gnawing at Ethereum to Automatically Exploit Smart Contracts</a></p>
+<p>论文引用：Krupp J, Rossow C. teether: Gnawing at ethereum to automatically exploit smart contracts[C]//27th {USENIX} Security Symposium ({USENIX} Security 18). 2018: 1317-1333.</p>
+<h2 id="一、主要内容"><a href="#一、主要内容" class="headerlink" title="一、主要内容"></a>一、主要内容</h2><p>作者在通用定义易受攻击合同的定义之后，TEETHER可以在允许仅在给定二进制字节码的情况下进行智能合约的自动漏洞识别和漏洞利用能力。对所有38,757个独特的以太坊合约进行了大规模分析，并在其中815个合约中找到了完全自动化的工作漏洞。<br>他们对于合同漏洞的定义基于以下观察：从一个账户（合同）到另一个账户的价值转移只能在少数明确的条件下进行。 特别是，他们确定了价值转移中必然涉及的四个关键的低级EVM指令：一个用于创建常规事务（CALL），一个用于合同终止（SELFDESTRUCT），两个用于代码注入（CALLCODE） ，DELEGATECALL）。<br>研究人员提出了一种方法，用于在合同中查找易受攻击的执行跟踪，并使用符号执行来自动创建漏洞利用。 具体方法如下为在合同的控制流程图中搜索某些关键路径。具体来说，我们确定了导致关键指令的路径，其中指令的参数可以由攻击者控制。找到路径后，我们利用符号执行将此路径转换为一组约束。 使用约束求解，我们可以推断出攻击者必须执行的事务才能触发漏洞。<br>本文的主要贡献在于：</p>
+<ol>
+<li>基于低级EVM指令提供易受攻击合同的通用定义。</li>
+<li>开发了一个工具TEETHER，它仅从合约的字节码提供端到端漏洞利用。 为此，他们解决了几个特定于EVM的挑战，例如象征性地处理哈希值的新方法</li>
+<li>提供了从以太坊区块链中提取的38,757个独特合约的大规模脆弱性分析。</li>
+</ol>
+<h2 id="二、设计实现"><a href="#二、设计实现" class="headerlink" title="二、设计实现"></a>二、设计实现</h2><p> TEETHER工具流程如下图所示</p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210412122545.png" srcset="/img/loading.gif" lazyload alt="TEETHER工具流程图"><br>（1） CFG（控制流程图）的重建<br>TEETHER使用反向切片来迭代地重建CFG。选择未解析的JUMP或JUMPI，并计算其跳转目标的（路径敏感的）后向切片的集合。如果可以找到完整的后向切片，则执行它以计算跳转目标，将新找到的边添加到CFG，并将相应的跳转指令标记为已解决。由于引入新边缘可能导致新连接的子树内可能出现新的反向跳跃切片，因此该子树中的所有JUMP和JUMPI指令再次标记为未解析。重复此过程，直到找不到新的边缘并且所有跳转指令都标记为已解决。</p>
+<p><img src="https://img-blog.csdn.net/20180904135634245" srcset="/img/loading.gif" lazyload alt="这里写图片描述"></p>
+<p>（2） 关键指令<br>    我们确定了四条关键的EVM指令，想从合约中提取以太网必须至少执行其中一条。 这四条指令分为两类：两条指令导致直接传输，两条指令允许在契约的上下文中执行任意以太网字节码。前两条为CALL和SELFDESTRUCT，后两条为 CALLCODE和DELEGATECALL指令。<br>（3） 路径生成<br>    为了找到关键路径，TEETHER使用A *探索路径，其中路径的成本被定义为该路径在CFG中遍历的分支数。为了仅关注关键路径，在每个步骤之后，我们检查是否仍然可以从当前路径到达至少一个关键切片的所有剩余指令。如果不能完全到达关键切片，则丢弃对路径的进一步探索<br>（4） 生成约束<br>    约束生成模块与路径生成同步运行。 一旦找到路径，路径约束生成模块就尝试以符号方式执行路径以便收集一组路径约束。<br>（5） 路径拼接<br>    将n状态变化路径与关键路径的收集路径约束C收集存储读取R和写入W合并，得到下一变化路径。具体如下</p>
+<p><img src="https://img-blog.csdn.net/20180904135801156" srcset="/img/loading.gif" lazyload alt="这里写图片描述"></p>
+<p>（6） 利用漏洞<br>    如果找到具有可满足的组合路径约束的路径序列，则该模块将输出导致智能合约利用的事务列表。<br>    为了证明文中的方法的实用性，研究人员最终对从区块链中提取的38,757个独特合同进行了大规模分析。 TEETHER发现815（2.10％）的漏洞 完全自动化，无需人工干预或手动验证，也不需要合同源代码。 由于代码共享，这使得至少1,731个账户的资金面临风险。 此外，一个案例研究表明，许多潜在的漏洞是由Solidity的设计选择和对EVM执行模型的误解造成的。</p>
+<h2 id="三、总结评价"><a href="#三、总结评价" class="headerlink" title="三、总结评价"></a>三、总结评价</h2><p>优点：</p>
+<ol>
+<li>TEETHER成功地对使用这些合同的以太坊账户产生了1,564个工作漏洞</li>
+<li>本文提出了一个通用漏洞定义，可以被一个弱的多的攻击者利用，不局限于恶意矿工。有的工具只能检测漏洞，该工具不仅能检测漏洞，还能自动的利用漏洞。</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>TEETHER目前只侧重于在检查合约内的漏洞，但事实上，合约可能会调用其他合约产生漏洞。</li>
+<li>搜索漏洞时，文中的评估会将合同的存储初始化为空状态。这使他们能够结合共享相同代码的合约进行分析，并将工具运行次数从784,344减少到38,757次。但是，这是以不精确的结果为代价的。</li>
+<li>文中的漏洞研究只是在本地测试平台中，有些漏洞在真实的以太坊区块链中不存在。
+   </li>
+</ol>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/">智能合约</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Smart-Contract/">Smart Contract</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/125ff8d3f9.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Evaluating Smart Contract Static Analysis Tools Using Bug Injection</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/11fdfc0192.html">
+                        <span class="hidden-mobile">Smartcheck: Static analysis of ethereum smart contracts</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.lazyComments('valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function () {
+        new Valine({
+          el: "#valine",
+          app_id: "73Hj5P4VcTv8HBdu8NBByx0A-gzGzoHsz",
+          app_key: "RiIo7kMzIb3EGAwRhvg7YEQ2",
+          placeholder: "说点什么",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: false,
+          recordIP: false,
+          serverURLs: "",
+        });
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the
+    <a target="_blank" href="https://valine.js.org" rel="nofollow noopener noopener">comments powered by Valine.</a>
+  </noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+    © 2020 - 2021  Reanon 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- LeanCloud 统计PV -->
+        <span id="leancloud-site-pv-container" style="display: none">
+            总访问量 
+            <span id="leancloud-site-pv"></span>
+             次
+          </span>
+      
+      
+        <!-- LeanCloud 统计UV -->
+        <span id="leancloud-site-uv-container" style="display: none">
+            总访客数 
+            <span id="leancloud-site-uv"></span>
+             人
+          </span>
+      
+
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?ee358a24a3d27e65fdc3801fa166e19a";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

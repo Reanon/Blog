@@ -1,0 +1,585 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/toast.png">
+  <link rel="icon" href="/img/toast.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="本文提出的 Oyente 是最早关注到自动化合约漏洞挖掘的工作之一, 其提供了一个实现较为精简的合约符号执行引擎；尽管Oyente的部分检测方案并不完善, 涉及的漏洞也不够全面, 但依旧作为开创性的工作, 为后续研究提供了很好的支持。">
+  <meta name="author" content="Reanon">
+  <meta name="keywords" content="JAVA">
+  
+  <title>Making Smart Contracts Smarter - Reanon</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"reanon.top","root":"/","version":"1.8.9-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"ee358a24a3d27e65fdc3801fa166e19a","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"aAmqsr4YuWrtrQmYt7oJIgRW-gzGzoHsz","app_key":"Y7jgoCiJCgvS7HIg2H1r4BDv","server_url":"https://aamqsr4y.lc-cn-n1-shared.com"}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>吐司博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Making Smart Contracts Smarter">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-10-22 10:25" pubdate>
+        2020年10月22日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      22
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- LeanCloud 统计文章PV -->
+      <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="leancloud-page-views"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Making Smart Contracts Smarter</h1>
+            
+            <div class="markdown-body">
+              <h1 id="Making-Smart-Contracts-Smarter"><a href="#Making-Smart-Contracts-Smarter" class="headerlink" title="Making Smart Contracts Smarter"></a>Making Smart Contracts Smarter</h1><p>论文标题：(2016-CCS) <a target="_blank" rel="noopener" href="https://dl.acm.org/doi/abs/10.1145/2976749.2978309">Making Smart Contracts Smarter</a> ——使智能合约更智能</p>
+<p>论文引用：Luu L, Chu D H, Olickel H, et al. Making smart contracts smarter[C]//Proceedings of the 2016 ACM SIGSAC conference on computer and communications security. 2016: 254-269.</p>
+<p>代码开源：<a target="_blank" rel="noopener" href="https://github.com/enzymefinance/oyente">oyente: An Analysis Tool for Smart Contracts</a></p>
+<h2 id="主要内容"><a href="#主要内容" class="headerlink" title="主要内容"></a>主要内容</h2><p>在本文中，作者研究了在类似加密货币的开放式分布式网络中基于以太坊运行智能合约的安全性。并且介绍了几个安全性问题，在这些问题中，对手可以操纵智能合约的执行以获取利益。这些错误表明在理解底层平台的分布式语义方面存在细微的差距。作者提出了增强以太坊操作语义的方法，以减少合同的脆弱性。对于为现有的以太坊系统写智能合约的开发人员，构建了一个名为Oyente的符号执行工具来发现潜在的安全漏洞。</p>
+<p>在19366份现有以太坊合同中，Oyente标记其中8833份为易受攻击的合同，其中包括TheDAO错误，该错误导致2016年6月损失了6000万美元。</p>
+<h3 id="背景知识：符号执行"><a href="#背景知识：符号执行" class="headerlink" title="背景知识：符号执行"></a>背景知识：符号执行</h3><p>符号执行是一种传统的自动化漏洞挖掘技术, 目前也被广泛用于智能合约的漏洞挖掘。符号执行引擎为目标代码提供符号化的虚拟运行环境, 将程序所需的外部输入抽象为取值不固定的符号值, 并通过不断求解路径约束, 来尽可能的探索程序分支。</p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201029221259.png" srcset="/img/loading.gif" lazyload></p>
+<p>符号执行的主要思想是把程序执行过程中不确定的输入转换为符号值, 以推动程序执行与分析我们以下面代码为例, 对符号执行的基本流程进行解释。图1对应的示例代码如下:   </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs javascript">contract sample&#123;        <br>	uint  g_var;          <br>	<span class="hljs-function"><span class="hljs-keyword">function</span>  <span class="hljs-title">foo1</span>(<span class="hljs-params">uint  m, uint n</span>) <span class="hljs-title">public</span></span>&#123;         <br>		<span class="hljs-keyword">if</span>(m &gt; n)&#123;                         <br>			g_var  =  m;         <br>		&#125;<span class="hljs-keyword">else</span>&#123;                         <br>			g_var  =  n;         <br>		&#125;     <br>	&#125;         <br>	<span class="hljs-function"><span class="hljs-keyword">function</span>  <span class="hljs-title">foo2</span>(<span class="hljs-params">uint  x</span>) <span class="hljs-title">public</span></span>&#123;<br>    	<span class="hljs-keyword">if</span>(g_var  &lt;  x)&#123;<br>        	g_var  =  x;         <br>         &#125;     <br>	&#125; <br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>无论是智能合约还是传统平台中的程序, 都可以被抽象为一棵执行树。在正常的执行流程中, 由于程序输入为定值, 每个条件判断都可以得到确定的答案, 因此仅有一条分支被探索。</p>
+<p>而在符号执行中, 输入值为不定的符号变量, 当遇到条件判断时, 符号执行引擎会利用==约束求解器==对包含符号变量的表达式进行求解。对于所有有解的分支, 符号执行都会进行分析, 并记录路径中的约束。</p>
+<p>在上图中, 合约调用的输入有两个, 一个是待调用的函数, 一个是函数的输入。对于图1中的路径  1  来说, 当程序执行到叶子节点时, 该路径的约束有两个: [Func == foo1, m &gt; n], m和n皆为符号化的输入值。对于符号执行来说, 智能合约与传统程序的差异主要在于合约中全局变量的取值是不确定的。因此通常情况下除了输入值, 智能合约的全局变量也需要被处理为符号值。</p>
+<h2 id="设计实现"><a href="#设计实现" class="headerlink" title="设计实现"></a>设计实现</h2><h3 id="Oyente"><a href="#Oyente" class="headerlink" title="Oyente"></a>Oyente</h3><p>Oyente是在论文发表之后一段时间才由melon.fund于2018年10月发布的一款为现有的以太坊智能合约开发人员构建的符号执行工具，以发现智能合约中潜在的安全漏洞。其基本介绍：</p>
+<ol>
+<li>开发语言：Python</li>
+<li>工具类型：静态分析工具</li>
+<li>分析内容：EVM字节码</li>
+<li>工具原理：Oyente将需要分析的合约的==字节码==和当前以太坊的全局状态作为输入，检测合约是否存在安全问题，并向用户输入有问题的符号路径。在这个过程中，使用Z3求解器来确定可满足性。</li>
+<li>模块划分：包含  4  个核心组件,    控制流图生成器(CFG   Builder),   探索器(Explorer), 分析器(Core Analysis)和验证器(Validator)。</li>
+</ol>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20201029222806.png" srcset="/img/loading.gif" lazyload alt="image-20201029221903218"></p>
+<ul>
+<li><p>控制流图生成器（CFGBuilder）：对合约进行预分析, 为合约构建基本的控制流图, 以基本块为节点, 跳转关系为边；然而部分跳转关系并不能由生成器完全确定。</p>
+</li>
+<li><p>探索器（Explorer）：对智能合约进行符号执行, 并在执行过程中将这些信息补齐。探索器承担着收集合约信息的重要责任, 它本质上是一个循环, 依次执行合约控制流图中各个基本块的代码。它利用  <strong>Z3  求解器</strong>对合约中的条件跳转进行求解, 探索器根据求解结果决定对哪个分支进行分析, 当条件跳转的两个分支条件都有解时, 两个分支都会被探索。</p>
+</li>
+<li><p>分析器（CoreAnalsis）：包含用于检测合同的子组件，这些合同是TOD，与时间戳相关或异常处理的异常。Explorer仅收集表现出不同的以太流的路径。 因此，根据当交易顺序改变时发出的以太币是否不同来检测合约是否为TOD。 同样，如果要发送的条件包括块时间戳，我们将检查合同是否与时间戳相关。 我们描述了我们如何执行以下分析</p>
+<ul>
+<li>TOD（transaction-ordering dependent）检测。 Explorer返回一组路径以及每个路径对应的以太流。 因此，我们的分析将检查两条不同的路径是否有不同的以太流。 如果合同中有这样的痕迹对，Oyente会将其报告为TOD合同。</li>
+<li>时间戳依赖性检测。 我们使用特殊的符号变量来表示块时间戳。 请注意，块时间戳在执行期间保持不变。 因此，给定轨迹的路径条件，我们检查是否包含此符号变量。 如果合同的任何跟踪依赖于此符号变量，则将合同标记为与时间戳相关。</li>
+<li>错误处理的异常。 检测错误处理的异常很简单。 回想一下，如果被调用方产生了例外，它将0推入调用方的操作数堆栈。 因此，我们仅需要在每次调用后检查合同是否执行ISZERO指令（该指令检查堆栈的最高值是否为0）。 如果不是，则忽略被调用方中发生的任何异常。 因此，我们将此类合同标记为处理异常的合同。</li>
+<li>重入检测。 我们利用路径条件来检查重入漏洞。 在遇到的每个CALL，我们在执行CALL之前获取执行的路径条件。 然后，我们检查这个条件带有更新变量（例如存储值）是否仍然成立（即，是否可以再次执行call 指令）。 如果是这样，我们认为这是一个漏洞，因为被调用者有可能在完成调用之前重新执行调用操作。</li>
+</ul>
+</li>
+<li><p>验证器（Validator）：试图消除误报。 例如，假设CoreAnalysis将一个合同标记为TOD，并且其两条迹线t1和t2表现出不同的以太流量，验证器将查询Z3以检查排序（t1，t2）和（t2，t1）是否都可行。 如果不存在这样的t1和t2，则将该案例视为误报。 但是，由于我们还没有完全模拟以太坊的执行环境，Validator还远远不够完善。 对于第6节中介绍的结果，我们采用尽力而为的 手动分析来确认安全漏洞。 换句话说，Oyente当前的主要用途是标记潜在的易受攻击的合同。 全面的误报检测将留待以后的工作。</p>
+</li>
+</ul>
+<h2 id="总结评价"><a href="#总结评价" class="headerlink" title="总结评价"></a>总结评价</h2><p>1、Oyente是最早关注到自动化合约漏洞挖掘的工作之一, 提供了一个实现较为精简的合约符号执行引擎；尽管  Oyente  的部分检测方案并不完善, 涉及的漏洞也不够全面, 但依旧作为开创性的工作, 为后续研究提供了很好的支持。</p>
+<p>2、Oyente 在论文中介绍了对条件竞争、时间戳依赖、未校验返回值以及重入漏洞等四种合约漏洞的检测方案，并在开源代码中进一步补充了整数上溢、整数下溢、调用栈溢出等常见漏洞的检测代码。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/">智能合约</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Smart-Contract/">Smart Contract</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/">符号执行</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/103af384f2.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Slither: A Static Analysis Framework For Smart</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/10c7caf55.html">
+                        <span class="hidden-mobile">Contractward: Automated vulnerability detection models for ethereum smart contracts</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.lazyComments('valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function () {
+        new Valine({
+          el: "#valine",
+          app_id: "73Hj5P4VcTv8HBdu8NBByx0A-gzGzoHsz",
+          app_key: "RiIo7kMzIb3EGAwRhvg7YEQ2",
+          placeholder: "说点什么",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: false,
+          recordIP: false,
+          serverURLs: "",
+        });
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the
+    <a target="_blank" href="https://valine.js.org" rel="nofollow noopener noopener">comments powered by Valine.</a>
+  </noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+    © 2020 - 2021  Reanon 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- LeanCloud 统计PV -->
+        <span id="leancloud-site-pv-container" style="display: none">
+            总访问量 
+            <span id="leancloud-site-pv"></span>
+             次
+          </span>
+      
+      
+        <!-- LeanCloud 统计UV -->
+        <span id="leancloud-site-uv-container" style="display: none">
+            总访客数 
+            <span id="leancloud-site-uv"></span>
+             人
+          </span>
+      
+
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?ee358a24a3d27e65fdc3801fa166e19a";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

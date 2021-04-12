@@ -1,0 +1,624 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/toast.png">
+  <link rel="icon" href="/img/toast.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="本文提出了一个名为SMARTEMBED的Web服务工具，该工具基于深度学习的代码嵌入和相似性检查技术，通过比较以太坊区块链中现有Solidity代码的代码嵌入向量与已知错误之间的相似性，来帮助 Solidity 开发人员在智能合约中查找重复的合约代码和克隆相关的漏洞">
+  <meta name="author" content="Reanon">
+  <meta name="keywords" content="JAVA">
+  
+  <title>SmartEmbed: A Tool for Clone and Bug Detection in Smart Contracts through Structural Code Embedding - Reanon</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"reanon.top","root":"/","version":"1.8.9-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"ee358a24a3d27e65fdc3801fa166e19a","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"aAmqsr4YuWrtrQmYt7oJIgRW-gzGzoHsz","app_key":"Y7jgoCiJCgvS7HIg2H1r4BDv","server_url":"https://aamqsr4y.lc-cn-n1-shared.com"}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>吐司博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="SmartEmbed: A Tool for Clone and Bug Detection in Smart Contracts through Structural Code Embedding">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-08-06 10:25" pubdate>
+        2020年8月6日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.4k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      38
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- LeanCloud 统计文章PV -->
+      <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="leancloud-page-views"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">SmartEmbed: A Tool for Clone and Bug Detection in Smart Contracts through Structural Code Embedding</h1>
+            
+            <div class="markdown-body">
+              <h1 id="SmartEmbed-A-Tool-for-Clone-and-Bug-Detection-in-Smart-Contracts-through-Structural-Code-Embedding"><a href="#SmartEmbed-A-Tool-for-Clone-and-Bug-Detection-in-Smart-Contracts-through-Structural-Code-Embedding" class="headerlink" title="SmartEmbed: A Tool for Clone and Bug Detection in Smart Contracts through Structural Code Embedding"></a>SmartEmbed: A Tool for Clone and Bug Detection in Smart Contracts through Structural Code Embedding</h1><p>论文题目：(2019-ICSME)<a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/abstract/document/8919164/">SmartEmbed: A Tool for Clone and Bug Detection in Smart Contracts through Structural Code Embedding</a>——通过结构代码嵌入在智能合约中进行克隆和错误检测的工具</p>
+<p>论文引用：Gao Z, Jayasundara V, Jiang L, et al. SmartEmbed: A Tool for Clone and Bug Detection in Smart Contracts through Structural Code Embedding[C]//2019 IEEE International Conference on Software Maintenance and Evolution (ICSME). IEEE, 2019: 394-397.</p>
+<p>代码开源：<a target="_blank" rel="noopener" href="https://github.com/beyondacm/SmartEmbed">beyondacm/SmartEmbed</a></p>
+<h2 id="一、主要内容"><a href="#一、主要内容" class="headerlink" title="一、主要内容"></a>一、主要内容</h2><h3 id="1-1-研究背景"><a href="#1-1-研究背景" class="headerlink" title="1.1  研究背景"></a>1.1  研究背景</h3><p>以太坊已成为广泛使用的平台，以实现基于区块链的安全金融和业务交易。但是，以太坊的一个主要问题是其智能合约的安全性。智能合约中许多已确定的错误和漏洞不仅给维护区块链提出了挑战，而且还导致了严重的财务损失。迫切需要更好地帮助开发人员检查智能合约并确保其可靠性。</p>
+<p>近年来，随着分布式分类账（又称区块链）中加密货币的采用和发展，以太坊作为区块链平台越来越受到关注。以太坊平台的核心是智能合约，智能合约是一种计算机程序，可以在满足特定的预定义条件时触发以执行任何任务。以太坊平台的主要关注点是智能合约的安全性，区块链中的智能合约通常涉及价值数百万美元的加密货币（例如DAO1，Parity2等）。此外，与传统软件程序不同，智能合约代码在部署后是不变的。智能合约无法更改，但在智能合约中发现任何安全问题时可能会被杀死。这给区块链维护带来了挑战，并极大地激发了黑客发现和利用智能合约中潜在问题的动力，因此，非常需要在部署之前检查并确保智能合约的健壮性。</p>
+<h3 id="1-2-相关工作"><a href="#1-2-相关工作" class="headerlink" title="1.2 相关工作"></a>1.2 相关工作</h3><p>许多先前的工作已经研究了智能合约的漏洞检测（bug detection），主要的缺点如下：</p>
+<ul>
+<li>所有这些现有工具都需要人工专家定义的某些错误模式或规范规则。</li>
+<li>编写新规则并构造新的检查器以应对攻击者创建的新错误和漏洞可能太慢且成本太高。</li>
+<li>这些漏洞检测的手段（如符号执行、模糊检测等）资源消耗过大。</li>
+</ul>
+<h3 id="1-3-主要成果"><a href="#1-3-主要成果" class="headerlink" title="1.3  主要成果"></a>1.3  主要成果</h3><p>本文提出了一个名为SMARTEMBED的Web服务工具，该工具基于深度学习的代码嵌入和相似性检查技术，通过比较以太坊区块链中现有Solidity代码的代码嵌入向量与已知错误之间的相似性，来帮助Solidity开发人员在智能合约中查找重复的合约代码和克隆相关的漏洞。</p>
+<p>以太坊区块链收集的超过22K个Solidity智能合约，发现合约代码的克隆率接近90％，远高于传统软件。将SMARTEMBED应用于这些智能合约，根据我们的小型bug数据库（small bug database），可以准确、有效地识别 194 个与clone相关的错误，准确率达96％。</p>
+<h2 id="二、设计实现"><a href="#二、设计实现" class="headerlink" title="二、设计实现"></a>二、设计实现</h2><h3 id="2-1-设计思想"><a href="#2-1-设计思想" class="headerlink" title="2.1 设计思想"></a>2.1 设计思想</h3><p> SMARTEMBED的主要思想有两个方面。 </p>
+<ol>
+<li>代码嵌入（Code Embedding）：利用基本程序分析和许多开源智能合约的可用性，我们通过改编自单词嵌入（word embeddings）的技术，将每个代码元素和漏洞模式（bug pattern），包括它们的词法、句法乃至某些语义信息（ lexical syntactical）自动编码为数值向量（numerical vectors）。</li>
+<li>相似性检查（word embeddings）：利用智能合约中代表不同粒度级别的各种代码元素的数值向量之间的有效相似性比较，可以检测到彼此相似的克隆以及与已知缺陷相似的错误。</li>
+</ol>
+<p>基于代码嵌入和相似性检查，SMARTEMBED以统一的方法针对两个任务：克隆检测和错误检测。</p>
+<ul>
+<li>对于克隆检测，SMARTEMBED 可以识别类似的智能合约。</li>
+<li>对于错误检测，基于错误数据库，SMARTEMBED可以检测以太坊区块链中现有合约中的错误或由Solidity Developer提供的与数据库中任何已知错误类似的智能合约中的错误。方法包含两个阶段：模型训练阶段和预测阶段</li>
+</ul>
+<h3 id="2-2-模型训练"><a href="#2-2-模型训练" class="headerlink" title="2.2 模型训练"></a>2.2 模型训练</h3><p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210412111725.png" srcset="/img/loading.gif" lazyload alt="image-20200806195045912"></p>
+<p>在模型训练阶段，主要有4个步骤：</p>
+<ul>
+<li>步骤一：为智能合约源代码构建了自定义的Solidity解析器。<br>解析器为我们收集的数据集中的每个智能合约生成一个抽象语法树（abstract syntax tree，AST），然后根据树节点的类型将解析树序列化为标记流。</li>
+<li>步骤二：规范化器（the normalizer）重新组合标记流（stream of tokens），以消除智能合约之间的不必要差异（例如，停用词，常量或文字的值）。</li>
+<li>步骤三：将输出标记流（The output token streams）嵌入代码的学习模块，并将每个代码片段嵌入到固定维度的数值向量（numerical vector）中。</li>
+<li>步骤四：在代码嵌入学习步骤之后，将所有源代码编码到源代码嵌入矩阵中（source code embedding matrix）；同时，我们收集的所有错误陈述都被编码到bug嵌入矩阵（the bug embedding matrix）中。</li>
+</ul>
+<h3 id="2-3-模型预测"><a href="#2-3-模型预测" class="headerlink" title="2.3 模型预测"></a>2.3 模型预测</h3><p>在预测阶段，通过执行步骤1,2,3并利用学习的嵌入矩阵(embedding vectors)，将任何给定的新智能合约转换为嵌入向量。在给定合同的嵌入和收集的数据库中的嵌入之间执行相似性比较（步骤5）。相似阈值用于控制给定合同中的代码片段是否将被视为代码克隆或与克隆相关的错误（步骤5）。</p>
+<h3 id="2-4-具体步骤"><a href="#2-4-具体步骤" class="headerlink" title="2.4 具体步骤"></a>2.4 具体步骤</h3><h4 id="2-4-1-Solidity解析器（Parsing）"><a href="#2-4-1-Solidity解析器（Parsing）" class="headerlink" title="2.4.1 Solidity解析器（Parsing）"></a>2.4.1 Solidity解析器（Parsing）</h4><p>SMARTEMBED使用==ANTLR3==和自定义Solidity 程序为每个智能合约生成AST。list1显示了一个智能合约的简单示例在Solidity中定义，取决于树的类型节点，对于合同级别，AST的序列化方式不同和语句级程序元素来捕获结构焦点要素及其周围的信息。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs json">pragma solidity ˆ0.4.15;<br><br>contractOverflow&#123;<br>	uintprivater=0;<br>	function addValue(uintvalue)returns(bool)&#123;<br>		<span class="hljs-comment">//possibleoverflow</span><br>    	r+=value;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>Listing 1. 一个Solidity程序</p>
+<h5 id="2-4-1-1-合同级别解析（Contract-Level-Parsing）"><a href="#2-4-1-1-合同级别解析（Contract-Level-Parsing）" class="headerlink" title="2.4.1.1 合同级别解析（Contract Level Parsing）"></a>2.4.1.1 合同级别解析（Contract Level Parsing）</h5><p>通过有序遍历从ASTS中提取所有终端标记，示例代码的合同级别解析结果如下所示：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs json">pragma solidity ˆversionliteral;	<br><br>contract Overflow&#123;<br>	uint privater=0;<br>	function addValue (uint value) returns(bool)<br>	&#123;<br>        r +=value;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="2-4-1-2-语句级解析-Statement-Level-Parsing"><a href="#2-4-1-2-语句级解析-Statement-Level-Parsing" class="headerlink" title="2.4.1.2 语句级解析(Statement Level Parsing)"></a>2.4.1.2 语句级解析(Statement Level Parsing)</h5><p>对于语句解析(statement parsing)，更多的结构信息（containment and neighbouring)）以及一些语义信息（data-flow）被添加到序列中。语句级解析结果如下。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs json">sourceUnit contract Definition contractPart<br>functionDefinition block statement<br>simpleStatement r+=value; <br>function addValue add value(uint value) returns(bool) <br>contract Overflow overflow&#123; &#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-4-2-规范化-Normalization"><a href="#2-4-2-规范化-Normalization" class="headerlink" title="2.4.2  规范化(Normalization)"></a>2.4.2  规范化(Normalization)</h4><p>SMARTEMBED规范化分析序列以删除一些与语义无关的信息；所有简单变量，非必要的标点符号和不同类型的常量都将被替换或删除。以下代码段示例了此步骤的操作：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs json">uint privater = 0;<br>==&gt;<br>uint private SimpeVar = decimalnumber<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-4-3-代码嵌入学习（Code-Embedding-Learning）"><a href="#2-4-3-代码嵌入学习（Code-Embedding-Learning）" class="headerlink" title="2.4.3 代码嵌入学习（Code Embedding Learning）"></a>2.4.3 代码嵌入学习（Code Embedding Learning）</h4><p>SMARTEMBED通过改编自单词嵌入的技术，将代码元素和bug模式（包括它们的词汇，句法和一些语义信息）嵌入到数字矢量中。选择<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/32965521">Fasttext</a> 作为代码嵌入算法，因为它的性能与传统word2vec相同或更好。</p>
+<h5 id="2-4-3-1-标记嵌入（Token-Embedding-）："><a href="#2-4-3-1-标记嵌入（Token-Embedding-）：" class="headerlink" title="2.4.3.1 标记嵌入（Token Embedding:）："></a>2.4.3.1 标记嵌入（Token Embedding:）：</h5><p>将标准化工具为Solidity合同生成的具有结构信息的标准化标记流用作训练语料库（training corpus）。将Fasttext算法改编为训练代码嵌入模型，训练后，训练语料库中的每个标记（包括代表结构信息的标记）都将映射到具有固定维向量的实际值中。</p>
+<h5 id="2-4-3-2-更高层次的嵌入-Higher-Level-Embedding"><a href="#2-4-3-2-更高层次的嵌入-Higher-Level-Embedding" class="headerlink" title="2.4.3.2 更高层次的嵌入(Higher Level Embedding)"></a>2.4.3.2 更高层次的嵌入(Higher Level Embedding)</h5><p>基于每个标记的基本矢量表示，将更高级别代码片段（例如，语句，函数，子合同和合同）的代码嵌入组合在一起。更具体地说，将特定代码片段（a particular code fragment）的代码嵌入定义为其所有组成标记（constituent tokens）的嵌入之和。</p>
+<h4 id="2-4-4-嵌入矩阵（Embedding-Matrices）"><a href="#2-4-4-嵌入矩阵（Embedding-Matrices）" class="headerlink" title="2.4.4 嵌入矩阵（Embedding Matrices）"></a>2.4.4 嵌入矩阵（Embedding Matrices）</h4><p>通过将各个向量堆叠在一起，获得用于克隆检测的源代码嵌入矩阵$ C^{c×d}$和用于错误检测的错误语句嵌入矩阵$ B^{b×d}$。</p>
+<h5 id="源代码嵌入矩阵-Source-Code-Embedding-Matrix-C-c×d"><a href="#源代码嵌入矩阵-Source-Code-Embedding-Matrix-C-c×d" class="headerlink" title="源代码嵌入矩阵(Source Code Embedding Matrix) $ C^{c×d}$"></a>源代码嵌入矩阵(Source Code Embedding Matrix) <strong>$ C^{c×d}$</strong></h5><ul>
+<li>第一个维度c是合同总数；</li>
+<li>第二维d是我们先前设置的代码嵌入大小。</li>
+<li>第i个元素Ci（i = 1，2，…，c）是第i个合约的向量表示</li>
+</ul>
+<h5 id="Bug声明嵌入矩阵（Bug-Statement-Embedding-Matrix）-B-b×d"><a href="#Bug声明嵌入矩阵（Bug-Statement-Embedding-Matrix）-B-b×d" class="headerlink" title="Bug声明嵌入矩阵（Bug Statement Embedding Matrix）**$ B^{b×d}$**"></a>Bug声明嵌入矩阵（Bug Statement Embedding Matrix）**$ B^{b×d}$**</h5><ul>
+<li>第一维b对应于我们的错误数据库中的错误语句总数，并且矩阵的每一行，即Bi（i = 1，2，…，b）表示针对特定错误语句嵌入的代码。</li>
+</ul>
+<h4 id="2-4-5-相似性检查（Similarity-Checking-）"><a href="#2-4-5-相似性检查（Similarity-Checking-）" class="headerlink" title="2.4.5 相似性检查（Similarity Checking:）"></a>2.4.5 相似性检查（Similarity Checking:）</h4><p>定义了一个相似性度量，用于克隆检测和错误检测的下游任务。定义：假设C1和C2是两个代码片段，而e1和e2是它们相应的代码嵌入。定义两个代码段之间的语义距离以及相似性，如下所示：</p>
+<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20200829190404.png" srcset="/img/loading.gif" lazyload alt="image-20200808011231285"></p>
+<p>给定任意两个代码片段Ci和Cj，如果它们的相似性得分超过特定的相似性阈值δ，则将Ci和Cj视为一个克隆对。</p>
+<h4 id="2-4-6-克隆检测和错误检测"><a href="#2-4-6-克隆检测和错误检测" class="headerlink" title="2.4.6 克隆检测和错误检测"></a>2.4.6 克隆检测和错误检测</h4><p>克隆检测和Bug检测任务都可以视为查找“相似”代码的问题的变体，具体取决于相似性的定义。</p>
+<ul>
+<li>对于克隆检测，测量智能合约对之间的相似性，如果相似性得分超过克隆的预定义阈值，则将它们识别为克隆。</li>
+<li>对于Bug检测，在给定的合同中搜索与已知错误相似的代码片段，而不是预先定义的错误阈值。</li>
+</ul>
+<h2 id="三、实验评估"><a href="#三、实验评估" class="headerlink" title="三、实验评估"></a>三、实验评估</h2><p>将SMARTEMBED实施为独立的Web服务，以帮助Solidity开发人员检查其智能合约。</p>
+<h3 id="3-1-数据采集（Data-Collection）"><a href="#3-1-数据采集（Data-Collection）" class="headerlink" title="3.1 数据采集（Data Collection）"></a>3.1 数据采集（Data Collection）</h3><p>我们使用EtherScan收集了22,275份经过验证的Solidity智能合约，该合约是Ethereum的区块浏览器和分析平台。这些合同包含135,239个分包合同，631,261个函数，大约200万份报表和700万行代码。同时，收集了22个著名的易受攻击的智能合约，并在合约中查明了37条错误语句，这些语句用作SMARTEMBED的错误数据库。</p>
+<h3 id="3-2-后端模型（Backend-Model-）"><a href="#3-2-后端模型（Backend-Model-）" class="headerlink" title="3.2 后端模型（Backend Model.）"></a>3.2 后端模型（Backend Model.）</h3><p>收集到的合同源代码被输入描述方法的工作流中，输出是代码嵌入，它们被用作相似性检查的后端模型。</p>
+<p>我们将SMARTEMBED与两个专用于克隆检测（扩展为Solidity的DECKARD [9]）和错误检测（SmartCheck [3]）的著名工具进行了比较。</p>
+<h3 id="3-3-前端用户界面（Frontend-User-Interface-）。"><a href="#3-3-前端用户界面（Frontend-User-Interface-）。" class="headerlink" title="3.3 前端用户界面（Frontend User Interface.）。"></a>3.3 前端用户界面（Frontend User Interface.）。</h3><p>在用户界面上，SMARTEMBED提供了一个输入框，供Solidity开发人员提交其源代码。在Solidity开发人员将其源代码提交给服务器后，将对源代码进行解析和规范化，然后通过我们的后端模型将合同和每个语句转换为向量，以进行相似性检查。输出分为两个单独的结果选项卡。</p>
+<p>初始化Web工具</p>
+<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20200829190405.png" srcset="/img/loading.gif" lazyload alt="1"></p>
+<p>对于克隆检测结果选项卡，SMARTEMBED返回我们代码库中前5名最相似的克隆合同以及相似性得分，并链接到它们在EtherScan中的位置。</p>
+<p>将智能合约粘贴到文本区域，然后单击“summit”。</p>
+<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20200829190406.png" srcset="/img/loading.gif" lazyload alt="2"></p>
+<p>对于Bug检测结果，SMARTEMBED突出显示提交的源代码中的错误行，并将错误类型报告给开发人员。</p>
+<p>bug检测结果将显示如下。</p>
+<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20200829190407.png" srcset="/img/loading.gif" lazyload alt="3"></p>
+<h3 id="3-4-实验总结"><a href="#3-4-实验总结" class="headerlink" title="3.4 实验总结"></a>3.4 实验总结</h3><p>对于克隆检测，针对22,725个智能合约源代码运行了DECKARD和SMARTEMBED，实验结果表明，两种工具都将大约660万行代码识别为代码克隆，而总行数仅为730万，这意味着克隆的可靠性代码约为90％，远高于传统软件。 </p>
+<p>对于漏洞检测，SMARTEMBED可以更有效，更准确地识别以太坊区块链中与克隆相关的漏洞。当相似度阈值设置为0.95时，SMARTEMBED工具会报告202个与克隆相关的错误，手动验证这些候选错误，其中194个被标记为真实错误，而SmartCheck只能检测其中的117个。</p>
+<h2 id="四、总结评论"><a href="#四、总结评论" class="headerlink" title="四、总结评论"></a>四、总结评论</h2><p>本文介绍了SMARTEMBED，这是一种用于准确高效地检测智能合约中的代码克隆和错误的Web服务工具，能够极大地节省了效率。它开发了一种用于Solidity代码中的代码嵌入技术，并利用相似性检查来搜索满足某些阈值的“相似”代码。该方法针对从以太坊区块链收集的合同和错误数据是自动化的。<br>这是一种轻量级的智能合约漏洞检测工具，不过很依赖于所存储的bug数据库，只能找到已知的合约漏洞，不能自主发现最新的漏洞，这点算是不足。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/">智能合约</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Smart-Contract/">Smart Contract</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/09782d0fb0.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">A Survey of Smart Contract Formal Specification and Verification</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/07e753fece.html">
+                        <span class="hidden-mobile">ETHBMC: A Bounded Model Checker for Smart Contracts</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.lazyComments('valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function () {
+        new Valine({
+          el: "#valine",
+          app_id: "73Hj5P4VcTv8HBdu8NBByx0A-gzGzoHsz",
+          app_key: "RiIo7kMzIb3EGAwRhvg7YEQ2",
+          placeholder: "说点什么",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: false,
+          recordIP: false,
+          serverURLs: "",
+        });
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the
+    <a target="_blank" href="https://valine.js.org" rel="nofollow noopener noopener">comments powered by Valine.</a>
+  </noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+    © 2020 - 2021  Reanon 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- LeanCloud 统计PV -->
+        <span id="leancloud-site-pv-container" style="display: none">
+            总访问量 
+            <span id="leancloud-site-pv"></span>
+             次
+          </span>
+      
+      
+        <!-- LeanCloud 统计UV -->
+        <span id="leancloud-site-uv-container" style="display: none">
+            总访客数 
+            <span id="leancloud-site-uv"></span>
+             人
+          </span>
+      
+
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?ee358a24a3d27e65fdc3801fa166e19a";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

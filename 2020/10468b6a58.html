@@ -1,0 +1,880 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/toast.png">
+  <link rel="icon" href="/img/toast.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="本文分析了当前（2019年）最新检测智能合约漏洞工具的有效性和实用性。">
+  <meta name="author" content="Reanon">
+  <meta name="keywords" content="JAVA">
+  
+  <title>Empirical Review of Automated Analysis Tools on 47,587 Ethereum Smart Contracts - Reanon</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"reanon.top","root":"/","version":"1.8.9-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"ee358a24a3d27e65fdc3801fa166e19a","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"aAmqsr4YuWrtrQmYt7oJIgRW-gzGzoHsz","app_key":"Y7jgoCiJCgvS7HIg2H1r4BDv","server_url":"https://aamqsr4y.lc-cn-n1-shared.com"}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>吐司博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Empirical Review of Automated Analysis Tools on 47,587 Ethereum Smart Contracts">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-10-05 10:25" pubdate>
+        2020年10月5日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      5.5k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      61
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- LeanCloud 统计文章PV -->
+      <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="leancloud-page-views"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Empirical Review of Automated Analysis Tools on 47,587 Ethereum Smart Contracts</h1>
+            
+            <div class="markdown-body">
+              <h1 id="Empirical-Review-of-Automated-Analysis-Tools-on-47-587-Ethereum-Smart-Contracts"><a href="#Empirical-Review-of-Automated-Analysis-Tools-on-47-587-Ethereum-Smart-Contracts" class="headerlink" title="Empirical Review of Automated Analysis Tools on 47,587 Ethereum Smart Contracts"></a>Empirical Review of Automated Analysis Tools on 47,587 Ethereum Smart Contracts</h1><p>论文题目：(2020-ICSE) <a target="_blank" rel="noopener" href="https://dl.acm.org/doi/abs/10.1145/3377811.3380364">Empirical Review of Automated Analysis Tools on 47,587 Ethereum Smart Contracts</a> —— 自动分析工具对47,587个以太坊智能合约的进行实证评估</p>
+<p>论文引用：Durieux T, Ferreira J F, Abreu R, et al. Empirical review of automated analysis tools on 47,587 Ethereum smart contracts[C]//Proceedings of the ACM/IEEE 42nd International Conference on Software Engineering. 2020: 530-541.</p>
+<p>代码开源：<a target="_blank" rel="noopener" href="https://github.com/smartbugs/smartbugs">SmartBugs</a></p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210412114935.png" srcset="/img/loading.gif" lazyload alt="image-20210412114934942"></p>
+<h2 id="一、MAIN-CONTENT"><a href="#一、MAIN-CONTENT" class="headerlink" title="一、MAIN CONTENT"></a>一、MAIN CONTENT</h2><p>本文想要分析当前最新检测智能合约漏洞工具的有效性和实用性，选择了35种主流的自动分析工具，按照自定义的四个标准筛选出了9个不同的工具；为了能够执行和比较自动分析工具，从而为公平比较奠定基础，作者提供了两个Solidity智能合约数据集：</p>
+<ul>
+<li>第一个数据集包含69个手动注释的智能合约，可用于评估分析工具的精度。</li>
+<li>第二个数据集包含以太坊区块链中所有可用的智能合约，这些合约在撰写本文时在Etherscan上具有Solidity源代码（总共47,518个合约）</li>
+</ul>
+<p>并且已经在两个数据集上执行了9种最新的自动化分析工具，并对结果进行了分析，所有工具的执行需要564天3小时才能完成428,337分析。为了简化对智能合约自动分析技术的研究，提供了一个新颖的，可扩展的，易于使用的执行框架，称为SmartBugs，可以在相同的执行环境中执行这些工具；该框架当前包含9个已配置的智能合约分析工具。</p>
+<p>结果表明，所有工具仅检测到注释数据集中的漏洞的42％，并且最新技术无法检测DASP10的两类漏洞：随机性差（Bad Randomness）和短地址（Short Addresses）；其中<a target="_blank" rel="noopener" href="https://github.com/ConsenSys/mythril">Mythtil</a>具有更高的准确性（27％），此外本文还提到如果要兼顾准确性和执行成本，那么Mythril和Slither的组合可以检测到总共42/115（37％）的漏洞，这是最佳折衷方案；</p>
+<p>而对另一个数据集进行漏洞检测时，有97％的合同至少被一种工具检测到漏洞，这表明每种工具都可能存在着大量误报，而其中Oyente更是当仁不让地检测到73％的合同中的漏洞。总之表明，最先进的技术远非完美无缺，依然有很大改进的空间。</p>
+<p>总而言之，本文的贡献是：</p>
+<p>（1）带有注释的易受攻击的Solidity智能合约数据集；<br>（2）一个包含以太坊区块链（Etherscan）中所有可用的智能合约的数据集，并且合约具有Solidity源代码;<br>（3）一个执行框架SmartBugs，包括9个预配置的智能合约分析工具；<br>（4）对47,587份智能合约执行9种工具的分析。</p>
+<h2 id="二、BACKGROUND"><a href="#二、BACKGROUND" class="headerlink" title="二、BACKGROUND"></a>二、BACKGROUND</h2><p>研究者已经开发了一些自动分析工具，以查找和消除智能合约中的漏洞。但是，比较和复制这项研究并不容易：即使有几种工具是公开可用的，但使用的数据集却不是。如果新工具的开发人员想将新工具与现有工作进行比较，当前的方法是与替代工具的作者联系，并希望他们能够访问其数据集。</p>
+<h2 id="三、STUDY-DESIGN"><a href="#三、STUDY-DESIGN" class="headerlink" title="三、STUDY DESIGN"></a>三、STUDY DESIGN</h2><p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210412115007.png" srcset="/img/loading.gif" lazyload alt="image-20210412115007168"></p>
+<h3 id="Research-Questions"><a href="#Research-Questions" class="headerlink" title="Research Questions"></a>Research Questions</h3><ol>
+<li><p>[Effectiveness] What is the effectiveness of current analysis tools in detecting vulnerabilities in Solidity smart contracts?</p>
+<p>探究最新的分析工具在检测已知智能合约中的漏洞方面的精确度如何</p>
+</li>
+<li><p>[Production] How many vulnerabilities are present in the Ethereum blockchain?</p>
+<p>调查了从以太坊区块链中提取的合约中检测到的漏洞，考虑了最流行的漏洞，随时间的演变的漏洞以及自动分析工具的不同组合之间的共同漏洞。</p>
+</li>
+<li><p>[Performance] How long do the tools require to analyze the smart contracts?</p>
+<p>比较分析工具的性能。目的是确定哪种工具效率最好</p>
+</li>
+</ol>
+<h3 id="Subject-Tools"><a href="#Subject-Tools" class="headerlink" title="Subject Tools"></a>Subject Tools</h3><p>根据一些已有的文献和作者自己的搜查，列出了35种工具：</p>
+<center>TABLE 1 确定为该研究潜在的工具</center>
+
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Tools</th>
+<th>URLs</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>contractLarva</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/gordonpace/contractLarva">https://github.com/gordonpace/contractLarva</a></td>
+</tr>
+<tr>
+<td>2</td>
+<td>E-EVM</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/pisocrob/E-EVM">https://github.com/pisocrob/E-EVM</a></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Echidna</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/crytic/echidna">https://github.com/crytic/echidna</a></td>
+</tr>
+<tr>
+<td>4</td>
+<td>Erays</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/teamnsrg/erays">https://github.com/teamnsrg/erays</a></td>
+</tr>
+<tr>
+<td>5</td>
+<td>Ether</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Ethersplay</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/crytic/ethersplay">https://github.com/crytic/ethersplay</a></td>
+</tr>
+<tr>
+<td>7</td>
+<td>EtherTrust</td>
+<td><a target="_blank" rel="noopener" href="https://www.netidee.at/ethertrust">https://www.netidee.at/ethertrust</a></td>
+</tr>
+<tr>
+<td>8</td>
+<td>EthIR</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/costa-group/EthIR">https://github.com/costa-group/EthIR</a></td>
+</tr>
+<tr>
+<td>9</td>
+<td>FSolidM</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/anmavrid/smart-contracts">https://github.com/anmavrid/smart-contracts</a></td>
+</tr>
+<tr>
+<td>10</td>
+<td>Gasper</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>11</td>
+<td>==HoneyBadger==</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/christoftorres/HoneyBadger">https://github.com/christoftorres/HoneyBadger</a></td>
+</tr>
+<tr>
+<td>12</td>
+<td>KEVM</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/kframework/evmsemantics">https://github.com/kframework/evmsemantics</a></td>
+</tr>
+<tr>
+<td>13</td>
+<td>MadMax</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/nevillegrech/MadMax">https://github.com/nevillegrech/MadMax</a></td>
+</tr>
+<tr>
+<td>14</td>
+<td>Maian</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/MAIAN-tool/MAIAN">https://github.com/MAIAN-tool/MAIAN</a></td>
+</tr>
+<tr>
+<td>15</td>
+<td>==Manticore==</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/trailofbits/manticore/">https://github.com/trailofbits/manticore/</a></td>
+</tr>
+<tr>
+<td>16</td>
+<td>==Mythril==</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/ConsenSys/mythril-classic">https://github.com/ConsenSys/mythril-classic</a></td>
+</tr>
+<tr>
+<td>17</td>
+<td>Octopus</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/quoscient/octopus">https://github.com/quoscient/octopus</a></td>
+</tr>
+<tr>
+<td>18</td>
+<td>==Osiris==</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/christoftorres/Osiris">https://github.com/christoftorres/Osiris</a></td>
+</tr>
+<tr>
+<td>19</td>
+<td>==Oyente==</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/melonproject/oyente">https://github.com/melonproject/oyente</a></td>
+</tr>
+<tr>
+<td>20</td>
+<td>Porosity</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/comaeio/porosity">https://github.com/comaeio/porosity</a></td>
+</tr>
+<tr>
+<td>21</td>
+<td>rattle</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/crytic/rattle">https://github.com/crytic/rattle</a></td>
+</tr>
+<tr>
+<td>22</td>
+<td>ReGuard</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>23</td>
+<td>Remix</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/ethereum/remix">https://github.com/ethereum/remix</a></td>
+</tr>
+<tr>
+<td>24</td>
+<td>SASC</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>25</td>
+<td>sCompile</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>26</td>
+<td>==Securify==</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/eth-sri/securify">https://github.com/eth-sri/securify</a></td>
+</tr>
+<tr>
+<td>27</td>
+<td>==Slither==</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/crytic/slither">https://github.com/crytic/slither</a></td>
+</tr>
+<tr>
+<td>28</td>
+<td>==Smartcheck==</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/smartdec/smartcheck">https://github.com/smartdec/smartcheck</a></td>
+</tr>
+<tr>
+<td>29</td>
+<td>Solgraph</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/raineorshine/solgraph">https://github.com/raineorshine/solgraph</a></td>
+</tr>
+<tr>
+<td>30</td>
+<td>Solhint</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/protofire/solhint">https://github.com/protofire/solhint</a></td>
+</tr>
+<tr>
+<td>31</td>
+<td>SolMet</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/chicxurug/SolMet-Solidity-parser">https://github.com/chicxurug/SolMet-Solidity-parser</a></td>
+</tr>
+<tr>
+<td>32</td>
+<td>teEther</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/nescio007/teether">https://github.com/nescio007/teether</a></td>
+</tr>
+<tr>
+<td>33</td>
+<td>Vandal</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/usyd-blockchain/vandal">https://github.com/usyd-blockchain/vandal</a></td>
+</tr>
+<tr>
+<td>34</td>
+<td>VeriSol</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/microsoft/verisol">https://github.com/microsoft/verisol</a></td>
+</tr>
+<tr>
+<td>35</td>
+<td>Zeus</td>
+<td>N/A</td>
+</tr>
+</tbody></table>
+<p>其中只有满足四个纳入条件（inclusion criteria）的工具才会被应用到最后的研究。三个纳入条件如下：</p>
+<ol>
+<li>Available and CLI：该工具是公开可用的，并支持命令行界面（command-line interface，CLI）；CLI促进了分析的可伸缩性</li>
+<li>Compatible Input：该工具将Solidity合同作为输入。这不包括仅考虑仅以EVM字节码为输入的工具。</li>
+<li>Only Source：该工具仅需要合同的源代码即可运行分析。这不包括需要测试套件（test suite）或带有断言注释的合同（contracts annotated with assertions）的工具。</li>
+<li>Vulnerability Finding：该工具可以识别智能合约中的漏洞或不良实践（bad practices）。这排除了仅构造诸如控制流程图之类的工件的分析类工具（analysis tools）</li>
+</ol>
+<p>在检查了表1中列出的所有35种分析工具之后，发现有9种工具符合概述的纳入标准。表2列出了排除和包含的工具，对于排除的工具，还显示了它们不符合哪些标准。</p>
+<center>TABLE 2 根据作者的纳入标准排除和包含的分析工具</center>
+
+<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20201009161527.png" srcset="/img/loading.gif" lazyload alt="image-20201009161520383"></p>
+<h4 id="HoneyBadger"><a href="#HoneyBadger" class="headerlink" title="HoneyBadger"></a>HoneyBadger</h4><p>由卢森堡大学的一组研究人员开发，是基于Oyente的工具，该工具采用符号执行和一组启发式方法（a set of heuristics）来确定智能合约中的漏洞（honeypots，这里用了蜜罐指代）。honeypots是指在设计上似乎有明显的缺陷的智能合约，假设用户先验将一定数量的以太币转移到合约中，则任意用户都可以从合约中消耗Ether。当HoneyBadger检测到合同似乎易受攻击时，这意味着合同的开发人员希望使合同看起来易受攻击，但并不易受攻击。</p>
+<h4 id="Maian"><a href="#Maian" class="headerlink" title="Maian"></a>Maian</h4><p>由新加坡国立大学和伦敦大学学院的研究人员联合开发的，也是基于Oyente工具的。Maian会寻找可以自毁（self-destructed）合同、从任意地址抽取以太的合同，以及不具有付款功能的却接受以太的合同；然后使用私有区块链中的动态分析（dynamic analysis）来减少误报的数量。</p>
+<h4 id="Manticore"><a href="#Manticore" class="headerlink" title="Manticore"></a>Manticore</h4><p>由TrailOfBits开发，使用符号执行在EVM字节码中搜索引起重入（reentrancy）漏洞和可达到自毁（reachable self-destruct）执行路径的漏洞。</p>
+<h4 id="Mythril"><a href="#Mythril" class="headerlink" title="Mythril"></a>Mythril</h4><p>由ConsenSys开发的产品，依赖于EVM字节码的调和分析（concolic analysis），污点分析（taint analysis）和控制流检查（control flow checking），以修剪搜索空间并查找可以利用智能合约中的漏洞的价值。</p>
+<h4 id="Osiris"><a href="#Osiris" class="headerlink" title="Osiris"></a>Osiris</h4><p>由卢森堡大学的一组研究人员开发的Oyente扩展了功能，可以检测智能合约中的整数错误（integer bugs）。</p>
+<h4 id="Oyente"><a href="#Oyente" class="headerlink" title="Oyente"></a>Oyente</h4><p>由Melonport AG开发的，是最早的智能合约分析工具之一。它也被用作Maian和Osiris等其他几种方法的基础。 Oyente在EVM字节码上使用符号执行来识别漏洞。</p>
+<h4 id="Securify"><a href="#Securify" class="headerlink" title="Securify"></a>Securify</h4><p>由苏黎世联邦理工学院的ICE中心开发，使用Souffle Datalog求解器静态分析EVM字节码，以推断出与合同有关的精确语义信息。然后，它将检查合规性（compliance）和违规（violation）模式，以捕获足够的条件来证明财产是否成立。</p>
+<h4 id="Slither"><a href="#Slither" class="headerlink" title="Slither"></a>Slither</h4><p>由TrailOfBits开发的是一种静态分析框架，该框架将Solidity智能合约转换为称为SlithIR的中间表示形式，并应用已知的程序分析技术，例如数据流和污点跟踪（taint tracking），来提取和改进信息。</p>
+<h4 id="Smartcheck"><a href="#Smartcheck" class="headerlink" title="Smartcheck"></a>Smartcheck</h4><p>由SmartDec开发的是一种静态分析工具，用于查找漏洞模式和不良的编程行为（bad coding practices）；它在Solidity源代码上运行词法和句法分析（lexical and syntactical analysis）。</p>
+<h3 id="Datasets-of-Smart-Contracts"><a href="#Datasets-of-Smart-Contracts" class="headerlink" title="Datasets of Smart Contracts"></a>Datasets of Smart Contracts</h3><h4 id="A-Dataset-of-69-Vulnerable-Smart-Contracts"><a href="#A-Dataset-of-69-Vulnerable-Smart-Contracts" class="headerlink" title="A Dataset of 69 Vulnerable Smart Contracts"></a>A Dataset of 69 Vulnerable Smart Contracts</h4><p>$SB^{curated}$，包含69个易受攻击的智能合约：此数据集中的合同或者是已被识别为易受攻击的真实合同，或者是为了说明易受攻击性而故意创建的。该数据集的目标是拥有一组标记有漏洞的位置和类别的已知漏洞合同。此数据集可用于评估智能合约分析工具识别漏洞的有效性。</p>
+<p>用$DASP^3$中提供的分类法来描述以太坊智能合约的漏洞。每个收集的合同都归为十类之一。通过从三个不同的来源收集合同来创建此数据集：</p>
+<ol>
+<li>GitHub存储库；</li>
+<li>分析合同的博客文章；</li>
+<li>以太坊网络。 </li>
+</ol>
+<p>其中80％的合同是从GitHub存储库中收集的。每行包含一个漏洞类别。对于每个类别都提供一个描述(Description)、可以减轻攻击的级别（Level）、该类别中可用的合同数量（Contracts）以及该类别的合同中的代码行总数（lines of code，LOC）。</p>
+<center>TABLE 3 数据集中可用漏洞的类别</center>
+
+<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20201009193624.png" srcset="/img/loading.gif" lazyload alt="image-20201009193623965"></p>
+<p>作者提供获取合同的URL及其作者来确保每个合同的可追溯性；数据集包含69个合约和115个带标签的漏洞，分为十类漏洞。并且将此数据集开源在<a target="_blank" rel="noopener" href="https://smartbugs.github.io/">SmartBugs</a>。</p>
+<h4 id="47-518-Contracts-from-the-Ethereum-Blockchain"><a href="#47-518-Contracts-from-the-Ethereum-Blockchain" class="headerlink" title="47,518 Contracts from the Ethereum Blockchain"></a>47,518 Contracts from the Ethereum Blockchain</h4><p>$SB^{WILD}$，包含从以太坊区块链中提取的47,518个合约：这些合同的漏洞集是未知的；但是，该数据集可用于识别具有（潜在）漏洞并指示特定问题发生频率的真实合同。它也可以用于比较诸如性能等指标的分析工具。</p>
+<center>TABLE 4 从以太坊区块链收集Solidity智能合约的统计数据。</center>
+
+<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20201009194431.png" srcset="/img/loading.gif" lazyload alt="image-20201009194431486"></p>
+<p>该数据集可在GitHub 上获得。数据集包含47,518个合约中每个合约的Solidity源代码。合同以合同地址命名；还为该数据集附加了其他信息，以便将该数据集用于其他类型的研究。它包含：</p>
+<ul>
+<li>合同名称； </li>
+<li>已用于编译合同的Solidity版本； </li>
+<li>重复合同的地址； </li>
+<li>与合同相关的交易数量； </li>
+<li>以Solidity代码行为单位的合同大小； </li>
+<li>2,263,096个合同的最后交易日期； </li>
+<li>2,263,096个合同的创建日期； </li>
+<li>972,975个有可用源代码的以太坊余额的合约。</li>
+</ul>
+<h3 id="The-Execution-Framework：SmartBugs"><a href="#The-Execution-Framework：SmartBugs" class="headerlink" title="The Execution Framework：SmartBugs"></a>The Execution Framework：SmartBugs</h3><p>SmartBugs，这是一个执行框架，旨在简化智能合约数据集上分析工具的执行。<br>SmartBugs具有以下功能：</p>
+<ul>
+<li>一个插件系统，可基于Docker映像轻松添加新的分析工具； </li>
+<li>并行执行工具以加快执行时间； </li>
+<li>一种输出机制，可标准化工具输出结果的方式，并简化跨工具的输出过程。</li>
+</ul>
+<h4 id="Architecture"><a href="#Architecture" class="headerlink" title="Architecture"></a>Architecture</h4><p>SmartBugs由五个主要部分组成：</p>
+<ol>
+<li>第一个由使用SmartBug的命令行界面组成。 </li>
+<li>第二部分包含工具插件。每个工具插件均包含工具的配置。该配置包含Docker映像的名称，工具的名称，运行该工具的命令行，该工具的描述以及结果输出的位置。 </li>
+<li>存储在Docker Hub上的Docker映像。当已有Docker映像时，将使用工具的Docker映像；否则，将创建自己的映像（所有Docker映像（包括作者的）都可以在Docker Hub上公开获得）。 </li>
+<li>智能合约的数据集。 </li>
+<li>SmartBugs的运行程序将SmartBugs的所有部分放在一起，以执行智能合约上的分析工具。</li>
+</ol>
+<h4 id="Dataset-Interface-Details"><a href="#Dataset-Interface-Details" class="headerlink" title="Dataset Interface Details"></a>Dataset Interface Details</h4><p>数据集接口详细信息：SmartBugs提供了一个命令行界面，可简化智能合约分析工具的执行。它需要一套工具名称和一个Solidity文件的路径来进行分析，并在每次执行时生成两个文件：</p>
+<ol>
+<li>包含执行标准输出的result.log文件</li>
+<li>包含执行结果的result.json文件，以可解析的格式进行分析。我们提供了处理这些输出的脚本，并将它们呈现在可读的表中。</li>
+</ol>
+<h3 id="Data-Collection-and-Analysis"><a href="#Data-Collection-and-Analysis" class="headerlink" title="Data Collection and Analysis"></a>Data Collection and Analysis</h3><p>使用SmartBugs在两个数据集上执行了9种工具，收集了输出并用于进一步分析。</p>
+<h4 id="Tools’-Setup"><a href="#Tools’-Setup" class="headerlink" title="Tools’ Setup"></a>Tools’ Setup</h4><p>我们将时间预算设置为每次分析30分钟。为了为一次执行一项工具而不是一份合约确定合适的时间预算，我们首先在摘要化的数据集上执行了所有工具。<br>然后，我们选择的时间预算要高于平均执行时间（1分44秒）。如果花费了时间预算，我们将停止执行并收集执行的部分结果。在执行实验期间，Manticore是唯一面临超时的工具</p>
+<h4 id="Large-scale-Execution"><a href="#Large-scale-Execution" class="headerlink" title="Large-scale Execution."></a>Large-scale Execution.</h4><p>总共对47,518张合同执行了9种分析工具。这代表了428,337次分析，这些分析大约需要564天和3个小时的组合执行时间，超过一年的连续执行时间。使用了两个云提供商来租用该实验所需的服务器。<br>第一个提供商是Scaleway，我们在其中使用了三台服务器，这些服务器具有32个vCPU和128 GB的RAM。我们增加了500€的预算，并支出了474.99€。</p>
+<p>第二个提供商是Google Cloud，使用了三台服务器和32个 vCPU，30GB RAM。我们在Google Cloud上花费了1038.46€。<br>我们总共花费了1513.45 €（折合11,971.44人民币）来执行本文中讨论的实验。</p>
+<h2 id="四、RESULTS"><a href="#四、RESULTS" class="headerlink" title="四、RESULTS"></a>四、RESULTS</h2><h3 id="Precision-of-the-Analysis-Tools"><a href="#Precision-of-the-Analysis-Tools" class="headerlink" title="Precision of the Analysis Tools"></a>Precision of the Analysis Tools</h3><p>用来该分析工具的精确度的方法如下：</p>
+<ol>
+<li>我们在69个合同上执行了9个工具</li>
+<li>将工具检测到的所有漏洞提取到JSON文件中。 </li>
+<li>我们将检测到的漏洞映射到漏洞类别。</li>
+</ol>
+<p>手动将已检测到的所有漏洞类型注释为十个DASP类别之一。例如，Oyente检测到一个名为Integer Overflow的漏洞，该漏洞已链接到Arithmetic类别；总共确定了141个漏洞类型，其中97个已被标记。不幸的是，发现这9个工具中没有一个能够检测到不良随机性（Bad Randomness）和短地址（Short Addresses）类别的漏洞，工具不会检测某些类别的漏洞，因为它们并非旨在识别所有类型的漏洞。</p>
+<center>TABLE 5 每个工具按类别识别的漏洞 </center>
+
+<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20201009211425.png" srcset="/img/loading.gif" lazyload alt="image-20201009211425151"></p>
+<p>括号中显示了单个工具识别的漏洞数量</p>
+<center>TABLE 6 每个工具检测到的漏洞总数 </center>
+
+<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20201009211556.png" srcset="/img/loading.gif" lazyload alt="image-20201009211556647"></p>
+<p>回答RQ1：当前的分析工具在检测Solidity智能合约上的漏洞时的准确性如何？</p>
+<p>通过将9个工具组合在一起，它们只能检测到所有漏洞的42％。这表明仍然存在提高智能合约漏洞检测方法的准确性的空间。我们注意到，在以下三个类别中，该工具在检测漏洞方面表现不佳：访问控制（Access Control），拒绝服务（Denial of service）和前端运行（Front running）。<br>它们无法通过设计漏洞来检测不良随机性和短地址类别中的漏洞。此外观察到，Mythril在检测到的漏洞数量（31/115，占27％）和针对的漏洞类别数量（5/9类别）方面胜过其他工具。<br>Mythril和Slither的组合可以检测到总共42/115（37％）的漏洞，这是准确性和执行成本之间的最佳折衷方案。</p>
+<h3 id="Vulnerabilities-in-Production-Smart-Contracts"><a href="#Vulnerabilities-in-Production-Smart-Contracts" class="headerlink" title="Vulnerabilities in Production Smart Contracts"></a>Vulnerabilities in Production Smart Contracts</h3><p>为了研究检测合同中漏洞的能力，分析了9种选定工具从数据集sbwild中查找漏洞。我们采用了与先前研究问题相同的方法，但是，对于$SB^{WILD}$来说，这里没有确定漏洞的预言。</p>
+<p>表7列出了在47,518个合同上执行9个工具的结果。它表明，这9个工具能够检测八种不同类别的漏洞。请注意，HoneyBadger检测到的漏洞是看起来很脆弱但其实并不是漏洞的合同——它们旨在看上去容易受到攻击，以便从试图利用此漏洞的人们那里窃取以太币。总共，44,589份合同(93%)至少有一个漏洞被9种工具中的一种检测到。</p>
+<center>TABLE 7 具有至少一个漏洞的合同总数 </center>
+
+<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20201009214242.png" srcset="/img/loading.gif" lazyload alt="image-20201009214242623"></p>
+<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20201009214917.png" srcset="/img/loading.gif" lazyload alt="image-20201009214917011"></p>
+<center>Figure 1：由一、二、三、四个或四个以上工具（4+）标识的漏洞比例 </center>
+
+
+
+<p>回答RQ2：以太坊区块链中存在多少个漏洞？<br>这9种工具可识别93％的合同中的漏洞，这表明误报率很高。仅Oyente，就能在73％的合同中检测到漏洞。通过组合使用工具来达成共识，观察到只有少数漏洞获得了四个或更多工具的共识：937个Arithmetic漏洞和133个Reentrancy漏洞。</p>
+<h3 id="Execution-Time-of-the-Analysis-Tools"><a href="#Execution-Time-of-the-Analysis-Tools" class="headerlink" title="Execution Time of the Analysis Tools"></a>Execution Time of the Analysis Tools</h3><p>在本节中，我们介绍了分析sbwild数据集47,518所需的工具执行时间。为了衡量执行时间，我们记录了每个分析的开始时间和结束时间。</p>
+<p>单个执行由以下步骤组成:</p>
+<ol>
+<li>启动Docker镜像，将合同绑定到Docker实例;</li>
+<li>清洗Docker容器;</li>
+<li>解析日志并将其输出到results文件夹中。</li>
+</ol>
+<p>表8列出了每种工具使用的平均时间和总时间。平均执行时间是在每个合同上执行该工具，包括编译，构建IR、图形、分析和解析结果。</p>
+<center>Table 8: 每个工具的平均执行时间</center>
+
+<p><img src="https://gitee.com/Reanon/upload-markdown-img/raw/master/img/20201009215326.png" srcset="/img/loading.gif" lazyload alt="image-20201009215326143"></p>
+<p>在表中，我们可以观察到三组不同的执行时间：执行需要几秒钟的工具，花费几分钟的工具和花费24分钟的Manticore。 </p>
+<ul>
+<li>Oyente，Osiris，Slither，Smartcheck和Solhint是速度更快的工具，平均需要5到30秒才能分析智能合约。 </li>
+<li>HoneyBadger，Maian，Mythril和Securify的执行速度较慢，执行时间介于1m24到6m37之间。</li>
+<li>最后，Manticore需要24分28秒。</li>
+</ul>
+<p>工具之间执行时间的差异取决于每个工具使用的技术。诸如Smartcheck和Slither之类的纯静态分析工具之所以快速，是因为它们无需编译或执行合同即可识别漏洞和不良做法（bad practices）。</p>
+<p>Securify，Maian，Mythril和Manticore分析合同的EVM字节码。这意味着这些工具需要在进行分析之前编译合同，附加的编译步骤会减慢分析速度。<br>Manticore是所有工具中最慢的，因为该工具一次仅分析一个内部合同（Solidity源文件可以包含任意数量的合同定义）。</p>
+<p>回答RQ3：这些工具需要多长时间来分析智能合约？<br>这些工具平均需要4分31秒来分析一份合同。但是，各工具的执行时间差异很大。<br>Slither是最快的工具，平均只需5秒钟即可分析合同。<br>Manticore是最慢的工具。分析合同平均需要24分28秒。</p>
+<p>我们还注意到执行速度并不是影响工具性能的唯一因素；Securify比Maian花费了更多的时间来执行，但是Securify可以很容易地并行化，因此分析47,518个合同的速度比Maian快得多。最后，并没有观察到准确性和执行时间之间的相关性。</p>
+<h2 id="五、SUMMARY-amp-REVIEW"><a href="#五、SUMMARY-amp-REVIEW" class="headerlink" title="五、SUMMARY &amp; REVIEW"></a>五、SUMMARY &amp; REVIEW</h2><p>本文作者制作了两个很有用的数据集，并将它们公开出来。参考DASP10智能合约漏洞类别作为对漏洞进行分类，发现当前的技术水平无法检测DASP10的两类漏洞：随机性差和短地址。。最后，使用创建的可拓展的执行框架SmartBugs在两个数据集上执行9个自动化分析工具。</p>
+<p>结果表明，所有工具仅检测到注释数据集中的漏洞的42％，其中<a target="_blank" rel="noopener" href="https://github.com/ConsenSys/mythril">Mythtil</a>具有更高的准确性（27％），此外本文还提到如果要兼顾准确性和执行成本，那么Mythril和Slither的组合可以检测到总共42/115（37％）的漏洞，这是最佳折衷方案；</p>
+<p>而对另一个数据集进行漏洞检测时，有97％的合同至少被一种工具检测到漏洞，这表明每种工具都可能存在着大量误报，而其中Oyente更是当仁不让地检测到73％的合同中的漏洞。</p>
+<p>此外，本文提出现有的工具的检测能力还有待提高，而其中Mythril是具有较高准确性的工具，并且能够检测到31/115（27％）的漏洞。当对更大的数据集进行漏洞检测时，有97％的合同被确定为易受攻击，这表明存在着大量误报。</p>
+<p>感觉文本作者不足在于，为了使得实验更加方便的进行或许排除了一些更加有用的方法，可能考虑地不是那么全面。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/">智能合约</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Smart-Contract/">Smart Contract</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/10c7caf55.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Contractward: Automated vulnerability detection models for ethereum smart contracts</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/0978ff8e8d.html">
+                        <span class="hidden-mobile">Machine Learning Model for Smart Contracts Security Analysis</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.lazyComments('valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function () {
+        new Valine({
+          el: "#valine",
+          app_id: "73Hj5P4VcTv8HBdu8NBByx0A-gzGzoHsz",
+          app_key: "RiIo7kMzIb3EGAwRhvg7YEQ2",
+          placeholder: "说点什么",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: false,
+          recordIP: false,
+          serverURLs: "",
+        });
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the
+    <a target="_blank" href="https://valine.js.org" rel="nofollow noopener noopener">comments powered by Valine.</a>
+  </noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+    © 2020 - 2021  Reanon 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- LeanCloud 统计PV -->
+        <span id="leancloud-site-pv-container" style="display: none">
+            总访问量 
+            <span id="leancloud-site-pv"></span>
+             次
+          </span>
+      
+      
+        <!-- LeanCloud 统计UV -->
+        <span id="leancloud-site-uv-container" style="display: none">
+            总访客数 
+            <span id="leancloud-site-uv"></span>
+             人
+          </span>
+      
+
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?ee358a24a3d27e65fdc3801fa166e19a";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
