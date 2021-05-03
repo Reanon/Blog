@@ -18,7 +18,7 @@
   <meta name="author" content="Reanon">
   <meta name="keywords" content="JAVA">
   
-  <title>Functional code clone detection with syntax and semantics fusion learning - Reanon</title>
+  <title>FCDetector：Functional code clone detection with syntax and semantics fusion learning - Reanon</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
@@ -163,7 +163,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Functional code clone detection with syntax and semantics fusion learning">
+            <span class="h2" id="subtitle" title="FCDetector：Functional code clone detection with syntax and semantics fusion learning">
               
             </span>
 
@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      6.9k 字
+      6.8k 字
     </span>
   
 
@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      74
+      73
        分钟
     </span>
   
@@ -233,7 +233,7 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Functional code clone detection with syntax and semantics fusion learning</h1>
+            <h1 style="display: none">FCDetector：Functional code clone detection with syntax and semantics fusion learning</h1>
             
             <div class="markdown-body">
               <h1 id="fcdetector"><a class="markdownIt-Anchor" href="#fcdetector"></a> FCDetector</h1>
@@ -306,8 +306,7 @@
 <p>抽象句法树（AST）是用编程语言编写的源代码抽象句法结构的树表示，此树定义了源代码的结构，通过操纵这棵树研究人员可以精确地定位声明语句、赋值语句、操作语句、实现分析、优化和更改代码等操作。</p>
 <h3 id="control-flow-graph"><a class="markdownIt-Anchor" href="#control-flow-graph"></a> Control Flow Graph</h3>
 <p>控制流图（CFG）是使用图形表示法的表示，在执行过程中可能会遍历程序的所有路径。 在每个CFG中都有一个包含几个代码语句的基本块，CFG可以轻松每个基本块的信息，它可以轻松找到程序中无法访问的代码，并且在控制流程图中易于检测到诸如循环之类的语法结构。</p>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/image-20210423205249931.png" srcset="/img/loading.gif" lazyload alt="image-20210423205249931" /></p>
-<center> 图1 使用调用图识别功能
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/image-20210423205249931.png" srcset="/img/loading.gif" lazyload alt="图1 使用调用图识别功能" /></p>
 <h3 id="word-embedding"><a class="markdownIt-Anchor" href="#word-embedding"></a> Word Embedding</h3>
 <p>词嵌入（Word embedding）是自然语言处理（NLP）中语言模型和表示学习技术的统称</p>
 <ul>
@@ -383,8 +382,7 @@
 <li>在情况（5）中，方法A调用方法B，方法A调用方法C，但也只有一个功能，该功能包括方法A，B和C。</li>
 <li>在情况（6）中，方法B调用方法A，方法C调用方法A。有两种功能，一种包括方法{A，B}，另一种包括方法{A，C}。</li>
 </ul>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/image-20210423211124505.png" srcset="/img/loading.gif" lazyload alt="image-20210423211124505" /></p>
-<p>Six kinds of caller-callee relationships among methods</p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/image-20210423211124505.png" srcset="/img/loading.gif" lazyload alt="Six kinds of caller-callee relationships among methods" /></p>
 <h3 id="extracting-syntactic-and-semantic-representations"><a class="markdownIt-Anchor" href="#extracting-syntactic-and-semantic-representations"></a> Extracting Syntactic and Semantic Representations</h3>
 <h4 id="ast-representation"><a class="markdownIt-Anchor" href="#ast-representation"></a> AST Representation</h4>
 <p>假设 C 是代码段C，而Nroot是其对应的AST入口节点。为了提取C的语法表示形式，首先从Nroot开始，并按顺序迭代遍历AST的所有节点。</p>
@@ -459,8 +457,7 @@
 <li>蓝线表示相似代码段之间的距离，红线代表不同代码段之间的距离。</li>
 <li>横轴是代码段的ID</li>
 </ul>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/image-20210423213015031.png" srcset="/img/loading.gif" lazyload alt="image-20210423213015031" /></p>
-<center>Euclidean distance between feature vectors.
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/image-20210423213015031.png" srcset="/img/loading.gif" lazyload alt="Euclidean distance between feature vectors." /></p>
 <p>为了解决这个问题，本文使用深度学习模型，因为该模型可以有效地检测代码片段之间的功能克隆。</p>
 <ul>
 <li>特别是，我们融合了句法和语义特征向量作为输入来训练前馈神经网络[32]，并将代码克隆检测转换为模型末尾的softmax层的二进制分类。</li>
@@ -472,8 +469,7 @@
 <li>为了获得AST和CFG的单词嵌入和图形嵌入，使用 Word2vec 和Graph2vec生成长度为{4，8，16，32} 的单词嵌入和长度为{4，8，16，32} 的图形嵌入。</li>
 </ul>
 <p>根据实验，本文选择向量长度为16，简而言之，较长的向量将增加训练时间，而较短的向量将无法捕获足够的代码特征。</p>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/image-20210423213302618.png" srcset="/img/loading.gif" lazyload alt="image-20210423213302618" /></p>
-<center> The architecture of the deep fusion learning model
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/image-20210423213302618.png" srcset="/img/loading.gif" lazyload alt="The architecture of the deep fusion learning model" /></p>
 <p>使用一对代码功能（code features）来表示这两个功能是否为克隆。</p>
 <ul>
 <li>输入向量包含三个部分：用于第一功能的融合特征向量V1、用于第二功能的融合特征向量V2、标签。</li>
@@ -533,14 +529,10 @@
 <ul>
 <li>因为数据集主要属于功能代码克隆，所以检测性能可以表明这些方法检测功能克隆的能力。</li>
 </ul>
-<center>Table 1: Results on OJClone
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210417211402.png" srcset="/img/loading.gif" lazyload alt="image-20210417211402220" /></p>
-<center>Time performance on OJClone
-![image-20210417212009245](https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210417212009.png)
-<p>Comparison with machine learning techniques</p>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/image-20210423215133498.png" srcset="/img/loading.gif" lazyload alt="image-20210423215133498" /></p>
-<p>The F1 values for different length of embeddings</p>
-<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/image-20210423215143692.png" srcset="/img/loading.gif" lazyload alt="image-20210423215143692" /></p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210417211402.png" srcset="/img/loading.gif" lazyload alt="Table 1: Results on OJClone" /></p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/20210417212009.png" srcset="/img/loading.gif" lazyload alt="Time performance on OJClone" /></p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/image-20210423215133498.png" srcset="/img/loading.gif" lazyload alt="Comparison with machine learning techniques" /></p>
+<p><img src="https://aliyun-typora-img.oss-cn-beijing.aliyuncs.com/imgs/image-20210423215143692.png" srcset="/img/loading.gif" lazyload alt="The F1 values for different length of embeddings" /></p>
 <h2 id="六-本文评价"><a class="markdownIt-Anchor" href="#六-本文评价"></a> 六、本文评价</h2>
 <p>本文提出了用于功能识别的细粒度源代码。</p>
 <ul>
